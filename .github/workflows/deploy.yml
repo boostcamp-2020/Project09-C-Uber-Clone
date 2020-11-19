@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
       - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh/ # ssh디렉토리 생성
-          echo "$SSH_KEY" > ~/.ssh/develop.key # ssh에 develop.key 생성하고 "$SSH_KEY" 주입
-          chmod 600 ~/.ssh/develop.key # rw------- 으로 변경.소유자에만 읽기쓰기 권한을 주는것으로 변경.
-          cat >>~/.ssh/config <<END # ssh config에 아래 내용들 저장
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/develop.key
+          chmod 600 ~/.ssh/develop.key
+          cat >>~/.ssh/config <<END
           Host deploy
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/develop.key # 참조할 key 지정
-            StrictHostKeyChecking no # ssh 접속시 host의 key를 확인하지 않고 접속
+            IdentityFile ~/.ssh/develop.key
+            StrictHostKeyChecking no
           END
         env:
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
