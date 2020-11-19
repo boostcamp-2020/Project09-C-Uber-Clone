@@ -6,23 +6,35 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --progress",
-    "lint": "eslint --ext js,jsx src"
+    "lint": "eslint --ext ts,tsx src",
+    "fix": "eslint src/**/*.ts src/**/*.tsx --fix"
   },
   "dependencies": {
     "@apollo/client": "3.2.6",
+    "@babel/preset-typescript": "^7.12.1",
+    "@reduxjs/toolkit": "^1.4.0",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
+    "@types/react-redux": "^7.1.11",
     "graphql": "15.4.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-router-dom": "5.2.0"
+    "react-redux": "^7.2.2",
+    "react-router-dom": "5.2.0",
+    "redux": "^4.0.5",
+    "typescript": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
     "babel-loader": "8.2.1",
-    "eslint": "7.13.0",
+    "eslint": "^7.13.0",
     "eslint-config-airbnb": "18.2.1",
-    "eslint-plugin-import": "2.22.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
     "html-webpack-plugin": "4.5.0",
