@@ -8,12 +8,12 @@ const { actions, reducer } = createSlice({
     loginPasswordInput: '',
   },
   reducers: {
-    setLoginIdInput(state, { payload})  {
+    setLoginIdInput(state, { payload }) {
       return payload;
     },
-    setLoginPasswordInput(state, { payload })  {
+    setLoginPasswordInput(state, { payload }) {
       return payload;
-    }
+    },
   },
 });
 

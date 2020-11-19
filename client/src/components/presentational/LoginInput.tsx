@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, { FunctionComponent } from 'react';
 
 interface LoginInputProps {
   type: string;
@@ -9,6 +9,6 @@ const LoginInput: FunctionComponent<LoginInputProps> = ({ type, handleChange }) 
   return (
     <input type={type} onChange={handleChange} />
   );
-}
+};
 
 export default LoginInput;

@@ -4,23 +4,23 @@ import LoginInput from '../presentational/LoginInput';
 
 import { useDispatch } from 'react-redux';
 
-import { setLoginIdInput, setLoginPasswordInput } from '../../slice'
+import { setLoginIdInput, setLoginPasswordInput } from '../../slice';
 
 function LoginForm() {
   const dispatch = useDispatch();
 
   const handleChangeId = (e: any) => {
-    dispatch(setLoginIdInput(e.target.value)); 
-  }
+    dispatch(setLoginIdInput(e.target.value));
+  };
 
   const handleChangePassword = (e: any) => {
-    dispatch(setLoginPasswordInput(e.target.value)); 
-  }
+    dispatch(setLoginPasswordInput(e.target.value));
+  };
 
   return (
     <>
       <LoginInput type="text" handleChange={handleChangeId} />
-      <LoginInput type="password"  handleChange={handleChangePassword}/>
+      <LoginInput type="password" handleChange={handleChangePassword}/>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoginPage from './pages/LoginPage'
+import LoginPage from './pages/LoginPage';
 
 export default function App() {
   return (
