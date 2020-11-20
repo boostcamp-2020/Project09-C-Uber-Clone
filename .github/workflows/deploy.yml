@@ -12,7 +12,6 @@ jobs:
        run: |
           mkdir -p ~/.ssh/
           echo $SSH_KEY > ~/.ssh/develop.key
-          cat ~/.ssh/develop.key
           chmod 600 ~/.ssh/develop.key
           cat >>~/.ssh/config <<END
           Host deploy
