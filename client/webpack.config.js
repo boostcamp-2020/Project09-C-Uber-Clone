@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
   mode: 'development',
   entry: {
-    main: './src/index.jsx',
+    main: './src/index.tsx',
   },
   output: {
     filename: 'bundle.js',
@@ -13,7 +14,7 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.(js|jsx)$/,
+      test: /\.(js|jsx|ts|tsx)$/,
       use: 'babel-loader',
       exclude: /node_modules/,
     }, {
@@ -34,6 +35,6 @@ module.exports = {
       template: './src/index.html',
     })],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 };

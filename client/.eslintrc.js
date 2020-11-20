@@ -1,13 +1,14 @@
-/* eslint-disable no-undef */
 module.exports = {
   env: {
     browser: true,
     es6: true,
   },
   extends: [
-    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:react/recommended',
   ],
+
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -17,15 +18,16 @@ module.exports = {
   },
   plugins: [
     'react',
+    '@typescript-eslint',
   ],
   settings: {
     react: {
-      'version': 'detect',
+      version: 'detect',
     },
   },
   rules: {
-    indent: ['error', 2, { 'SwitchCase': 1 }],
-    'semi': ['error', 'always'],
+    indent: ['error', 2, { SwitchCase: 1 }],
+    semi: ['error', 'always'],
     'no-trailing-spaces': 'error',
     curly: 'error',
     'brace-style': 'error',
