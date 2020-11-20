@@ -11,8 +11,7 @@ jobs:
      - name: Configure SSH
        run: |
           mkdir -p ~/.ssh/
-          cat $SSH_KEY
-          echo "$SSH_KEY" > ~/.ssh/develop.key
+          echo $SSH_KEY > ~/.ssh/develop.key
           cat ~/.ssh/develop.key
           chmod 600 ~/.ssh/develop.key
           cat >>~/.ssh/config <<END
