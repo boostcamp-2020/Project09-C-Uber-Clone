@@ -24,6 +24,8 @@ jobs:
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+     - name: key test 
+       run: cat ${{ secrets.STAGING_SSH_KEY }}
      - name: Run Install & Build
        run: ssh deploy 'cd repos/Project09-C-Uber-Clone && git pull && cd client && npm ci && npm run build'
      - name: Reload PM2
