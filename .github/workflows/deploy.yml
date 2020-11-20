@@ -25,6 +25,6 @@ jobs:
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
      - name: Run Install & Build
-       run: ssh deploy 'cd repos/Project09-C-Uber-Clone && git pull && cd client && npm i && npm run build'
+       run: ssh deploy 'cd repos/Project09-C-Uber-Clone && git pull && cd client && npm run build'
      - name: Reload PM2
-       run: ssh deploy 'cd repos/Project09-C-Uber-Clone/server && npm i && pm2 reload Project09-C-Uber-Clone'
+       run: ssh deploy 'cd repos/Project09-C-Uber-Clone/server && pm2 reload Project09-C-Uber-Clone'
