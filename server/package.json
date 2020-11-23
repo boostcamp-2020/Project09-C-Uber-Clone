@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node 'dist/app.js'",
-    "build": "tsc -p . && ncp src/schema dist/schema",
+    "build": "tsc -p . && ncp src/graphql/types dist/graphql/types",
     "dev": "nodemon 'src/app.ts' --exec 'ts-node' src/app.ts -e ts,graphql",
     "lint": "eslint ./src/**/*.ts"
   },

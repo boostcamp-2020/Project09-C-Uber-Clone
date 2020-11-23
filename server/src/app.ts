@@ -1,19 +1,10 @@
-const express = require('express');
-const { ApolloServer, gql } = require('apollo-server-express');
-const mongoose = require('mongoose');
-require('dotenv').config();
+import 'dotenv/config';
 
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+import express from 'express';
+import { ApolloServer, gql } from 'apollo-server-express';
+import mongoose from 'mongoose';
+import typeDefs from './graphql/typeDef';
+import resolvers from './graphql/resolvers';
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
@@ -23,13 +14,13 @@ const options = {
   useCreateIndex: true,
 };
 
-mongoose.connect(process.env.MONGODB_URL, options)
+mongoose.connect(process.env.MONGODB_URL || '', options)
   .then(() => console.log('Successfully connected to mongodb'))
   .catch(e => console.error(e));
 
 const app = express();
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),
+app.listen({ port: process.env.PORT }, () =>
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`),
 );
