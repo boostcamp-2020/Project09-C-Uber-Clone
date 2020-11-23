@@ -6,24 +6,15 @@ import { useDispatch } from 'react-redux';
 
 import { setLoginIdInput, setLoginPasswordInput, getHello } from '../../slice';
 
-import { useQuery } from '@apollo/client';
-
-import { helloQuery } from '../../queries/hello';
+import { useApolloClient } from '@apollo/client';
 
 function LoginForm() {
-  const { loading, data, error } = useQuery(
-    helloQuery,
-    {
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    },
-  );
-
+  const client = useApolloClient();
   const dispatch = useDispatch();
 
   const handleChangeId = async (e: any) => {
     dispatch(setLoginIdInput(e.target.value));
-    dispatch(getHello());
+    dispatch(getHello(client));
   };
 
   const handleChangePassword = (e: any) => {

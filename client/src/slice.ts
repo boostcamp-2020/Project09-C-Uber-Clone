@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { gql, useQuery } from '@apollo/client';
-
 import { helloQuery } from './queries/hello';
 
 const { actions, reducer } = createSlice({
@@ -24,14 +22,11 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const getHello = () => async (dispatch: any) => {
-  const { loading, data, error } = useQuery(
-    helloQuery,
-    {
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    },
-  );
+export const getHello = (client: any) => async (dispatch: any) => {
+  const { data } = await client.query({
+    query: helloQuery,
+    fetchPolicy: 'cache-first',
+  });
 
   dispatch(setHelloString(data));
 };
