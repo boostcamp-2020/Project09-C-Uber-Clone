@@ -3,10 +3,16 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['eslint:recommended'],
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
   },
+  plugins: [
+    '@typescript-eslint',
+  ],
   rules: {
     indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['error', 'always'],
