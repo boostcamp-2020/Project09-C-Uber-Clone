@@ -13,6 +13,7 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
   ],
+  ignorePatterns: ['node_modules/', 'dist/'],
   rules: {
     indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['error', 'always'],
