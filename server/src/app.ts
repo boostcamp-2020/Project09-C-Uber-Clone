@@ -1,5 +1,7 @@
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 const typeDefs = gql`
   type Query {
@@ -14,6 +16,16 @@ const resolvers = {
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+};
+
+mongoose.connect(process.env.MONGODB_URL, options)
+  .then(() => console.log('Successfully connected to mongodb'))
+  .catch(e => console.error(e));
 
 const app = express();
 server.applyMiddleware({ app });
