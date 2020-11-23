@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import express from 'express';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import typeDefs from './graphql/typeDef';
 import resolvers from './graphql/resolvers';
