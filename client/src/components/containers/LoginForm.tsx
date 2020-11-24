@@ -1,4 +1,3 @@
-import React from 'react';
 import React, { useState } from 'react';
 
 import LoginInput from '../presentational/LoginInput';
@@ -7,7 +6,25 @@ import { setLoginEmail, setLoginPassword, requestLogin } from '../../slice';
 
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { Button } from 'antd-mobile';
+import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
+
+import styled from 'styled-components';
+
+const Header = styled.div`
+display: flex;
+width: 180px;
+height: 117px;
+left: calc(50% - 180px/2 + 6px);
+top: calc(50% - 117px/2 - 191.5px);
+
+font-family: Inter;
+font-style: normal;
+font-weight: bold;
+font-size: 64px;
+line-height: 77px;
+
+color: #243443;
+`;
 
 function LoginForm() {
   const client = useApolloClient();
@@ -24,7 +41,6 @@ function LoginForm() {
   };
 
   const loginButton = () => {
-    requestLogin(client);
     requestLogin(client, riderCheck);
   };
 
@@ -43,11 +59,14 @@ function LoginForm() {
 
   return (
     <>
-      <LoginInput type="text" handleChange={handleChangeEmail} />
-      <LoginInput type="password" handleChange={handleChangePassword}/>
-      <Button onClick={loginButton}>로그인</Button>
+      <Header>UBER</Header>
       <Checkbox onChange={onRiderCheck} checked={riderCheck}>라이더</Checkbox>
       <Checkbox onChange={onDriverCheck} checked={driverCheck}>드라이버</Checkbox>
+      <LoginInput placeholder="Enter your email" handleChange={handleChangeEmail} />
+      <WhiteSpace />
+      <LoginInput placeholder="Enter your password" handleChange={handleChangePassword}/>
+      <WhiteSpace />
+      <Button onClick={loginButton} type='primary' style={{ backgroundColor: '#56A902' }}>로그인</Button>
     </>
   );
 }

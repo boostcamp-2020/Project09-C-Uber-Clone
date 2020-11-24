@@ -1,15 +1,25 @@
 import React, { FunctionComponent } from 'react';
-
+import { InputItem } from 'antd-mobile';
 
 interface LoginInputProps {
-  type: string;
+  placeholder: string;
   handleChange: any;
 }
 
-const LoginInput: FunctionComponent<LoginInputProps> = ({ type, handleChange }) => {
+import styled from 'styled-components';
+
+const Input = styled.input`
+  display: flex;
+  width: 319px;
+  height: 54px;
+  left: 47px;
+  top: 337px;
+`;
+
+const LoginInput: FunctionComponent<LoginInputProps> = ({ placeholder, handleChange }) => {
   return (
     <>
-      <input type={type} onChange={handleChange} />
+      <InputItem placeholder={placeholder} onChange={handleChange} />
     </>
   );
 };
