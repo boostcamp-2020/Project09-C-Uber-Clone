@@ -39,14 +39,12 @@ const Title = styled.h1`
 
 function SignUpSelectPage() {
   return (
-    <>
-      <Page>
-        <Title>회원가입</Title>
-        <Button>라이더 회원가입</Button>
-        <WhiteSpace />
-        <Button>드라이버 회원가입</Button>
-      </Page>
-    </>
+    <Page>
+      <Title>회원가입</Title>
+      <Button>라이더 회원가입</Button>
+      <WhiteSpace />
+      <Button>드라이버 회원가입</Button>
+    </Page>
   );
 }
 
