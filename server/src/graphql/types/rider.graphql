@@ -1,0 +1,3 @@
+type Mutation {
+  loginRider(email: String!, password: String!):String
+}
