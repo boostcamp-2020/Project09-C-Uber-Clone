@@ -4,8 +4,6 @@ import styled from 'styled-components';
 
 import RiderSignUpForm from '../components/containers/RiderSignUpForm';
 
-import { InputItem } from 'antd-mobile';
-
 const Page = styled.div`
   display: flex;
   flex-direction: column;
