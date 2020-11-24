@@ -127,4 +127,9 @@ psd
 thumb
 sketch
 dist
+
+### docker ###
+docker-compose.yml
+.docker/
+
 # End of https://www.toptal.com/developers/gitignore/api/react,node
