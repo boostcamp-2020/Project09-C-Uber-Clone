@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import LoginInput from '../presentational/LoginInput';
 
@@ -28,6 +29,9 @@ function LoginForm() {
       <LoginInput type="text" handleChange={handleChangeEmail} />
       <LoginInput type="password" handleChange={handleChangePassword}/>
       <Button onClick={loginButton}>로그인</Button>
+      <Link to='/signup/select'>
+        <button>Sign up here</button>
+      </Link>
     </>
   );
 }
