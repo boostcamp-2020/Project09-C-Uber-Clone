@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { WhiteSpace } from 'antd-mobile';
 
@@ -41,9 +42,13 @@ function SignUpSelectPage() {
   return (
     <Page>
       <Title>회원가입</Title>
-      <Button>라이더 회원가입</Button>
+      <Link to='/signup/rider'>
+        <Button>라이더 회원가입</Button>
+      </Link>
       <WhiteSpace />
-      <Button>드라이버 회원가입</Button>
+      <Link to='/signup/driver'>
+        <Button>드라이버 회원가입</Button>
+      </Link>
     </Page>
   );
 }
