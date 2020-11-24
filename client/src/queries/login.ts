@@ -7,3 +7,10 @@ export const loginRider = (email : String, password : String) => gql`mutation lo
 }
 `;
 
+export const loginDriver = (email : String, password : String) => gql`mutation loginQuery(${email}:String!,${password}:String!){
+  loginDriver(email:${email},password:${password}){
+    String
+  }
+}
+`;
+
