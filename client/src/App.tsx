@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage';
 import SignUpSelectPage from './pages/SignUpSelectPage';
+import RiderSignUpPage from './pages/RiderSignUpPage';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Switch>
         <Route path='/login' component={LoginPage} />
         <Route path='/signup/select' component={SignUpSelectPage} />
+        <Route path='/signup/rider' component={RiderSignUpPage} />
       </Switch>
     </>
   );
