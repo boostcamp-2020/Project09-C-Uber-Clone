@@ -2,11 +2,9 @@ import { Driver } from '../models';
 
 export default {
   create: async (payload) => {
-    const newDriver = await Driver.create(payload);
-    return newDriver;
+    return await Driver.create(payload);
   },
   findAll: async () => {
-    const drivers = await Driver.find({});
-    return drivers;
+    return await Driver.find({});
   },
 };

@@ -2,11 +2,12 @@ import { Rider } from '../models';
 
 export default {
   create: async (payload) => {
-    const newRider = await Rider.create(payload);
-    return newRider;
+    return await Rider.create(payload);
   },
   findAll: async () => {
-    const riders = await Rider.find({});
-    return riders;
+    return await Rider.find({});
+  },
+  findByEmailPassword: async(payload) => {
+    return await Rider.findOne(payload);
   },
 };
