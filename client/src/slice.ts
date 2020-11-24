@@ -1,36 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { helloQuery } from './queries/hello';
+import { loginRider } from './queries/login';
 
 const { actions, reducer } = createSlice({
   name: 'app',
   initialState: {
-    loginIdInput: '',
-    loginPasswordInput: '',
-    helloString: '',
+    loginField: {
+      email: '',
+      password: '',
+    },
   },
   reducers: {
-    setLoginIdInput(state, { payload }) {
-      return payload;
+    setLoginEmail(state, { payload: email }) {
+      return { ...state, loginField: { ...state.loginField, email } };
     },
-    setLoginPasswordInput(state, { payload }) {
-      return payload;
-    },
-    setHelloString(state, { payload }) {
-      return payload;
+    setLoginPassword(state, { payload: password }) {
+      return { ...state, loginField: { ...state.loginField, password } };
     },
   },
 });
 
-export const getHello = (client: any) => async (dispatch: any) => {
-  const { data } = await client.query({
-    query: helloQuery,
+export const requestLogin = (client: any) => async (dispatch: any, getState : any) => {
+  const { loginField } = getState();
+  const { data } = await client.mutate({
+    mutation: loginRider(loginField.email, loginField.password),
     fetchPolicy: 'cache-first',
   });
-
-  dispatch(setHelloString(data));
 };
 
-export const { setLoginIdInput, setLoginPasswordInput, setHelloString } = actions;
+export const { setLoginEmail, setLoginPassword } = actions;
 
 export default reducer;
