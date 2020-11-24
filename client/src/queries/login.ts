@@ -1,3 +1,9 @@
 import { gql } from '@apollo/client';
 
-export const loginDriver = (email : String, password : String) => gql`query loginQuery {${email}, ${password}}`;
+export const loginRider = (email : String, password : String) => gql`mutation loginQuery(${email}:String!,${password}:String!){
+  loginRider(email:${email},password:${password}){
+    String
+  }
+}
+`;
+

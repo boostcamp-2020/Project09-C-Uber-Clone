@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { loginDriver } from './queries/login';
+import { loginRider } from './queries/login';
 
 const { actions, reducer } = createSlice({
   name: 'app',
@@ -22,8 +22,8 @@ const { actions, reducer } = createSlice({
 
 export const requestLogin = (client: any) => async (dispatch: any, getState : any) => {
   const { loginField } = getState();
-  const { data } = await client.query({
-    query: loginDriver(loginField.email, loginField.password),
+  const { data } = await client.mutate({
+    mutation: loginRider(loginField.email, loginField.password),
     fetchPolicy: 'cache-first',
   });
 };
