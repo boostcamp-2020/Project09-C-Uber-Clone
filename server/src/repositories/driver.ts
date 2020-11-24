@@ -9,4 +9,7 @@ export default {
     const drivers = await Driver.find({});
     return drivers;
   },
+  findByEmail: async (payload: {email: string}) => {
+    return await Driver.findOne({ email: payload.email });
+  },
 };
