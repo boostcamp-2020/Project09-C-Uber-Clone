@@ -25,9 +25,7 @@ localStrategy();
 
 const authenticationResolver = ['loginQuery', 'signupQuery'];
 const server = new ApolloServer({ typeDefs, resolvers, context: ({ req, res }) => {
-  console.log(req.body);
   if (authenticationResolver.includes(req.body.operationName)) {
-    console.log('login');
     return buildContext({ req, res });
   }
   if (!req.headers.authorization) {

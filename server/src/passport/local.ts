@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { GraphQLLocalStrategy } from 'graphql-passport';
 
-import { Rider } from '../repositories/index';
+import { Rider } from '../repositories';
 
 export const localStrategy = () => {
   passport.use(
