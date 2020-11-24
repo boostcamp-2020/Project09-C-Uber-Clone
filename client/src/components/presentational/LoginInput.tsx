@@ -1,5 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
+import { Button } from 'antd-mobile';
+
 interface LoginInputProps {
   type: string;
   handleChange: any;
@@ -7,7 +9,10 @@ interface LoginInputProps {
 
 const LoginInput: FunctionComponent<LoginInputProps> = ({ type, handleChange }) => {
   return (
-    <input type={type} onChange={handleChange} />
+    <>
+      <input type={type} onChange={handleChange} />
+      <Button>확인</Button>
+    </>
   );
 };
 
