@@ -6,10 +6,10 @@ interface RiderSignUpInput {
   placeholder: string;
 }
 
-const LoginInput: FunctionComponent<RiderSignUpInput> = ({ placeholder }) => {
+const RiderSignUpInput: FunctionComponent<RiderSignUpInput> = ({ placeholder }) => {
   return (
     <InputItem placeholder={placeholder}/>
   );
 };
 
-export default LoginInput;
+export default RiderSignUpInput;
