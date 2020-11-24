@@ -1,3 +1,4 @@
 import Rider from './rider';
+import Driver from './driver';
 
-export { Rider };
+export { Rider, Driver };
