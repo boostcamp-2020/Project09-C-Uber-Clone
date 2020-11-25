@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { loginRider, loginDriver } from './queries/login';
+import { signUpDriver, signUpRider } from './queries/signup';
 
 const { actions, reducer } = createSlice({
   name: 'app',
@@ -14,15 +15,16 @@ const { actions, reducer } = createSlice({
       phoneNumber: '',
       email: '',
       password: '',
+      rePassword: '',
     },
     driverSignUpField: {
       name: '',
       phoneNumber: '',
       email: '',
-      rePassword: '',
       password: '',
+      rePassword: '',
       carType: '',
-      carNumber: '',
+      plateNumber: '',
     },
   },
   reducers: {
@@ -44,6 +46,9 @@ const { actions, reducer } = createSlice({
     setRiderSignUpPassword(state, { payload: password }) {
       return { ...state, riderSignUpField: { ...state.riderSignUpField, password } };
     },
+    setRiderSignUpRePassword(state, { payload: rePassword }) {
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, rePassword } };
+    },
     setDriverSignUpName(state, { payload: name }) {
       return { ...state, driverSignUpField: { ...state.driverSignUpField, name } };
     },
@@ -62,8 +67,8 @@ const { actions, reducer } = createSlice({
     setDriverSignUpCarType(state, { payload: carType }) {
       return { ...state, driverSignUpField: { ...state.driverSignUpField, carType } };
     },
-    setDriverSignUpCarNumber(state, { payload: carNumber }) {
-      return { ...state, driverSignUpField: { ...state.driverSignUpField, carNumber } };
+    setDriverSignUpPlateNumber(state, { payload: plateNumber }) {
+      return { ...state, driverSignUpField: { ...state.driverSignUpField, plateNumber } };
     },
   },
 });
@@ -80,10 +85,21 @@ export const requestLogin = (client: any, riderCheck : boolean) => async (dispat
 
 export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
   const { riderSignUpField } = getState();
+  console.log(riderSignUpField);
+  const { data } = await client.mutate({
+    mutation: signUpRider,
+    variables: { ...riderSignUpField },
+    fetchPolicy: 'no-cache',
+  });
 };
 
 export const requestDriverSignUp = (client: any) => async (dispatch: any, getState : any) => {
   const { driverSignUpField } = getState();
+  const { data } = await client.mutate({
+    mutation: signUpDriver,
+    variables: { ...driverSignUpField },
+    fetchPolicy: 'no-cache',
+  });
 };
 
 export const {
@@ -92,13 +108,14 @@ export const {
   setRiderSignUpEmail,
   setRiderSignUpName,
   setRiderSignUpPassword,
+  setRiderSignUpRePassword,
   setRiderSignUpPhoneNumber,
   setDriverSignUpName,
   setDriverSignUpPhoneNumber,
   setDriverSignUpEmail,
   setDriverSignUpPassword,
   setDriverSignUpRePassword,
-  setDriverSignUpCarNumber,
+  setDriverSignUpPlateNumber,
   setDriverSignUpCarType,
 } = actions;
 
