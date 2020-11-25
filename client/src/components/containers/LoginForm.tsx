@@ -34,11 +34,11 @@ function LoginForm() {
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
 
-  const handleChangeEmail = async (e: any) => {
-    dispatch(setLoginEmail(e.target.value));
+  const handleChangeEmail = async (value: string) => {
+    dispatch(setLoginEmail(value));
   };
-  const handleChangePassword = (e: any) => {
-    dispatch(setLoginPassword(e.target.value));
+  const handleChangePassword = (value: string) => {
+    dispatch(setLoginPassword(value));
   };
   const handleLoginButtonClick = () => {
     dispatch(requestLogin(client, riderCheck));
