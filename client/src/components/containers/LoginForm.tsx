@@ -41,7 +41,7 @@ function LoginForm() {
     dispatch(setLoginPassword(e.target.value));
   };
   const handleLoginButtonClick = () => {
-    requestLogin(client, riderCheck);
+    dispatch(requestLogin(client, riderCheck));
   };
 
   const checkToggle = (e: any) => {
