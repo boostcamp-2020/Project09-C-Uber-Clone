@@ -8,4 +8,10 @@ type Rider {
 
 type Mutation {
   loginRider(email: String!, password: String!): LoginResult
+  createRider(
+    email: String!,
+    name: String!,
+    password: String!,
+    phoneNumber: String!
+  ): Rider
 }
