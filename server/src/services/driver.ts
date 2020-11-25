@@ -9,16 +9,14 @@ export default {
     const { password } = payload;
     try {
       const hash = await bcrypt.hash(password, saltRounds);
-      const driver = await Driver.create({ ...payload, password: hash });
-      return driver;
+      return await Driver.create({ ...payload, password: hash });
     } catch (e) {
       throw e.message;
     }
   },
   getDriverInfo: async (payload) => {
     try {
-      const driver = await Driver.findByEmail(payload);
-      return driver;
+      return await Driver.findByEmail(payload);
     } catch (e) {
       throw e.message;
     }

@@ -19,7 +19,7 @@ export default {
   },
   Mutation: {
     async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
-      return await Driver.signup({ ...args });
+      return await Driver.signup(args);
     },
   },
 };
