@@ -1,3 +1,7 @@
+import bcrypt from 'bcrypt';
+
+const saltRounds = parseInt(process.env.SALT_ROUNDS || '10');
+
 import { Rider } from '../repositories';
 
 export default {
@@ -7,6 +11,15 @@ export default {
       return user._id;
     } catch (e) {
       return e.message;
+    }
+  },
+  signup: async (payload) => {
+    const { password } = payload;
+    try {
+      const hash = await bcrypt.hash(password, saltRounds);
+      return await Rider.create({ ...payload, password: hash });
+    } catch (e) {
+      throw e.message;
     }
   },
 };
