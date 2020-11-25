@@ -1,7 +1,3 @@
-type Query{
-  rider: String
-}
-
 type Mutation {
   loginRider(email: String!, password: String!):String
 }

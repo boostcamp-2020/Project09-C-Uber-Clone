@@ -6,12 +6,9 @@ interface LoginPayload{
 }
 
 export default {
-  Query: {
-    rider: () => 'Hello Rider',
-  },
   Mutation: {
-    loginRider:
-      async (_: any, payload:LoginPayload, context) =>
-        await Rider.login(context, payload),
+    async loginRider(_: any, payload:LoginPayload, context) {
+      return await Rider.login(context, payload);
+    },
   },
 };
