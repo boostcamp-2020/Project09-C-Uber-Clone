@@ -40,37 +40,18 @@ function LoginForm() {
   const handleChangePassword = (e: any) => {
     dispatch(setLoginPassword(e.target.value));
   };
-
   const handleLoginButtonClick = () => {
     requestLogin(client, riderCheck);
   };
 
-  const checkRider = (e : any) => {
-    if (!riderCheck) {
+  const checkToggle = (e: any) => {
+    if (e.target.children === '라이더' && !riderCheck) {
       setRiderCheck(true);
       setDriverCheck(false);
     }
-  };
-  const checkDriver = (e: any) => {
-    if (!driverCheck) {
+    if (e.target.children === '드라이버' && !driverCheck) {
       setRiderCheck(false);
       setDriverCheck(true);
-    }
-  };
-
-  const checkToggle = (e: any) => {
-    if (e.target.children === '라이더') {
-      if (!riderCheck) {
-        setRiderCheck(true);
-        setDriverCheck(false);
-      }
-      console.log('riderbutton', riderCheck, driverCheck);
-    } else {
-      if (!driverCheck) {
-        setRiderCheck(false);
-        setDriverCheck(true);
-        console.log('drverbutton', riderCheck, driverCheck);
-      }
     }
   };
 
