@@ -18,8 +18,7 @@ export default {
       async (_: any, payload:LoginPayload, context) =>
         await Rider.login(context, payload),
     createRider:
-      async (parent: any, payload: createRiderArgs, context: any) => {
-        await Rider.signup(payload);
-      },
+      async (parent: any, payload: createRiderArgs, context: any) =>
+        await Rider.signup(payload),
   },
 };
