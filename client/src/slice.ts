@@ -24,7 +24,6 @@ const { actions, reducer } = createSlice({
       return { ...state, loginField: { ...state.loginField, password } };
     },
     setRiderSignUpName(state, { payload: name }) {
-      console.log('state :', JSON.stringify(state));
       return { ...state, riderSignUpField: { ...state.riderSignUpField, name } };
     },
     setRiderSignUpPhoneNumber(state, { payload: phoneNumber }) {
