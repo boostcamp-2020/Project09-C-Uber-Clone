@@ -6,7 +6,7 @@ const H2 = styled.h2`
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  margin: -10px 0 100px 0;
+  margin: -10px 0 30px 0;
 `;
 
 interface SubTitleProps {
