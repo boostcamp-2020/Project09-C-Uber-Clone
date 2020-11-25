@@ -6,16 +6,6 @@ interface LoginInputProps {
   handleChange: any;
 }
 
-import styled from 'styled-components';
-
-const Input = styled.input`
-  display: flex;
-  width: 319px;
-  height: 54px;
-  left: 47px;
-  top: 337px;
-`;
-
 const LoginInput: FunctionComponent<LoginInputProps> = ({ placeholder, handleChange }) => {
   return (
     <>
