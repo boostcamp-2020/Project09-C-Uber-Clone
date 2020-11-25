@@ -22,6 +22,7 @@ import {
 
 const Form = styled.form`
   width: 90%;
+  margin-top: 90px;
 `;
 
 function RiderSignUpForm() {
