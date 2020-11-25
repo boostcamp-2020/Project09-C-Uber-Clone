@@ -9,6 +9,12 @@ const { actions, reducer } = createSlice({
       email: '',
       password: '',
     },
+    riderSignUpField: {
+      name: '',
+      phoneNumber: '',
+      email: '',
+      password: '',
+    },
   },
   reducers: {
     setLoginEmail(state, { payload: email }) {
@@ -16,6 +22,19 @@ const { actions, reducer } = createSlice({
     },
     setLoginPassword(state, { payload: password }) {
       return { ...state, loginField: { ...state.loginField, password } };
+    },
+    setRiderSignUpName(state, { payload: name }) {
+      console.log('state :', JSON.stringify(state));
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, name } };
+    },
+    setRiderSignUpPhoneNumber(state, { payload: phoneNumber }) {
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, phoneNumber } };
+    },
+    setRiderSignUpEmail(state, { payload: email }) {
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, email } };
+    },
+    setRiderSignUpPassword(state, { payload: password }) {
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, password } };
     },
   },
 });
@@ -30,6 +49,17 @@ export const requestLogin = (client: any) => async (dispatch: any, getState : an
   console.log(data); //로그인한 유저의 id
 };
 
-export const { setLoginEmail, setLoginPassword } = actions;
+export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
+  const { riderSignUpField } = getState();
+};
+
+export const {
+  setLoginEmail,
+  setLoginPassword,
+  setRiderSignUpEmail,
+  setRiderSignUpName,
+  setRiderSignUpPassword,
+  setRiderSignUpPhoneNumber,
+} = actions;
 
 export default reducer;
