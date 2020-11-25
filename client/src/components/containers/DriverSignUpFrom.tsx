@@ -19,7 +19,7 @@ import {
   setDriverSignUpEmail,
   setDriverSignUpPassword,
   setDriverSignUpRePassword,
-  setDriverSignUpCarNumber,
+  setDriverSignUpPlateNumber,
   setDriverSignUpCarType,
   requestDriverSignUp,
 } from '../../slice';
@@ -80,7 +80,7 @@ function DriverSignUpFrom() {
         <Input
           type='text'
           placeholder='차량번호(필수)'
-          onChange={handleChangeInput(setDriverSignUpCarNumber)}
+          onChange={handleChangeInput(setDriverSignUpPlateNumber)}
         />
       </List>
       <SignUpButton
