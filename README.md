@@ -1,5 +1,3 @@
-# Project09-C-Uber-Clone
-
 <div align="center" >
 
 <img src="https://user-images.githubusercontent.com/26592306/99405825-86b35200-2930-11eb-8f9d-03d9ce81748e.png"/>
