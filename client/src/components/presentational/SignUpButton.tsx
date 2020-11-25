@@ -4,12 +4,19 @@ import { Button } from 'antd-mobile';
 
 interface SignUpButtonProps {
   content: string;
+  onClick: any;
 }
 
-const LoginInput: FunctionComponent<SignUpButtonProps> = ({ content }) => {
+const SignUpButton: FunctionComponent<SignUpButtonProps> = ({ content, onClick }) => {
   return (
-    <Button type='primary' style={{ backgroundColor: '#56A902' }}>{content}</Button>
+    <Button
+      type='primary'
+      style={{ backgroundColor: '#56A902' }}
+      onClick={onClick}
+    >
+      {content}
+    </Button>
   );
 };
 
-export default LoginInput;
+export default SignUpButton;
