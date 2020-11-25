@@ -8,7 +8,7 @@ export const localStrategy = () => {
   passport.use('driver-local',
     new GraphQLLocalStrategy(async(email, inputPassword, done) => {
       const user = await Driver.findByEmail({ email }) ;
-      const passwordCompareResult = await bcrypt.compare(inputPassword, user?.password);
+      const passwordCompareResult = user ? await bcrypt.compare(inputPassword, user?.password) : false;
       const error = passwordCompareResult ? null : new Error('no matching user');
       done(error, user);
     }),
@@ -17,7 +17,7 @@ export const localStrategy = () => {
   passport.use('rider-local',
     new GraphQLLocalStrategy(async(email, inputPassword, done) => {
       const user = await Rider.findByEmail({ email });
-      const passwordCompareResult = await bcrypt.compare(inputPassword, user?.password);
+      const passwordCompareResult = user ? await bcrypt.compare(inputPassword, user?.password) : false;
       const error = passwordCompareResult ? null : new Error('no matching user');
       done(error, user);
     }),
