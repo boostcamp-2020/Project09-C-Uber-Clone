@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server-express';
 import { Driver } from '../../services';
 
 interface createDriverArgs {
@@ -19,6 +20,9 @@ interface LoginPayload{
 export default {
   Query: {
     async driver(parent: any, args: { email: string }, context: any, info: any) {
+      if (!context.req.user) {
+        throw new AuthenticationError('No authorization');
+      };
       return await Driver.getDriverInfo({ email: args.email });
     },
   },

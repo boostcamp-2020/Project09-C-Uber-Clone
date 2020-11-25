@@ -7,7 +7,7 @@ export default {
   findAll: async () => {
     return await Rider.find({});
   },
-  findByEmailPassword: async(payload) => {
-    return await Rider.findOne(payload);
+  findByEmail: async (payload: {email: string}) => {
+    return await Rider.findOne({ email: payload.email });
   },
 };
