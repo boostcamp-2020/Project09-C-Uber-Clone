@@ -1,5 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
+
+type riderInterface = {
+  email: String,
+  name: String,
+  password: String,
+  phoneNumber: String,
+}
 
 const riderSchema = new Schema({
   email: { type: String, unique: true, required: true },
@@ -8,4 +15,4 @@ const riderSchema = new Schema({
   phoneNumber: { type: String, unique: true, required: true },
 });
 
-export default model('Rider', riderSchema);
+export default model<riderInterface & Document>('Rider', riderSchema);
