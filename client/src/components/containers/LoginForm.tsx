@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-
 import { Link } from 'react-router-dom';
 
-import { setLoginEmail, setLoginPassword, requestLogin } from '../../slice';
-
 import { useDispatch } from 'react-redux';
+
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace, Checkbox, InputItem } from 'antd-mobile';
+import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
+
+import Input from '../presentational/Input';
+
+import {
+  setLoginEmail,
+  setLoginPassword,
+  requestLogin,
+} from '../../slices/loginSlice';
 
 const Header = styled.div`
   display: flex;
@@ -34,12 +40,10 @@ function LoginForm() {
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
 
-  const handleChangeEmail = async (e: any) => {
-    dispatch(setLoginEmail(e.target.value));
+  const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setState(value));
   };
-  const handleChangePassword = (e: any) => {
-    dispatch(setLoginPassword(e.target.value));
-  };
+
   const handleLoginButtonClick = () => {
     dispatch(requestLogin(client, riderCheck));
   };
@@ -58,11 +62,29 @@ function LoginForm() {
   return (
     <>
       <Header>UBER</Header>
-      <Checkbox onChange={checkToggle} checked={riderCheck}>라이더</Checkbox>
-      <Checkbox onChange={checkToggle} checked={driverCheck}>드라이버</Checkbox>
-      <InputItem placeholder="Enter your email" onChange={handleChangeEmail} />
+      <Checkbox
+        onChange={checkToggle}
+        checked={riderCheck}
+      >
+         라이더
+      </Checkbox>
+      <Checkbox
+        onChange={checkToggle}
+        checked={driverCheck}
+      >
+        드라이버
+      </Checkbox>
+      <Input
+        type='text'
+        placeholder='Enter your email'
+        onChange={handleChangeInput(setLoginEmail)}
+      />
       <WhiteSpace />
-      <InputItem placeholder="Enter your password" onChange={handleChangePassword}/>
+      <Input
+        type='password'
+        placeholder='Enter your password'
+        onChange={handleChangeInput(setLoginPassword)}
+      />
       <WhiteSpace />
       <Button
         onClick={handleLoginButtonClick}

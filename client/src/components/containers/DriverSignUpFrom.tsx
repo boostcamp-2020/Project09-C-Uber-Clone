@@ -22,7 +22,7 @@ import {
   setDriverSignUpPlateNumber,
   setDriverSignUpCarType,
   requestDriverSignUp,
-} from '../../slice';
+} from '../../slices/signUpSlice';
 
 const Form = styled.form`
   width: 90%;

@@ -18,7 +18,7 @@ import {
   setRiderSignUpRePassword,
   setRiderSignUpPhoneNumber,
   requestRiderSignUp,
-} from '../../slice';
+} from '../../slices/signUpSlice';
 
 const Form = styled.form`
   width: 90%;
