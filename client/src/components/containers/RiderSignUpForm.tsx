@@ -15,6 +15,7 @@ import {
   setRiderSignUpEmail,
   setRiderSignUpName,
   setRiderSignUpPassword,
+  setRiderSignUpRePassword,
   setRiderSignUpPhoneNumber,
   requestRiderSignUp,
 } from '../../slice';
@@ -59,6 +60,12 @@ function RiderSignUpForm() {
         type='password'
         placeholder='비밀번호(필수)'
         onChange={handleChangeInput(setRiderSignUpPassword)}
+      />
+      <WhiteSpace />
+      <Input
+        type='password'
+        placeholder='비밀번호 확인'
+        onChange={handleChangeInput(setRiderSignUpRePassword)}
       />
       <WhiteSpace />
       <SignUpButton
