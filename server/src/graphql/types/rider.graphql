@@ -1,7 +1,21 @@
+type Rider {
+  id: ID!
+  email: String!
+  name: String!
+  password: String!
+  phoneNumber: String!
+}
+
 type Query{
-  rider: String
+  rider(email: String!): Rider
 }
 
 type Mutation {
   loginRider(email: String!, password: String!):String
+  createRider(
+    email: String!,
+    name: String!,
+    password: String!,
+    phoneNumber: String!
+  ): Rider
 }
