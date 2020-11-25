@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 
-import LoginInput from '../presentational/LoginInput';
-
 import { setLoginEmail, setLoginPassword, requestLogin } from '../../slice';
 
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
+import { Button, WhiteSpace, Checkbox, InputItem } from 'antd-mobile';
 
 import styled from 'styled-components';
 
@@ -60,9 +58,9 @@ function LoginForm() {
       <Header>UBER</Header>
       <Checkbox onChange={checkToggle} checked={riderCheck}>라이더</Checkbox>
       <Checkbox onChange={checkToggle} checked={driverCheck}>드라이버</Checkbox>
-      <LoginInput placeholder="Enter your email" handleChange={handleChangeEmail} />
+      <InputItem placeholder="Enter your email" onChange={handleChangeEmail} />
       <WhiteSpace />
-      <LoginInput placeholder="Enter your password" handleChange={handleChangePassword}/>
+      <InputItem placeholder="Enter your password" onChange={handleChangePassword}/>
       <WhiteSpace />
       <Button
         onClick={handleLoginButtonClick}
