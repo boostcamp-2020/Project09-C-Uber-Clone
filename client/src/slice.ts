@@ -23,9 +23,11 @@ const { actions, reducer } = createSlice({
 export const requestLogin = (client: any) => async (dispatch: any, getState : any) => {
   const { loginField } = getState();
   const { data } = await client.mutate({
-    mutation: loginRider(loginField.email, loginField.password),
-    fetchPolicy: 'cache-first',
+    mutation: loginRider,
+    variables: { ...loginField },
+    fetchPolicy: 'no-cache',
   });
+  console.log(data); //로그인한 유저의 id
 };
 
 export const { setLoginEmail, setLoginPassword } = actions;
