@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { loginRider, loginDriver } from './queries/login';
+import { loginRiderQuery, loginDriverQuery } from './queries/login';
 
 const { actions, reducer } = createSlice({
   name: 'app',
@@ -71,11 +71,17 @@ const { actions, reducer } = createSlice({
 export const requestLogin = (client: any, riderCheck : boolean) => async (dispatch: any, getState : any) => {
   const { loginField } = getState();
   const { data } = await client.mutate({
-    mutation: riderCheck ? loginRider : loginDriver,
+    mutation: riderCheck ? loginRiderQuery : loginDriverQuery,
     variables: { ...loginField },
     fetchPolicy: 'no-cache',
   });
-  console.log(data); //로그인한 유저의 id
+
+  const { message, name, role, success, token } = riderCheck ? data.loginRider : data.loginDriver;
+  if (success) {
+    localStorage.setItem('token', token);
+  } else {
+    window.alert(message);
+  }
 };
 
 export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
