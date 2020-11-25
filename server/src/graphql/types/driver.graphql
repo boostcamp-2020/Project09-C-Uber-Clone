@@ -25,4 +25,5 @@ type Mutation {
     description: String,
     profileImage: String
   ): Driver
+  loginDriver(email: String!, password: String!):String
 }

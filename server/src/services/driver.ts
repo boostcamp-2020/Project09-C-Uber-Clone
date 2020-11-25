@@ -5,6 +5,15 @@ import { Driver } from '../repositories';
 const saltRounds = parseInt(process.env.SALT_ROUNDS || '10');
 
 export default {
+  login: async (context, payload) => {
+    try {
+      const { user } = await context.authenticate('driver-local', payload);
+      //TODO: jwt 발급 후 반환
+      return user._id;
+    } catch (e) {
+      return e.message;
+    }
+  },
   signup: async (payload) => {
     const { password } = payload;
     try {

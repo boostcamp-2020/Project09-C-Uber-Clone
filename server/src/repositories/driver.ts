@@ -10,4 +10,7 @@ export default {
   findByEmail: async (payload: {email: string}) => {
     return await Driver.findOne({ email: payload.email });
   },
+  findByEmailPassword: async(payload) => {
+    return await Driver.findOne(payload);
+  },
 };
