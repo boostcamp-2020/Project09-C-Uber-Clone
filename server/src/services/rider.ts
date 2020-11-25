@@ -1,11 +1,12 @@
 import { Rider } from '../repositories';
 
 export default {
-  login: async (payload) => {
-    const rider = await Rider.findByEmailPassword(payload);
-    if (rider) {
-      return 'token';
-    };
-    return 'unauthorized';
+  login: async (context, payload) => {
+    try {
+      const { user } = await context.authenticate('graphql-local', payload);
+      return user._id;
+    } catch (e) {
+      return e.message;
+    }
   },
 };

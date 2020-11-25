@@ -21,7 +21,7 @@ function LoginForm() {
   };
 
   const loginButton = () => {
-    requestLogin(client);
+    dispatch(requestLogin(client));
   };
 
   return (
