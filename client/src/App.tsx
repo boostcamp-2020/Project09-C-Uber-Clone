@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpSelectPage from './pages/SignUpSelectPage';
 import RiderSignUpPage from './pages/RiderSignUpPage';
 import DriverSignUpPage from './pages/DriverSignUpPage';
+import TestPage from './pages/TestPage';
 
 export default function App() {
   return (
@@ -16,7 +17,8 @@ export default function App() {
         <Route path='/signup/select' component={SignUpSelectPage} />
         <Route path='/signup/rider' component={RiderSignUpPage} />
         <Route path='/signup/driver' component={DriverSignUpPage} />
-        <Route path='/' component={LoginPage} />
+        <Route exact path='/' component={LoginPage} />
+        <Route path='/test' component={TestPage} />
       </Switch>
     </>
   );
