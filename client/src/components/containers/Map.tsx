@@ -1,40 +1,35 @@
-import React, { useState, useCallback, memo, useRef } from 'react';
+import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import picker from '../../../assets/Google_Maps_pin.png';
 
-import { selectPosition } from '../../slices/mapSlice';
-
-// Map 사이즈
-const containerStyle = {
-  width: '100%',
-  height: '380px',
-};
-
-
 import styled from 'styled-components';
+
+import {
+  selectMapReducer,
+  setOriginPosition,
+  setDestPosition,
+  setOriginPlace,
+  setDestPlace,
+  setOriginMarker,
+  setDestMarker,
+} from '../../slices/mapSlice';
 
 const Picker = styled.img`
   position: absolute;
-  top: 165px;
-  left: 190px;
+  top: 40%;
+  left: 47%;
   width: 20px;
   z-index: 100;
   display: none;
 `;
 
 // Map 사이즈
-// const containerStyle = {
-//   width: '400px',
-//   height: '400px',
-// };
-
-// 처음 map의 위치
-const center = {
-  lat: 37.512359618923725,
-  lng: 126.86565258928634,
+const containerStyle = {
+  width: '100%',
+  height: '380px',
 };
 
 // Marker 위치
@@ -44,9 +39,18 @@ const NEW_MARKER_POS = {
 };
 
 function Map() {
+  const {
+    originPosition,
+    destPosition,
+    originMarker,
+    destMarker,
+  }: any = useSelector(selectMapReducer);
+  const dispatch = useDispatch();
+
   const [map, setMap] = useState(null);
-  const position = useSelector(selectPosition);
-  const [markers, setMarkers] = useState([]);
+  const [isOriginVisible, setIsOriginVisible] = useState(false);
+  const [isDestVisible, setIsDestVisible] = useState(false);
+
   const pickerEl = useRef(null);
 
   const onLoad = useCallback((map) => {
@@ -57,40 +61,58 @@ function Map() {
     setMap(null);
   }, []);
 
+  const checkDestMarker = (tempPlace: string) => {
+    dispatch(setDestPosition(NEW_MARKER_POS));
+    dispatch(setDestPlace(tempPlace));
+    dispatch(setDestMarker('check'));
+  };
+
+  const checkOriginMarker = (tempPlace: string) => {
+    dispatch(setOriginPosition(NEW_MARKER_POS));
+    dispatch(setOriginPlace(tempPlace));
+    dispatch(setOriginMarker('check'));
+  };
+
   const addMarker = ({ lat, lng }: { lat: number, lng: number}) => {
     NEW_MARKER_POS.lat = lat;
     NEW_MARKER_POS.lng = lng;
+    const tempPlace = `위도 :${NEW_MARKER_POS.lat} 경도:${NEW_MARKER_POS.lng}`;
 
-    if (markers.length === 1) {
-      return setMarkers([...markers,
-        <Marker
-          key={markers.length + 1}
-          position={NEW_MARKER_POS}
-          label={'도착'}
-        />,
-      ]);
+    if (originMarker === 'check') {
+      return checkDestMarker(tempPlace);
     }
-    return setMarkers([...markers,
-      <Marker
-        key={markers.length + 1}
-        position={NEW_MARKER_POS}
-        label={'출발'}
-      />,
-    ]);
+    checkOriginMarker(tempPlace);
   };
 
   const onDragEnd = () => {
     pickerEl.current.style.display = 'none';
-    if (markers.length < 2) {
+    if (!(isDestVisible && isOriginVisible)) {
       addMarker(JSON.parse(JSON.stringify(map.center)));
     }
   };
 
   const onDragStart = () => {
-    if (markers.length < 2) {
+    if (!(isDestVisible && isOriginVisible)) {
       pickerEl.current.style.display = 'block';
     }
   };
+
+  useEffect(() => {
+    console.log('현재위치?');
+    if (originMarker === '') {
+      setIsOriginVisible(false);
+      return;
+    }
+    setIsOriginVisible(true);
+  }, [originMarker]);
+
+  useEffect(() => {
+    if (destMarker === '') {
+      setIsDestVisible(false);
+      return;
+    }
+    setIsDestVisible(true);
+  }, [destMarker]);
 
   return (
     <LoadScript
@@ -98,16 +120,26 @@ function Map() {
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
-        zoom={15}
+        zoom={14}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        center={position}
-        // center={center}
+        center={originPosition}
         onDragEnd={onDragEnd}
         onDragStart={onDragStart}
       >
         <Picker src={picker} ref={pickerEl} />
-        {markers.map(marker => marker)}
+        <Marker
+          key={1}
+          position={originPosition}
+          label={'출발'}
+          visible={isOriginVisible}
+        />
+        <Marker
+          key={2}
+          position={destPosition}
+          label={'도착'}
+          visible={isDestVisible}
+        />
       </GoogleMap>
     </LoadScript>
   );
