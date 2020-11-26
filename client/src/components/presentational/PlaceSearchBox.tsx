@@ -17,7 +17,7 @@ const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder })
     if (autocomplete !== null) {
       console.log(autocomplete.getPlace().geometry.location.lat());
       console.log(autocomplete.getPlace().geometry.location.lng());
-      setAutocomplete(autocomplete.getPlace());
+      setAutocomplete(autocomplete);
     }
   };
 
