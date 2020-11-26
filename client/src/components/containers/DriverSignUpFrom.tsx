@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -87,10 +88,12 @@ function DriverSignUpFrom() {
         onChange={handleChangeInput(setDriverSignUpPlateNumber)}
       />
       <WhiteSpace />
-      <SignUpButton
-        content={'가입하기'}
-        onClick={handleSignUpButton}
-      />
+      <Link to='/'>
+        <SignUpButton
+          content={'가입하기'}
+          onClick={handleSignUpButton}
+        />
+      </Link>
     </Form>
   );
 }
