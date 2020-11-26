@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'source-map',
@@ -12,6 +13,10 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty',
   },
   module: {
     rules: [{
@@ -33,7 +38,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
-    })],
+    }),    
+    new Dotenv(),
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
