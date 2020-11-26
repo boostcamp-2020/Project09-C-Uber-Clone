@@ -1,5 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
+
+type driverInterface = {
+  email: String,
+  name: String,
+  password: String,
+  phoneNumber: String,
+  carType: String,
+  plateNumber: String,
+  description: String,
+  profileImage: String,
+}
 
 const driverSchema = new Schema({
   email: { type: String, unique: true, required: true },
@@ -12,4 +23,4 @@ const driverSchema = new Schema({
   profileImage: String,
 });
 
-export default model('Driver', driverSchema);
+export default model<driverInterface & Document>('Driver', driverSchema);

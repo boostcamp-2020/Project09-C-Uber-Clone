@@ -10,6 +10,14 @@ type Driver {
   profileImage: String
 }
 
+type LoginResult {
+  success: Boolean!
+  message: String
+  name: String
+  role: String!
+  token: String
+}
+
 type Query {
   driver(email: String!): Driver
 }
@@ -25,4 +33,5 @@ type Mutation {
     description: String,
     profileImage: String
   ): Driver
+  loginDriver(email: String!, password: String!): LoginResult
 }

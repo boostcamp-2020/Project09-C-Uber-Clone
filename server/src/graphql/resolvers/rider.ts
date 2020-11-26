@@ -14,11 +14,11 @@ interface createRiderArgs {
 
 export default {
   Mutation: {
-    loginRider:
-      async (_: any, payload:LoginPayload, context) =>
-        await Rider.login(context, payload),
-    createRider:
-      async (parent: any, payload: createRiderArgs, context: any) =>
-        await Rider.signup(payload),
+    async loginRider(_: any, payload:LoginPayload, context) {
+      return await Rider.login(context, payload);
+    },
+    async createRider (parent: any, payload: createRiderArgs, context: any) {
+      return await Rider.signup(payload);
+    },
   },
 };

@@ -7,7 +7,7 @@ type Rider {
 }
 
 type Mutation {
-  loginRider(email: String!, password: String!):String
+  loginRider(email: String!, password: String!): LoginResult
   createRider(
     email: String!,
     name: String!,
