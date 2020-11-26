@@ -12,7 +12,7 @@ import { useApolloClient } from '@apollo/client';
 import ProfileImageInput from '../presentational/ProfileImageInput';
 import Input from '../presentational/Input';
 import DiscriptionInput from '../presentational/DescriptionInput';
-import SignUpButton from '../presentational/SignUpButton';
+import SubmitButton from '../presentational/SubmitButton';
 
 import {
   setDriverSignUpName,
@@ -90,7 +90,7 @@ function DriverSignUpFrom() {
       />
       <WhiteSpace />
       <Link to='/'>
-        <SignUpButton
+        <SubmitButton
           content={'가입하기'}
           onClick={handleSignUpButton}
         />

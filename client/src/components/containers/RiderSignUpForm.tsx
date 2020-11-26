@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import { useApolloClient } from '@apollo/client';
 
-import SignUpButton from '../presentational/SignUpButton';
+import SubmitButton from '../presentational/SubmitButton';
 import Input from '../presentational/Input';
 
 import {
@@ -72,7 +72,7 @@ function RiderSignUpForm() {
       />
       <WhiteSpace />
       <Link to='/'>
-        <SignUpButton
+        <SubmitButton
           content={'가입하기'}
           onClick={handleSignUpButton}
         />
