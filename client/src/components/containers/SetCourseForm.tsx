@@ -10,8 +10,8 @@ import { Button, WhiteSpace, InputItem } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import Input from '../presentational/Input';
 import Map from '../containers/Map';
+import PlaceSearchBox from '../presentational/PlaceSearchBox';
 
 const Header = styled.div`
   height: 130px;
@@ -105,19 +105,10 @@ function SetCourseForm() {
       </Header>
       <Map />
       <FormTitle>경로 선택</FormTitle>
-      <InputItem
-        type='text'
-        placeholder='출발지'
-        // onChange={handleChangeInput(setStartingPoint)}
-        value={startingPoint}
-      />
+      <PlaceSearchBox placeholder='출발지' value={startingPoint}/>
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
-      <Input
-        type='text'
-        placeholder='목적지'
-        onChange={handleChangeInput(setDestination)}
-      />
+      <PlaceSearchBox placeholder='목적지'/>
       <WhiteSpace />
       <Link to='/'>
         <Button
