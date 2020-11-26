@@ -2,16 +2,11 @@ import React, { useState, FunctionComponent } from 'react';
 
 import { Autocomplete } from '@react-google-maps/api';
 
-import { SearchBar, LocaleProvider } from 'antd-mobile';
-import enUS from 'antd-mobile/lib/locale-provider/en_US';
-
 interface PlaceSearchBoxProps {
   placeholder: string;
-  onChange?: any;
-  value?: string;
 }
 
-const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder, onChange, value }) => {
+const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder }) => {
   const [autocomplete, setAutocomplete] = useState(null);
 
   const onLoad = (autocomplete: any) => {
@@ -20,15 +15,15 @@ const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder, o
 
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
-      setAutocomplete(autocomplete);
+      console.log(autocomplete.getPlace().geometry.location.lat());
+      console.log(autocomplete.getPlace().geometry.location.lng());
+      setAutocomplete(autocomplete.getPlace());
     }
   };
 
   return (
-    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-      <LocaleProvider locale={enUS}>
-        <SearchBar placeholder={placeholder} onChange={onChange} value={value} />
-      </LocaleProvider>
+    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} fields={['geometry']}>
+      <input placeholder={placeholder} style={{ width: '100%' }}/>
     </Autocomplete>
   );
 };

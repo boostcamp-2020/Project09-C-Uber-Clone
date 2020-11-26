@@ -105,10 +105,10 @@ function SetCourseForm() {
       </Header>
       <Map />
       <FormTitle>경로 선택</FormTitle>
-      <PlaceSearchBox placeholder='출발지' value={startingPoint} onChange={setStartingPoint}/>
+      <PlaceSearchBox placeholder='출발지'/>
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
-      <PlaceSearchBox placeholder='목적지' value={destination} onChange={setDestination}/>
+      <PlaceSearchBox placeholder='목적지'/>
       <WhiteSpace />
       <Link to='/'>
         <Button
