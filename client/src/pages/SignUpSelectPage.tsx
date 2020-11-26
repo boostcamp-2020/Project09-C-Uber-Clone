@@ -30,7 +30,6 @@ const Title = styled.h1`
   left: calc(50% - 89px/2 - 2.5px);
   top: calc(50% - 29px/2 - 329.5px);
 
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
