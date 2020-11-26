@@ -24,7 +24,6 @@ const Header = styled.div`
   left: calc(50% - 180px/2 + 6px);
   top: calc(50% - 117px/2 - 191.5px);
 
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 64px;
