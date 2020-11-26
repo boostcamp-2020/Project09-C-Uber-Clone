@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useSelector } from 'react-redux';
 
 import { selectPosition } from '../../slices/mapSlice';
@@ -22,21 +22,17 @@ function Map() {
   }, []);
 
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.REACT_APP_API_KEY}
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      zoom={15}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+      center={position}
     >
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        zoom={15}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        center={position}
-      >
-        <Marker
-          position={position}
-        />
-      </GoogleMap>
-    </LoadScript>
+      <Marker
+        position={position}
+      />
+    </GoogleMap>
   );
 }
 
