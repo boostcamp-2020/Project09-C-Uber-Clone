@@ -1,37 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { loginRider, loginDriver } from './queries/login';
+import { signUpDriver, signUpRider } from '../queries/signup';
 
 const { actions, reducer } = createSlice({
-  name: 'app',
+  name: 'signup',
   initialState: {
-    loginField: {
-      email: '',
-      password: '',
-    },
     riderSignUpField: {
       name: '',
       phoneNumber: '',
       email: '',
       password: '',
+      rePassword: '',
     },
     driverSignUpField: {
       name: '',
       phoneNumber: '',
       email: '',
-      rePassword: '',
       password: '',
+      rePassword: '',
       carType: '',
-      carNumber: '',
+      plateNumber: '',
     },
   },
   reducers: {
-    setLoginEmail(state, { payload: email }) {
-      return { ...state, loginField: { ...state.loginField, email } };
-    },
-    setLoginPassword(state, { payload: password }) {
-      return { ...state, loginField: { ...state.loginField, password } };
-    },
     setRiderSignUpName(state, { payload: name }) {
       return { ...state, riderSignUpField: { ...state.riderSignUpField, name } };
     },
@@ -43,6 +34,9 @@ const { actions, reducer } = createSlice({
     },
     setRiderSignUpPassword(state, { payload: password }) {
       return { ...state, riderSignUpField: { ...state.riderSignUpField, password } };
+    },
+    setRiderSignUpRePassword(state, { payload: rePassword }) {
+      return { ...state, riderSignUpField: { ...state.riderSignUpField, rePassword } };
     },
     setDriverSignUpName(state, { payload: name }) {
       return { ...state, driverSignUpField: { ...state.driverSignUpField, name } };
@@ -62,43 +56,42 @@ const { actions, reducer } = createSlice({
     setDriverSignUpCarType(state, { payload: carType }) {
       return { ...state, driverSignUpField: { ...state.driverSignUpField, carType } };
     },
-    setDriverSignUpCarNumber(state, { payload: carNumber }) {
-      return { ...state, driverSignUpField: { ...state.driverSignUpField, carNumber } };
+    setDriverSignUpPlateNumber(state, { payload: plateNumber }) {
+      return { ...state, driverSignUpField: { ...state.driverSignUpField, plateNumber } };
     },
   },
 });
 
-export const requestLogin = (client: any, riderCheck : boolean) => async (dispatch: any, getState : any) => {
-  const { loginField } = getState();
+export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
+  const { riderSignUpField } = getState().signUpReducer;
   const { data } = await client.mutate({
-    mutation: riderCheck ? loginRider : loginDriver,
-    variables: { ...loginField },
+    mutation: signUpRider,
+    variables: { ...riderSignUpField },
     fetchPolicy: 'no-cache',
   });
-  console.log(data); //로그인한 유저의 id
-};
-
-export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
-  const { riderSignUpField } = getState();
 };
 
 export const requestDriverSignUp = (client: any) => async (dispatch: any, getState : any) => {
-  const { driverSignUpField } = getState();
+  const { driverSignUpField } = getState().signUpReducer;
+  const { data } = await client.mutate({
+    mutation: signUpDriver,
+    variables: { ...driverSignUpField },
+    fetchPolicy: 'no-cache',
+  });
 };
 
 export const {
-  setLoginEmail,
-  setLoginPassword,
   setRiderSignUpEmail,
   setRiderSignUpName,
   setRiderSignUpPassword,
+  setRiderSignUpRePassword,
   setRiderSignUpPhoneNumber,
   setDriverSignUpName,
   setDriverSignUpPhoneNumber,
   setDriverSignUpEmail,
   setDriverSignUpPassword,
   setDriverSignUpRePassword,
-  setDriverSignUpCarNumber,
+  setDriverSignUpPlateNumber,
   setDriverSignUpCarType,
 } = actions;
 

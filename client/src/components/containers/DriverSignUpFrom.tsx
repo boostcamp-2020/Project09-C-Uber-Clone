@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { List, WhiteSpace } from 'antd-mobile';
+import { WhiteSpace } from 'antd-mobile';
 
 import { useDispatch } from 'react-redux';
 
@@ -19,10 +19,10 @@ import {
   setDriverSignUpEmail,
   setDriverSignUpPassword,
   setDriverSignUpRePassword,
-  setDriverSignUpCarNumber,
+  setDriverSignUpPlateNumber,
   setDriverSignUpCarType,
   requestDriverSignUp,
-} from '../../slice';
+} from '../../slices/signUpSlice';
 
 const Form = styled.form`
   width: 90%;
@@ -42,47 +42,51 @@ function DriverSignUpFrom() {
 
   return (
     <Form>
-      <h2>드라이버로 가입하기</h2>
-      <List>
-        <ProfileImageInput selectable={true} />
-        <DiscriptionInput placeholder='한마디' />
-        <WhiteSpace />
-        <Input
-          type='text'
-          placeholder='이름(필수)'
-          onChange={handleChangeInput(setDriverSignUpName)}
-        />
-        <Input
-          type='phone'
-          placeholder='전화번호(필수)'
-          onChange={handleChangeInput(setDriverSignUpPhoneNumber)}
-        />
-        <Input
-          type='text'
-          placeholder='이메일(필수)'
-          onChange={handleChangeInput(setDriverSignUpEmail)}
-        />
-        <Input
-          type='password'
-          placeholder='비밀번호(필수)'
-          onChange={handleChangeInput(setDriverSignUpPassword)}
-        />
-        <Input
-          type='password'
-          placeholder='비밀번호 확인(필수)'
-          onChange={handleChangeInput(setDriverSignUpRePassword)}
-        />
-        <Input
-          type='text'
-          placeholder='차종(필수)'
-          onChange={handleChangeInput(setDriverSignUpCarType)}
-        />
-        <Input
-          type='text'
-          placeholder='차량번호(필수)'
-          onChange={handleChangeInput(setDriverSignUpCarNumber)}
-        />
-      </List>
+      <ProfileImageInput selectable={true} />
+      <DiscriptionInput placeholder='한마디' />
+      <WhiteSpace />
+      <Input
+        type='text'
+        placeholder='이름(필수)'
+        onChange={handleChangeInput(setDriverSignUpName)}
+      />
+      <WhiteSpace />
+      <Input
+        type='phone'
+        placeholder='전화번호(필수)'
+        onChange={handleChangeInput(setDriverSignUpPhoneNumber)}
+      />
+      <WhiteSpace />
+      <Input
+        type='text'
+        placeholder='이메일(필수)'
+        onChange={handleChangeInput(setDriverSignUpEmail)}
+      />
+      <WhiteSpace />
+      <Input
+        type='password'
+        placeholder='비밀번호(필수)'
+        onChange={handleChangeInput(setDriverSignUpPassword)}
+      />
+      <WhiteSpace />
+      <Input
+        type='password'
+        placeholder='비밀번호 확인(필수)'
+        onChange={handleChangeInput(setDriverSignUpRePassword)}
+      />
+      <WhiteSpace />
+      <Input
+        type='text'
+        placeholder='차종(필수)'
+        onChange={handleChangeInput(setDriverSignUpCarType)}
+      />
+      <WhiteSpace />
+      <Input
+        type='text'
+        placeholder='차량번호(필수)'
+        onChange={handleChangeInput(setDriverSignUpPlateNumber)}
+      />
+      <WhiteSpace />
       <SignUpButton
         content={'가입하기'}
         onClick={handleSignUpButton}
