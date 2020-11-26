@@ -9,7 +9,6 @@ import SignUpSelectPage from './pages/SignUpSelectPage';
 import RiderSignUpPage from './pages/RiderSignUpPage';
 import DriverSignUpPage from './pages/DriverSignUpPage';
 
-import TestPage from './pages/TestPage';
 import RouteIf from './routes/RouteIf';
 
 export default function App() {
@@ -19,7 +18,6 @@ export default function App() {
         <Route path='/signup/select' component={SignUpSelectPage} />
         <Route path='/signup/rider' component={RiderSignUpPage} />
         <Route path='/signup/driver' component={DriverSignUpPage} />
-        <Route path='/test' component={TestPage} />
         <Route path='/login' component={LoginPage} />
         <RouteIf path='*' />
       </Switch>
