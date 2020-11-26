@@ -62,22 +62,32 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const requestRiderSignUp = (client: any) => async (dispatch: any, getState : any) => {
+export const requestRiderSignUp = (client: any, history: any) => async (dispatch: any, getState : any) => {
   const { riderSignUpField } = getState().signUpReducer;
   const { data } = await client.mutate({
     mutation: signUpRider,
     variables: { ...riderSignUpField },
     fetchPolicy: 'no-cache',
   });
+  if (data) {
+    history.push('/login');
+  }
+  window.alert('회원가입 실패');
+  history.push('/signup/rider') ;
 };
 
-export const requestDriverSignUp = (client: any) => async (dispatch: any, getState : any) => {
+export const requestDriverSignUp = (client: any, history: any) => async (dispatch: any, getState : any) => {
   const { driverSignUpField } = getState().signUpReducer;
   const { data } = await client.mutate({
     mutation: signUpDriver,
     variables: { ...driverSignUpField },
     fetchPolicy: 'no-cache',
   });
+  if (data.createRider) {
+    history.push('/login');
+  }
+  window.alert('회원가입 실패');
+  history.push('/signup/driver') ;
 };
 
 export const {

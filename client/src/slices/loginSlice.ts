@@ -20,7 +20,7 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const requestLogin = (client: any, riderCheck : boolean) => async (dispatch: any, getState : any) => {
+export const requestLogin = (client: any, history: any, riderCheck : boolean) => async (dispatch: any, getState : any) => {
   const { loginField } = getState().loginReducer;
   const { data } = await client.mutate({
     mutation: riderCheck ? loginRiderQuery : loginDriverQuery,
@@ -31,6 +31,7 @@ export const requestLogin = (client: any, riderCheck : boolean) => async (dispat
   const { message, name, role, success, token } = riderCheck ? data.loginRider : data.loginDriver;
   if (success) {
     localStorage.setItem('token', token);
+    riderCheck ? history.push('/setcourse') : history.push('/signup/select');
   } else {
     window.alert(message);
   }

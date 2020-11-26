@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -31,13 +32,14 @@ const Form = styled.form`
 function DriverSignUpFrom() {
   const client = useApolloClient();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setState(value));
   };
 
   const handleSignUpButton = () => {
-    dispatch(requestDriverSignUp(client));
+    dispatch(requestDriverSignUp(client, history));
   };
 
   return (
@@ -87,10 +89,12 @@ function DriverSignUpFrom() {
         onChange={handleChangeInput(setDriverSignUpPlateNumber)}
       />
       <WhiteSpace />
-      <SignUpButton
-        content={'가입하기'}
-        onClick={handleSignUpButton}
-      />
+      <Link to='/'>
+        <SignUpButton
+          content={'가입하기'}
+          onClick={handleSignUpButton}
+        />
+      </Link>
     </Form>
   );
 }
