@@ -19,14 +19,19 @@ module.exports = {
     net: 'empty',
   },
   module: {
-    rules: [{
-      test: /\.(js|jsx|ts|tsx)$/,
-      use: 'babel-loader',
-      exclude: /node_modules/,
-    }, {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader'],
-    }],
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        use: 'babel-loader',
+        exclude: /node_modules/,
+      }, {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      }, {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [{ loader: 'file-loader' }],
+      },
+    ],
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
@@ -38,7 +43,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
-    }),    
+    }),
     new Dotenv(),
   ],
   resolve: {
