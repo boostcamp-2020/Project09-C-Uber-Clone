@@ -4,7 +4,7 @@ import { Menu } from 'antd-mobile';
 import { ValueType } from 'antd-mobile/lib/menu/PropsType';
 
 interface PlaceDropdownItemProps {
-  data: Array<{label: ReactNode, value:any}>;
+  data: Array<{label: ReactNode, value:{placeName: string, location: string}}>;
   height?: number;
   onChange: ([value]?: ValueType) => any;
 }
