@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "3.2.6",
     "@babel/preset-typescript": "^7.12.1",
+    "@react-google-maps/api": "^1.13.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
@@ -32,6 +33,7 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
+    "@types/googlemaps": "^3.40.3",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "babel-loader": "8.2.1",
