@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -12,7 +14,7 @@ import App from './App';
 const rootElement = document.getElementById('app');
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+  uri: process.env.REACT_APP_SERVER_URI,
   cache: new InMemoryCache(),
 });
 

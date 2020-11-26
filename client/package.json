@@ -2,7 +2,7 @@
   "name": "client",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --progress --env production",
@@ -37,6 +37,7 @@
     "babel-loader": "8.2.1",
     "babel-plugin-import": "^1.13.1",
     "css-loader": "^5.0.1",
+    "dotenv-webpack": "^6.0.0",
     "eslint": "^7.13.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
