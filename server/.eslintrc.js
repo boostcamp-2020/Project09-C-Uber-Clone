@@ -3,10 +3,18 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['eslint:recommended'],
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
+    sourceType: 'module',
   },
+  plugins: [
+    '@typescript-eslint',
+  ],
+  ignorePatterns: ['node_modules/', 'dist/'],
   rules: {
     indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['error', 'always'],

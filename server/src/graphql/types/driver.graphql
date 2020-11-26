@@ -1,0 +1,37 @@
+type Driver {
+  id: ID!
+  email: String!
+  name: String!
+  password: String!
+  phoneNumber: String!
+  carType: String!
+  plateNumber: String!
+  description: String
+  profileImage: String
+}
+
+type LoginResult {
+  success: Boolean!
+  message: String
+  name: String
+  role: String!
+  token: String
+}
+
+type Query {
+  driver(email: String!): Driver
+}
+
+type Mutation {
+  createDriver(
+    email: String!,
+    name: String!,
+    password: String!,
+    phoneNumber: String!,
+    carType: String!,
+    plateNumber: String!,
+    description: String,
+    profileImage: String
+  ): Driver
+  loginDriver(email: String!, password: String!): LoginResult
+}

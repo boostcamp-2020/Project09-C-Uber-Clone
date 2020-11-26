@@ -9,4 +9,7 @@ module.exports = {
     ],
     '@babel/preset-react',
   ],
+  plugins: [
+    ['import', { 'libraryName': 'antd-mobile', 'style': 'css' }],
+  ],
 };

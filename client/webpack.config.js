@@ -3,7 +3,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  devtool: 'source-map',
+  mode: process.env.NODE_ENV || 'development',
   entry: {
     main: './src/index.tsx',
   },
@@ -19,8 +20,7 @@ module.exports = {
       exclude: /node_modules/,
     }, {
       test: /\.css$/,
-      use: ['style-loader'],
-      exclude: /node_modules/,
+      use: ['style-loader', 'css-loader'],
     }],
   },
   devServer: {

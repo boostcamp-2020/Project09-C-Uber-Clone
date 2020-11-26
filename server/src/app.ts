@@ -1,0 +1,45 @@
+import 'dotenv/config';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import { buildContext } from 'graphql-passport';
+
+import typeDefs from './graphql/typeDef';
+import resolvers from './graphql/resolvers';
+import { localStrategy, jwtStrategy } from './passport';
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+};
+
+mongoose.connect(process.env.MONGODB_URL || '', options)
+  .then(() => console.log('Successfully connected to mongodb'))
+  .catch(e => console.error(e));
+
+const server = new ApolloServer({ typeDefs, resolvers, context: ({ req, res }) => buildContext({ req, res }) });
+
+const app = express();
+const path = '/graphql';
+
+localStrategy();
+jwtStrategy();
+
+app.use(path, passport.initialize());
+app.use(path, (req, res, next) =>
+  passport.authenticate('jwt', { session: false }, (error, user) => {
+    if (user) {
+      req.user = user;
+    };
+    next();
+  })(req, res, next));
+
+
+server.applyMiddleware({ app, path });
+
+app.listen({ port: process.env.PORT }, () =>
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`),
+);
+
