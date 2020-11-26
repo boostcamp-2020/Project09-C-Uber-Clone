@@ -10,7 +10,6 @@ interface Paths {
 }
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
-  console.log({ path });
   return (
     <Route
       path={path}

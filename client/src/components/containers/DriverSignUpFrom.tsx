@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -32,13 +32,14 @@ const Form = styled.form`
 function DriverSignUpFrom() {
   const client = useApolloClient();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setState(value));
   };
 
   const handleSignUpButton = () => {
-    dispatch(requestDriverSignUp(client));
+    dispatch(requestDriverSignUp(client, history));
   };
 
   return (
