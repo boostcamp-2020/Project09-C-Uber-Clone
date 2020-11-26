@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPosition, setPosition } from '../../slices/mapSlice';
 
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace } from 'antd-mobile';
+import { Button, WhiteSpace, InputItem } from 'antd-mobile';
 
 import styled from 'styled-components';
 
 import Input from '../presentational/Input';
+import Map from '../containers/Map';
 
 const Header = styled.div`
-  height: 266px;
-  left: 0px;
-  top: 0px;
+  height: 130px;
+  padding:10px;
 
   background: #56A902;
 `;
@@ -23,7 +24,6 @@ const PageTitle = styled.div`
   left: 30px;
   top: 44px;
 
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 48px;
@@ -33,12 +33,8 @@ const PageTitle = styled.div`
 `;
 
 const FormTitle = styled.div`
-  width: 85px;
-  height: 27px;
-  left: 24px;
-  top: 298px;
+  padding:10px;
 
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 22px;
@@ -48,14 +44,23 @@ const FormTitle = styled.div`
   letter-spacing: -0.02em;
 
   /* 9 black */
-
   color: #000000;
+`;
+
+const HereButton = styled.button`
+  background-color: transparent;
+  color: #56A902;
+  border: none;
+  margin-top: 5px;
+  margin-left: 10px;
+  cursor: pointer;
 `;
 
 function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
 
+  const position = useSelector(selectPosition);
   const [startingPoint, setStartingPoint] = useState('');
   const [destination, setDestination] = useState('');
   const [mapView, setMapView] = useState(false);
@@ -69,8 +74,23 @@ function SetCourseForm() {
   };
 
   const makeStartingPointHere = () => {
-    //TODO: 현재위치 받아서, text로 바꿔서 출발지에 넣어주기
-    console.log('here');
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: Position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          dispatch(setPosition(pos));
+          setStartingPoint('현재 위치');
+        },
+        () => {
+          console.log('Error: The Geolocation service failed.');
+        },
+      );
+    } else {
+      console.log('Error: Your browser doesn\'t support geolocation');
+    }
   };
 
   const showMapView = () => {
@@ -81,15 +101,17 @@ function SetCourseForm() {
   return (
     <>
       <Header>
-        <PageTitle>라이더 경로설정</PageTitle>
+        <PageTitle>라이더 <br/> 경로설정</PageTitle>
       </Header>
+      <Map />
       <FormTitle>경로 선택</FormTitle>
-      <Input
+      <InputItem
         type='text'
         placeholder='출발지'
-        onChange={handleChangeInput(setStartingPoint)}
+        // onChange={handleChangeInput(setStartingPoint)}
+        value={startingPoint}
       />
-      <button onClick={makeStartingPointHere}>현재 위치로</button>
+      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
       <Input
         type='text'

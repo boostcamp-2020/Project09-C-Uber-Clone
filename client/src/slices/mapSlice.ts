@@ -4,13 +4,12 @@ const { actions, reducer } = createSlice({
   name: 'map',
   initialState: {
     position: {
-      lat: 0,
-      lng: 0,
+      lat: 37.512359618923725,
+      lng: 126.86565258928634,
     },
   },
   reducers: {
     setPosition(state, { payload }) {
-      console.log(payload);
       return { ...state, position: { ...state, ...payload } };
     },
   },

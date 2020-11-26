@@ -5,21 +5,9 @@ import { useSelector } from 'react-redux';
 import { selectPosition } from '../../slices/mapSlice';
 // Map 사이즈
 const containerStyle = {
-  width: '400px',
-  height: '400px',
+  width: '100%',
+  height: '380px',
 };
-
-// 처음 map의 위치
-// const center = {
-//   lat: 37.512359618923725,
-//   lng: 126.86565258928634,
-// };
-
-// Marker 위치
-// const position = {
-//   lat: 37.512359618923725,
-//   lng: 126.86565258928634,
-// };
 
 function Map() {
   const [map, setMap] = useState(null);
