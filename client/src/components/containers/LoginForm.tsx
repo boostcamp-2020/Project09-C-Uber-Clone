@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
@@ -48,6 +48,7 @@ const SignupButton = styled.button`
 function LoginForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
@@ -57,7 +58,7 @@ function LoginForm() {
   };
 
   const handleLoginButtonClick = () => {
-    dispatch(requestLogin(client, riderCheck));
+    dispatch(requestLogin(client, history, riderCheck));
   };
 
   const checkToggle = (e: any) => {
