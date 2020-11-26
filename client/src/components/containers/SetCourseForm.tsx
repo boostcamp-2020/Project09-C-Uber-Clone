@@ -12,6 +12,7 @@ import styled from 'styled-components';
 
 import Input from '../presentational/Input';
 import Map from '../containers/Map';
+import SubmitButton from '../presentational/SubmitButton';
 
 const Header = styled.div`
   height: 130px;
@@ -120,12 +121,10 @@ function SetCourseForm() {
       />
       <WhiteSpace />
       <Link to='/'>
-        <Button
+        <SubmitButton
+          content={'결정'}
           onClick={handelCourseSubmitButton}
-          type='primary'
-          style={{ backgroundColor: '#56A902' }}
-        >결정
-        </Button>
+        />
       </Link>
     </>
   );
