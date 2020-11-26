@@ -65,16 +65,16 @@ function SetCourseForm() {
   };
 
   const handelCourseSubmitButton = () => {
-    // dispatch(sendCourse(client, { startingPoint, destination }));
+    // TODO: dispatch(sendCourse(client, { startingPoint, destination }));
   };
 
   const makeStartingPointHere = () => {
-    //현재위치 받아서, text로 바꿔서 출발지에 넣어주기
+    //TODO: 현재위치 받아서, text로 바꿔서 출발지에 넣어주기
     console.log('here');
   };
 
   const showMapView = () => {
-    //출발지나 도착지를 dropdown list를 통하여 확정하면 세부 설정 할 수 있도록 setMapView(true)
+    //TODO: 출발지나 도착지를 dropdown list를 통하여 확정하면 세부 설정 할 수 있도록 setMapView(true)
   };
 
 
