@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
+import GlobalStyle from './GlobalStyle';
 import store from './store';
 import App from './App';
 
@@ -22,6 +23,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
       <BrowserRouter>
+        <GlobalStyle/>
         <App />
       </BrowserRouter>
     </Provider>

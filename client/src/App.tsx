@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpSelectPage from './pages/SignUpSelectPage';
 import RiderSignUpPage from './pages/RiderSignUpPage';
 import DriverSignUpPage from './pages/DriverSignUpPage';
+
 import RouteIf from './routes/RouteIf';
 
 export default function App() {
