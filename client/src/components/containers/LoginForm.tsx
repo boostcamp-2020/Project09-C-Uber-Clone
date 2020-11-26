@@ -17,12 +17,17 @@ import {
   requestLogin,
 } from '../../slices/loginSlice';
 
+const Div = styled.div`
+  width: 90%;
+  margin: 0 auto;
+`;
+
 const Header = styled.div`
   display: flex;
-  width: 180px;
-  height: 117px;
-  left: calc(50% - 180px/2 + 6px);
-  top: calc(50% - 117px/2 - 191.5px);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 250px;
 
   font-style: normal;
   font-weight: bold;
@@ -30,6 +35,14 @@ const Header = styled.div`
   line-height: 77px;
 
   color: #243443;
+`;
+
+const SignupButton = styled.button`
+  width:100%;
+  margin-top: 5px;
+  color: #56A902;
+  border: none;
+  background-color: transparent;
 `;
 
 function LoginForm() {
@@ -59,7 +72,7 @@ function LoginForm() {
   };
 
   return (
-    <>
+    <Div>
       <Header>UBER</Header>
       <Checkbox
         onChange={checkToggle}
@@ -88,13 +101,13 @@ function LoginForm() {
       <Button
         onClick={handleLoginButtonClick}
         type='primary'
-        style={{ backgroundColor: '#56A902' }}
+        style={{ backgroundColor: '#56A902', marginTop: '100px' }}
       >로그인
       </Button>
       <Link to='/signup/select'>
-        <button>Sign up here</button>
+        <SignupButton>Sign up here</SignupButton>
       </Link>
-    </>
+    </Div>
   );
 }
 
