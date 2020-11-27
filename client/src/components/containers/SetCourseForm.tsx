@@ -43,11 +43,11 @@ const PageTitle = styled.div`
 `;
 
 const FormTitle = styled.div`
-  padding:10px;
+  padding:8px;
 
   font-style: normal;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 27px;
   /* identical to box height */
 
@@ -183,12 +183,10 @@ function SetCourseForm() {
         onChange={handleOnChangeDest}
       />
       <WhiteSpace />
-      <Link to='/'>
-        <SubmitButton
-          content={'결정'}
-          onClick={handelCourseSubmitButton}
-        />
-      </Link>
+      <SubmitButton
+        content={'결정'}
+        onClick={handelCourseSubmitButton}
+      />
     </>
   );
 }
