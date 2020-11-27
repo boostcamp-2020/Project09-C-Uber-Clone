@@ -28,7 +28,7 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       }, {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|ico)$/i,
         use: [{ loader: 'file-loader' }],
       },
     ],
@@ -43,6 +43,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+      favicon: './src/favicon.ico',
     }),
     new Dotenv(),
   ],
