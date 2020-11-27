@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +9,8 @@ import { WhiteSpace } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import InputPath from '../presentational/InputPath';
-import Map from '../containers/Map';
+import PlaceSearchBox from '../presentational/PlaceSearchBox';
+import Map from './Map';
 import SubmitButton from '../presentational/SubmitButton';
 
 import {
@@ -70,12 +70,12 @@ function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const { originPlace, destPlace }: any = useSelector(selectMapReducer);
+  const [originAutocomplete, setOriginAutocomplete] = useState(null);
+  const [destAutocomplete, setDestAutocomplete] = useState(null);
+  const [originInput, setOriginInput] = useState('');
+  const [destInput, setDestInput] = useState('');
 
   const [mapView, setMapView] = useState(false);
-
-  const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setState(value));
-  };
 
   const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
@@ -108,9 +108,54 @@ function SetCourseForm() {
     }
   };
 
+  const onOrignAutocompleteLoad = (autocomplete: any) => {
+    setOriginAutocomplete(autocomplete);
+  };
+
+  const onOriginAutocompletePlaceChanged = () => {
+    if (originAutocomplete !== null) {
+      const lat = originAutocomplete.getPlace().geometry.location.lat();
+      const lng = originAutocomplete.getPlace().geometry.location.lng();
+      dispatch(setOriginPlace(originAutocomplete.getPlace().name));
+      dispatch(setOriginPosition({ lat, lng }));
+      dispatch(setOriginMarker('check'));
+      setOriginAutocomplete(originAutocomplete);
+    }
+  };
+  const destAutocompleteLoad = (autocomplete: any) => {
+    setDestAutocomplete(autocomplete);
+  };
+
+  const onDestAutocompletePlaceChanged = () => {
+    if (destAutocomplete !== null) {
+      const lat = destAutocomplete.getPlace().geometry.location.lat();
+      const lng = destAutocomplete.getPlace().geometry.location.lng();
+      dispatch(setDestPlace(destAutocomplete.getPlace().name));
+      dispatch(setDestPosition({ lat, lng }));
+      dispatch(setDestMarker('check'));
+      setDestAutocomplete(destAutocomplete);
+    }
+  };
+
   const showMapView = () => {
     //TODO: 출발지나 도착지를 dropdown list를 통하여 확정하면 세부 설정 할 수 있도록 setMapView(true)
   };
+
+  const handleOnChangeOrigin = (event: any) => {
+    setOriginInput(event.target.value);
+  };
+
+  const handleOnChangeDest = (event: any) => {
+    setDestInput(event.target.value);
+  };
+
+  useEffect(() => {
+    setOriginInput(originPlace);
+  }, [originPlace]);
+
+  useEffect(() => {
+    setDestInput(destPlace);
+  }, [destPlace]);
 
   return (
     <>
@@ -119,29 +164,23 @@ function SetCourseForm() {
       </Header>
       <Map />
       <FormTitle>경로 선택</FormTitle>
-      <InputPath
-        type='text'
+      <PlaceSearchBox
         placeholder='출발지'
-        value={originPlace}
-        onChange={handleChangeInput(setOriginPlace)}
-        onClick={handleClickCancel(
-          setOriginPlace,
-          setOriginPosition,
-          setOriginMarker,
-        )}
+        onLoad={onOrignAutocompleteLoad}
+        onPlaceChanged={onOriginAutocompletePlaceChanged}
+        onCancelClicked={handleClickCancel(setOriginPlace, setOriginPosition, setOriginMarker)}
+        value={originInput}
+        onChange={handleOnChangeOrigin}
       />
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
-      <InputPath
-        type='text'
-        placeholder='목적지'
-        value={destPlace}
-        onChange={handleChangeInput(setDestPlace)}
-        onClick={handleClickCancel(
-          setDestPlace,
-          setDestPosition,
-          setDestMarker,
-        )}
+      <PlaceSearchBox
+        placeholder='도착지'
+        onLoad={destAutocompleteLoad}
+        onPlaceChanged={onDestAutocompletePlaceChanged}
+        onCancelClicked={handleClickCancel(setDestPlace, setDestPosition, setDestMarker)}
+        value={destInput}
+        onChange={handleOnChangeDest}
       />
       <WhiteSpace />
       <Link to='/'>

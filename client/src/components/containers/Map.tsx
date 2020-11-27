@@ -38,18 +38,26 @@ const NEW_MARKER_POS = {
   lng: 0,
 };
 
+const INIT_POS = {
+  lat: 37.55,
+  lng: 126.97,
+};
+
 function Map() {
   const {
     originPosition,
     destPosition,
     originMarker,
     destMarker,
+    originPlace,
+    destPlace,
   }: any = useSelector(selectMapReducer);
   const dispatch = useDispatch();
 
   const [map, setMap] = useState(null);
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
+  const [center, setCenter] = useState(INIT_POS);
 
   const pickerEl = useRef(null);
 
@@ -98,11 +106,11 @@ function Map() {
   };
 
   useEffect(() => {
-    console.log('현재위치?');
     if (originMarker === '') {
       setIsOriginVisible(false);
       return;
     }
+    setCenter(originPosition);
     setIsOriginVisible(true);
   }, [originMarker]);
 
@@ -111,37 +119,34 @@ function Map() {
       setIsDestVisible(false);
       return;
     }
+    setCenter(destPosition);
     setIsDestVisible(true);
   }, [destMarker]);
 
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.REACT_APP_API_KEY}
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      zoom={14}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+      center={center}
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}
     >
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        zoom={14}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        center={originPosition}
-        onDragEnd={onDragEnd}
-        onDragStart={onDragStart}
-      >
-        <Picker src={picker} ref={pickerEl} />
-        <Marker
-          key={1}
-          position={originPosition}
-          label={'출발'}
-          visible={isOriginVisible}
-        />
-        <Marker
-          key={2}
-          position={destPosition}
-          label={'도착'}
-          visible={isDestVisible}
-        />
-      </GoogleMap>
-    </LoadScript>
+      <Picker src={picker} ref={pickerEl} />
+      <Marker
+        key={1}
+        position={originPosition}
+        label={'출발'}
+        visible={isOriginVisible}
+      />
+      <Marker
+        key={2}
+        position={destPosition}
+        label={'도착'}
+        visible={isDestVisible}
+      />
+    </GoogleMap>
   );
 }
 
