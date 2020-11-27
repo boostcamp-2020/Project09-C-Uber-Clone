@@ -16,12 +16,10 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
       render={() => {
         if (localStorage.getItem('token')) {
           return (
-            <Router>
-              <Switch>
-                <Route path='/setcourse' component={SetCoursePage} />
-                <Redirect path="*" to="/login" />
-              </Switch>
-            </Router>
+            <Switch>
+              <Route path='/setcourse' component={SetCoursePage} />
+              <Redirect path="*" to="/login" />
+            </Switch>
           );
         }
         return <Redirect to="/login"/>;

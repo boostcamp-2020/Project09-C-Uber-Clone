@@ -20,14 +20,17 @@ const CancelButton = styled.button`
   border: 0.5px solid #989898;
   color: #989898;
   cursor: pointer;
+  margin-left: 2%;
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 96%;
+  height: 37px;
+  border: none;
+  margin: 0 2%;
 `;
 
 const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder, onLoad, onPlaceChanged, onCancelClicked, value, onChange }) => {
-  console.log(value);
   return (
     <>
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} fields={['geometry', 'address_components', 'name']}>
