@@ -97,7 +97,7 @@ function SetCourseForm() {
           };
           dispatch(setOriginPosition(pos));
           dispatch(setOriginPlace('현재위치'));
-          dispatch(setOriginMarker('check'));
+          dispatch(setOriginMarker('현재위치'));
         },
         () => {
           console.log('Error: The Geolocation service failed.');
@@ -118,7 +118,7 @@ function SetCourseForm() {
       const lng = originAutocomplete.getPlace().geometry.location.lng();
       dispatch(setOriginPlace(originAutocomplete.getPlace().name));
       dispatch(setOriginPosition({ lat, lng }));
-      dispatch(setOriginMarker('check'));
+      dispatch(setOriginMarker(originAutocomplete.getPlace().name));
       setOriginAutocomplete(originAutocomplete);
     }
   };
@@ -132,7 +132,7 @@ function SetCourseForm() {
       const lng = destAutocomplete.getPlace().geometry.location.lng();
       dispatch(setDestPlace(destAutocomplete.getPlace().name));
       dispatch(setDestPosition({ lat, lng }));
-      dispatch(setDestMarker('check'));
+      dispatch(setDestMarker(destAutocomplete.getPlace().name));
       setDestAutocomplete(destAutocomplete);
     }
   };
