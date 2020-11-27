@@ -3,24 +3,52 @@ import { createSlice } from '@reduxjs/toolkit';
 const { actions, reducer } = createSlice({
   name: 'map',
   initialState: {
-    position: {
-      lat: 37.512359618923725,
-      lng: 126.86565258928634,
+    originPosition: {
+      lat: 37.55,
+      lng: 126.97,
     },
+    destPosition: {
+      lat: 0,
+      lng: 0,
+    },
+    originPlace: '',
+    destPlace: '',
+    originMarker: '',
+    destMarker: '',
   },
   reducers: {
-    setPosition(state, { payload }) {
-      return { ...state, position: { ...state, ...payload } };
+    setOriginPosition(state, { payload }) {
+      return { ...state, originPosition: { ...state.originPosition, ...payload } };
+    },
+    setDestPosition(state, { payload }) {
+      return { ...state, destPosition: { ...state.destPosition, ...payload } };
+    },
+    setOriginPlace(state, { payload }) {
+      return { ...state, originPlace: payload };
+    },
+    setDestPlace(state, { payload }) {
+      return { ...state, destPlace: payload };
+    },
+    setOriginMarker(state, { payload }) {
+      return { ...state, originMarker: payload };
+    },
+    setDestMarker(state, { payload }) {
+      return { ...state, destMarker: payload };
     },
   },
 });
 
-export const selectPosition = (state: any): {lat:number, lng:number} => {
-  return state.mapReducer.position;
+export const selectMapReducer = (state: any): {lat:number, lng:number} => {
+  return state.mapReducer;
 };
 
 export const {
-  setPosition,
+  setOriginPosition,
+  setDestPosition,
+  setOriginPlace,
+  setDestPlace,
+  setOriginMarker,
+  setDestMarker,
 } = actions;
 
 export default reducer;

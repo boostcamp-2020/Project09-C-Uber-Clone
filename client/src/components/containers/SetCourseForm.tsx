@@ -2,16 +2,26 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPosition, setPosition } from '../../slices/mapSlice';
 
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace, InputItem } from 'antd-mobile';
+import { WhiteSpace } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import Input from '../presentational/Input';
+import InputPath from '../presentational/InputPath';
 import Map from '../containers/Map';
+import SubmitButton from '../presentational/SubmitButton';
+
+import {
+  selectMapReducer,
+  setOriginPosition,
+  setDestPosition,
+  setOriginPlace,
+  setDestPlace,
+  setOriginMarker,
+  setDestMarker,
+} from '../../slices/mapSlice';
 
 const Header = styled.div`
   height: 130px;
@@ -59,14 +69,18 @@ const HereButton = styled.button`
 function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
+  const { originPlace, destPlace }: any = useSelector(selectMapReducer);
 
-  const position = useSelector(selectPosition);
-  const [startingPoint, setStartingPoint] = useState('');
-  const [destination, setDestination] = useState('');
   const [mapView, setMapView] = useState(false);
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setState(value));
+  };
+
+  const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPlace(''));
+    dispatch(setPosition({ lat: 0, lng: 0 }));
+    dispatch(setMarker(''));
   };
 
   const handelCourseSubmitButton = () => {
@@ -81,8 +95,9 @@ function SetCourseForm() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          dispatch(setPosition(pos));
-          setStartingPoint('현재 위치');
+          dispatch(setOriginPosition(pos));
+          dispatch(setOriginPlace('현재위치'));
+          dispatch(setOriginMarker('check'));
         },
         () => {
           console.log('Error: The Geolocation service failed.');
@@ -97,7 +112,6 @@ function SetCourseForm() {
     //TODO: 출발지나 도착지를 dropdown list를 통하여 확정하면 세부 설정 할 수 있도록 setMapView(true)
   };
 
-
   return (
     <>
       <Header>
@@ -105,27 +119,36 @@ function SetCourseForm() {
       </Header>
       <Map />
       <FormTitle>경로 선택</FormTitle>
-      <InputItem
+      <InputPath
         type='text'
         placeholder='출발지'
-        // onChange={handleChangeInput(setStartingPoint)}
-        value={startingPoint}
+        value={originPlace}
+        onChange={handleChangeInput(setOriginPlace)}
+        onClick={handleClickCancel(
+          setOriginPlace,
+          setOriginPosition,
+          setOriginMarker,
+        )}
       />
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
-      <Input
+      <InputPath
         type='text'
         placeholder='목적지'
-        onChange={handleChangeInput(setDestination)}
+        value={destPlace}
+        onChange={handleChangeInput(setDestPlace)}
+        onClick={handleClickCancel(
+          setDestPlace,
+          setDestPosition,
+          setDestMarker,
+        )}
       />
       <WhiteSpace />
       <Link to='/'>
-        <Button
+        <SubmitButton
+          content={'결정'}
           onClick={handelCourseSubmitButton}
-          type='primary'
-          style={{ backgroundColor: '#56A902' }}
-        >결정
-        </Button>
+        />
       </Link>
     </>
   );
