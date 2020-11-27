@@ -7,7 +7,7 @@ type Rider {
 }
 
 type Query {
-  rider(email: String!): Rider @isAuthorized
+  rider(email: String!): Rider
 }
 
 type Mutation {
