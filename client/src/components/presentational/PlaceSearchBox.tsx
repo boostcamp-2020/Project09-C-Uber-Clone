@@ -1,30 +1,42 @@
 import React, { useState, FunctionComponent } from 'react';
 
+import styled from 'styled-components';
+
 import { Autocomplete } from '@react-google-maps/api';
 
 interface PlaceSearchBoxProps {
   placeholder: string;
+  onLoad: any;
+  onPlaceChanged: any;
+  onCancelClicked?: any;
+  value: string;
+  onChange?: any
 }
 
-const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder }) => {
-  const [autocomplete, setAutocomplete] = useState(null);
+const CancelButton = styled.button`
+  padding: 0 3px;
+  background-color: transparent;
+  border-radius: 50%;
+  border: 0.5px solid #989898;
+  color: #989898;
+  cursor: pointer;
+`;
 
-  const onLoad = (autocomplete: any) => {
-    setAutocomplete(autocomplete);
-  };
+const Input = styled.input`
+  width: 100%;
+`;
 
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      console.log(autocomplete.getPlace().geometry.location.lat());
-      console.log(autocomplete.getPlace().geometry.location.lng());
-      setAutocomplete(autocomplete);
-    }
-  };
-
+const PlaceSearchBox: FunctionComponent<PlaceSearchBoxProps> = ({ placeholder, onLoad, onPlaceChanged, onCancelClicked, value, onChange }) => {
+  console.log(value);
   return (
-    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} fields={['geometry']}>
-      <input placeholder={placeholder} style={{ width: '100%' }}/>
-    </Autocomplete>
+    <>
+      <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} fields={['geometry', 'address_components', 'name']}>
+        <Input placeholder={placeholder} value={value} onChange={onChange}/>
+      </Autocomplete>
+      <CancelButton onClick={onCancelClicked}>
+        X
+      </CancelButton>
+    </>
   );
 };
 
