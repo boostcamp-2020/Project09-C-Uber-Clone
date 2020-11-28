@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
+import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
