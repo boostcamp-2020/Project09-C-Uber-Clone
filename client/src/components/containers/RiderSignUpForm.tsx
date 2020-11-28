@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -26,6 +26,7 @@ function RiderSignUpForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
+  const [isValidate, setIsValidate] = useState(false);
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     setState(value);
@@ -35,6 +36,25 @@ function RiderSignUpForm() {
     const riderInfo = { name, phoneNumber, email, password };
     requestRiderSignUp(client, history, riderInfo);
   };
+
+  const checkValidation = () => {
+    if (password !== rePassword) {
+      setIsValidate(false);
+      return;
+    }
+    if (!name || !phoneNumber || !email || !password || !rePassword) {
+      setIsValidate(false);
+      return;
+    }
+    if (!!name && !!phoneNumber && !!email && !!password && !!rePassword) {
+      setIsValidate(true);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    checkValidation();
+  }, [name, phoneNumber, email, password, rePassword]);
 
   return (
     <Form>
@@ -71,6 +91,7 @@ function RiderSignUpForm() {
       <SubmitButton
         content={'가입하기'}
         onClick={handleSignUpButton}
+        disabled={!isValidate}
       />
     </Form>
   );
