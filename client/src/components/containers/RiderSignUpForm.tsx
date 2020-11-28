@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -68,12 +68,10 @@ function RiderSignUpForm() {
         onChange={handleChangeInput(setRePassword)}
       />
       <WhiteSpace />
-      <Link to='/'>
-        <SubmitButton
-          content={'가입하기'}
-          onClick={handleSignUpButton}
-        />
-      </Link>
+      <SubmitButton
+        content={'가입하기'}
+        onClick={handleSignUpButton}
+      />
     </Form>
   );
 }

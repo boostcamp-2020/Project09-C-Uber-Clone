@@ -27,7 +27,6 @@ export const requestRiderSignUp = async(client: any, history: any, riderInfo: Ri
     history.push('/login');
   } catch (error) {
     window.alert(`회원가입 실패\n원인${error}`);
-    history.push('/signup/rider') ;
   }
 };
 
@@ -42,6 +41,5 @@ export const requestDriverSignUp = async(client: any, history: any, driverInfo: 
     history.push('/login');
   } catch (error) {
     window.alert(`회원가입 실패\n원인${error}`);
-    history.push('/signup/driver') ;
   }
 };
