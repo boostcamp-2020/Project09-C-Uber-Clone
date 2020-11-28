@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -29,6 +29,7 @@ function DriverSignUpFrom() {
   const [rePassword, setRePassword] = useState('');
   const [carType, setCarType] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
+  const [isValidate, setIsValidate] = useState(false);
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     setState(value);
@@ -38,6 +39,26 @@ function DriverSignUpFrom() {
     const driverInfo = { name, phoneNumber, email, password, carType, plateNumber };
     requestDriverSignUp(client, history, driverInfo);
   };
+
+  const checkValidation = () => {
+    if (password !== rePassword) {
+      setIsValidate(false);
+      return;
+    }
+    if (!name || !phoneNumber || !email || !password || !rePassword || !carType || !plateNumber) {
+      setIsValidate(false);
+      return;
+    }
+    if (!!name && !!phoneNumber && !!email && !!password && !!rePassword && !!carType && !!plateNumber) {
+      setIsValidate(true);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    checkValidation();
+  }, [name, phoneNumber, email, password, rePassword, carType, plateNumber]);
+
 
   return (
     <Form>
@@ -89,6 +110,7 @@ function DriverSignUpFrom() {
       <SubmitButton
         content={'가입하기'}
         onClick={handleSignUpButton}
+        disabled={!isValidate}
       />
     </Form>
   );
