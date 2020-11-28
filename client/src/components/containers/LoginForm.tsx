@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
-
 import { useApolloClient } from '@apollo/client';
 
 import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
@@ -11,11 +9,7 @@ import styled from 'styled-components';
 
 import Input from '../presentational/Input';
 
-import {
-  setLoginEmail,
-  setLoginPassword,
-  requestLogin,
-} from '../../slices/loginSlice';
+import { requestLogin } from '../../apis/loginAPI';
 
 const Div = styled.div`
   width: 90%;
@@ -47,18 +41,19 @@ const SignupButton = styled.button`
 
 function LoginForm() {
   const client = useApolloClient();
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setState(value));
+    setState(value);
   };
 
   const handleLoginButtonClick = () => {
-    dispatch(requestLogin(client, history, riderCheck));
+    requestLogin(client, history, riderCheck, email, password);
   };
 
   const checkToggle = (e: any) => {
@@ -90,13 +85,13 @@ function LoginForm() {
       <Input
         type='text'
         placeholder='Enter your email'
-        onChange={handleChangeInput(setLoginEmail)}
+        onChange={handleChangeInput(setEmail)}
       />
       <WhiteSpace />
       <Input
         type='password'
         placeholder='Enter your password'
-        onChange={handleChangeInput(setLoginPassword)}
+        onChange={handleChangeInput(setPassword)}
       />
       <WhiteSpace />
       <Button
