@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { useApolloClient } from '@apollo/client';
@@ -49,6 +49,7 @@ function LoginForm() {
   const [driverCheck, setDriverCheck] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isValidate, setIsValidate] = useState(false);
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     setState(value);
@@ -68,6 +69,22 @@ function LoginForm() {
       setDriverCheck(true);
     }
   };
+
+  const checkValidation = () => {
+    if (!email || !password) {
+      setIsValidate(false);
+      return;
+    }
+    if (!!email && !!password) {
+      setIsValidate(true);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    checkValidation();
+  }, [email, password]);
+
 
   return (
     <Div>
@@ -99,6 +116,7 @@ function LoginForm() {
       <SubmitButton
         content={'로그인'}
         onClick={handleLoginButtonClick}
+        disabled={!isValidate}
       />
       <Link to='/signup/select'>
         <SignupButton>Sign up here</SignupButton>
