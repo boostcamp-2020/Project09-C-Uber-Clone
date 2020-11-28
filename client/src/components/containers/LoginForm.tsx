@@ -11,6 +11,8 @@ import Input from '../presentational/Input';
 
 import { requestLogin } from '../../apis/loginAPI';
 
+import SubmitButton from '../presentational/SubmitButton';
+
 const Div = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -94,12 +96,10 @@ function LoginForm() {
         onChange={handleChangeInput(setPassword)}
       />
       <WhiteSpace />
-      <Button
+      <SubmitButton
+        content={'로그인'}
         onClick={handleLoginButtonClick}
-        type='primary'
-        style={{ backgroundColor: '#56A902', marginTop: '100px' }}
-      >로그인
-      </Button>
+      />
       <Link to='/signup/select'>
         <SignupButton>Sign up here</SignupButton>
       </Link>
