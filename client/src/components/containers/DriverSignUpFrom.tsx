@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import { WhiteSpace } from 'antd-mobile';
-
-import { useDispatch } from 'react-redux';
 
 import { useApolloClient } from '@apollo/client';
 
@@ -14,16 +12,7 @@ import Input from '../presentational/Input';
 import DiscriptionInput from '../presentational/DescriptionInput';
 import SubmitButton from '../presentational/SubmitButton';
 
-import {
-  setDriverSignUpName,
-  setDriverSignUpPhoneNumber,
-  setDriverSignUpEmail,
-  setDriverSignUpPassword,
-  setDriverSignUpRePassword,
-  setDriverSignUpPlateNumber,
-  setDriverSignUpCarType,
-  requestDriverSignUp,
-} from '../../slices/signUpSlice';
+import { requestDriverSignUp } from '../../apis/signUpAPI';
 
 const Form = styled.form`
   width: 90%;
@@ -31,15 +20,23 @@ const Form = styled.form`
 
 function DriverSignUpFrom() {
   const client = useApolloClient();
-  const dispatch = useDispatch();
   const history = useHistory();
 
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
+  const [carType, setCarType] = useState('');
+  const [plateNumber, setPlateNumber] = useState('');
+
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setState(value));
+    setState(value);
   };
 
   const handleSignUpButton = () => {
-    dispatch(requestDriverSignUp(client, history));
+    const driverInfo = { name, phoneNumber, email, password, carType, plateNumber };
+    requestDriverSignUp(client, history, driverInfo);
   };
 
   return (
@@ -50,43 +47,43 @@ function DriverSignUpFrom() {
       <Input
         type='text'
         placeholder='이름(필수)'
-        onChange={handleChangeInput(setDriverSignUpName)}
+        onChange={handleChangeInput(setName)}
       />
       <WhiteSpace />
       <Input
         type='phone'
         placeholder='전화번호(필수)'
-        onChange={handleChangeInput(setDriverSignUpPhoneNumber)}
+        onChange={handleChangeInput(setPhoneNumber)}
       />
       <WhiteSpace />
       <Input
         type='text'
         placeholder='이메일(필수)'
-        onChange={handleChangeInput(setDriverSignUpEmail)}
+        onChange={handleChangeInput(setEmail)}
       />
       <WhiteSpace />
       <Input
         type='password'
         placeholder='비밀번호(필수)'
-        onChange={handleChangeInput(setDriverSignUpPassword)}
+        onChange={handleChangeInput(setPassword)}
       />
       <WhiteSpace />
       <Input
         type='password'
         placeholder='비밀번호 확인(필수)'
-        onChange={handleChangeInput(setDriverSignUpRePassword)}
+        onChange={handleChangeInput(setRePassword)}
       />
       <WhiteSpace />
       <Input
         type='text'
         placeholder='차종(필수)'
-        onChange={handleChangeInput(setDriverSignUpCarType)}
+        onChange={handleChangeInput(setCarType)}
       />
       <WhiteSpace />
       <Input
         type='text'
         placeholder='차량번호(필수)'
-        onChange={handleChangeInput(setDriverSignUpPlateNumber)}
+        onChange={handleChangeInput(setPlateNumber)}
       />
       <WhiteSpace />
       <Link to='/'>
