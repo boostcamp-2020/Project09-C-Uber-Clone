@@ -8,14 +8,18 @@ interface RiderInfo {
 }
 
 export const requestRiderSignUp = async(client: any, history: any, riderInfo: RiderInfo) => {
-  const { data } = await client.mutate({
-    mutation: signUpRider,
-    variables: { ...riderInfo },
-    fetchPolicy: 'no-cache',
-  });
-  if (data) {
-    history.push('/login');
+  try {
+    const { data } = await client.mutate({
+      mutation: signUpRider,
+      variables: { ...riderInfo },
+      fetchPolicy: 'no-cache',
+    });
+    if (data) {
+      return history.push('/login');
+    }
+  } catch (error) {
+    console.log(error);
+    window.alert(`회원가입 실패\n원인${error}`);
+    history.push('/signup/rider') ;
   }
-  window.alert('회원가입 실패');
-  history.push('/signup/rider') ;
 };
