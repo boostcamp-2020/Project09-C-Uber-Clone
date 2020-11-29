@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { buildContext } from 'graphql-passport';
@@ -42,7 +42,6 @@ app.use(path, (req, res, next) =>
     }
     next();
   })(req, res, next));
-
 
 server.applyMiddleware({ app, path });
 
