@@ -72,24 +72,12 @@ function LoginForm() {
     }
   };
 
-  // const checkValidation = () => {
-  //   if (!email || !password) {
-  //     setIsValidate(false);
-  //     return;
-  //   }
-  //   if (!!email && !!password) {
-  //     setIsValidate(true);
-  //     return;
-  //   }
-  // };
-
   const propertyToCheck = { email, password };
   const propertyToWatch = [email, password];
 
   useEffect(() => {
     checkValidation(propertyToCheck, setIsValidate);
   }, propertyToWatch);
-
 
   return (
     <Div>

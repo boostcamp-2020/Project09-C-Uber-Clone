@@ -49,7 +49,6 @@ function DriverSignUpFrom() {
     checkValidation(propertyToCheck, setIsValidate);
   }, propertyToWatch);
 
-
   return (
     <Form>
       <ProfileImageInput selectable={true} />
