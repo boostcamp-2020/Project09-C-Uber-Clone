@@ -13,12 +13,10 @@ export const checkValidation = ({ name = '_', phoneNumber = '_', email, password
     setIsValidate(false);
     return;
   }
-  if (!name || !phoneNumber || !email || !password || !rePassword || !carType || !plateNumber) {
-    setIsValidate(false);
-    return;
-  }
   if (!!name && !!phoneNumber && !!email && !!password && !!rePassword && !!carType && !!plateNumber) {
     setIsValidate(true);
     return;
   }
+  setIsValidate(false);
+  return;
 };
