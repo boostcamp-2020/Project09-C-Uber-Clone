@@ -8,6 +8,7 @@ import { buildContext } from 'graphql-passport';
 import typeDefs from './graphql/typeDef';
 import resolvers from './graphql/resolvers';
 import { localStrategy, jwtStrategy } from './passport';
+import IsAuthorizedDirective from './graphql/directives/auth';
 
 const options = {
   useNewUrlParser: true,
@@ -19,7 +20,13 @@ mongoose.connect(process.env.MONGODB_URL || '', options)
   .then(() => console.log('Successfully connected to mongodb'))
   .catch(e => console.error(e));
 
-const server = new ApolloServer({ typeDefs, resolvers, context: ({ req, res }) => buildContext({ req, res }) });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    isAuthorized: IsAuthorizedDirective,
+  },
+  context: ({ req, res }) => buildContext({ req, res }) });
 
 const app = express();
 const path = '/graphql';
@@ -29,13 +36,12 @@ jwtStrategy();
 
 app.use(path, passport.initialize());
 app.use(path, (req, res, next) =>
-  passport.authenticate('jwt', { session: false }, (error, user) => {
-    if (user) {
-      req.user = user;
-    };
+  passport.authenticate('jwt', { session: false }, (error, info) => {
+    if (info) {
+      req.user = info;
+    }
     next();
   })(req, res, next));
-
 
 server.applyMiddleware({ app, path });
 

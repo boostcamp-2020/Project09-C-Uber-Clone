@@ -6,6 +6,10 @@ type Rider {
   phoneNumber: String!
 }
 
+type Query {
+  rider(email: String!): Rider
+}
+
 type Mutation {
   loginRider(email: String!, password: String!): LoginResult
   createRider(

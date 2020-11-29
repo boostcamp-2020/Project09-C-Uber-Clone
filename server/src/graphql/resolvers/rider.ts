@@ -13,6 +13,11 @@ interface createRiderArgs {
 }
 
 export default {
+  Query: {
+    async rider(parent: any, args: { email: string }, context: any, info: any) {
+      return await Rider.getRiderInfo({ email: args.email });
+    },
+  },
   Mutation: {
     async loginRider(_: any, payload:LoginPayload, context) {
       return await Rider.login(context, payload);

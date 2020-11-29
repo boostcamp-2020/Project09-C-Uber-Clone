@@ -31,4 +31,11 @@ export default {
       throw e.message;
     }
   },
+  getRiderInfo: async (payload) => {
+    try {
+      return await Rider.findByEmail(payload);
+    } catch (e) {
+      throw e.message;
+    }
+  },
 };

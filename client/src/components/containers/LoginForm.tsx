@@ -78,15 +78,18 @@ function LoginForm() {
       <Checkbox
         onChange={checkToggle}
         checked={riderCheck}
+        style={{ margin: '0 10px 10px 0' }}
       >
          라이더
       </Checkbox>
       <Checkbox
         onChange={checkToggle}
         checked={driverCheck}
+        style={{ margin: '0 0 10px 10px' }}
       >
         드라이버
       </Checkbox>
+      <WhiteSpace />
       <Input
         type='text'
         placeholder='Enter your email'
