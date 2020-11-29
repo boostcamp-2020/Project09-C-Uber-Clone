@@ -11,6 +11,8 @@ import Input from '../presentational/Input';
 
 import { requestLogin } from '../../apis/loginAPI';
 
+import { checkValidation } from '../../utils/validate';
+
 import SubmitButton from '../presentational/SubmitButton';
 
 const Div = styled.div`
@@ -70,20 +72,23 @@ function LoginForm() {
     }
   };
 
-  const checkValidation = () => {
-    if (!email || !password) {
-      setIsValidate(false);
-      return;
-    }
-    if (!!email && !!password) {
-      setIsValidate(true);
-      return;
-    }
-  };
+  // const checkValidation = () => {
+  //   if (!email || !password) {
+  //     setIsValidate(false);
+  //     return;
+  //   }
+  //   if (!!email && !!password) {
+  //     setIsValidate(true);
+  //     return;
+  //   }
+  // };
+
+  const propertyToCheck = { email, password };
+  const propertyToWatch = [email, password];
 
   useEffect(() => {
-    checkValidation();
-  }, [email, password]);
+    checkValidation(propertyToCheck, setIsValidate);
+  }, propertyToWatch);
 
 
   return (

@@ -14,6 +14,8 @@ import SubmitButton from '../presentational/SubmitButton';
 
 import { requestDriverSignUp } from '../../apis/signUpAPI';
 
+import { checkValidation } from '../../utils/validate';
+
 const Form = styled.form`
   width: 90%;
 `;
@@ -40,24 +42,12 @@ function DriverSignUpFrom() {
     requestDriverSignUp(client, history, driverInfo);
   };
 
-  const checkValidation = () => {
-    if (password !== rePassword) {
-      setIsValidate(false);
-      return;
-    }
-    if (!name || !phoneNumber || !email || !password || !rePassword || !carType || !plateNumber) {
-      setIsValidate(false);
-      return;
-    }
-    if (!!name && !!phoneNumber && !!email && !!password && !!rePassword && !!carType && !!plateNumber) {
-      setIsValidate(true);
-      return;
-    }
-  };
+  const propertyToCheck = { name, phoneNumber, email, password, rePassword, carType, plateNumber };
+  const propertyToWatch = [name, phoneNumber, email, password, rePassword, carType, plateNumber];
 
   useEffect(() => {
-    checkValidation();
-  }, [name, phoneNumber, email, password, rePassword, carType, plateNumber]);
+    checkValidation(propertyToCheck, setIsValidate);
+  }, propertyToWatch);
 
 
   return (

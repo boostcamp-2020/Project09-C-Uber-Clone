@@ -12,6 +12,8 @@ import Input from '../presentational/Input';
 
 import { requestRiderSignUp } from '../../apis/signUpAPI';
 
+import { checkValidation } from '../../utils/validate';
+
 const Form = styled.form`
   width: 90%;
   margin-top: 90px;
@@ -37,24 +39,12 @@ function RiderSignUpForm() {
     requestRiderSignUp(client, history, riderInfo);
   };
 
-  const checkValidation = () => {
-    if (password !== rePassword) {
-      setIsValidate(false);
-      return;
-    }
-    if (!name || !phoneNumber || !email || !password || !rePassword) {
-      setIsValidate(false);
-      return;
-    }
-    if (!!name && !!phoneNumber && !!email && !!password && !!rePassword) {
-      setIsValidate(true);
-      return;
-    }
-  };
+  const propertyToCheck = { name, phoneNumber, email, password, rePassword };
+  const propertyToWatch = [name, phoneNumber, email, password, rePassword];
 
   useEffect(() => {
-    checkValidation();
-  }, [name, phoneNumber, email, password, rePassword]);
+    checkValidation(propertyToCheck, setIsValidate);
+  }, propertyToWatch);
 
   return (
     <Form>
