@@ -28,7 +28,12 @@ const server = new ApolloServer({
   schemaDirectives: {
     isAuthorized: IsAuthorizedDirective,
   },
-  context: ({ req, res }) => buildContext({ req, res }),
+  context: ({ req, res, connection }) => {
+    if (connection) {
+      return connection.context;
+    }
+    return buildContext({ req, res });
+  },
   subscriptions: {
     onConnect: async (connectionParams:{Authorization?:string}, webSocket, context) => {
       const { Authorization } = connectionParams;
