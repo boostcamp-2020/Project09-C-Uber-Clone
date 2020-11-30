@@ -7,7 +7,7 @@ import { AuthenticationError } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import { Rider, Driver } from '../repositories/index';
 
-export default async(token) => {
+export default async (token:string) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || '');
     const isDriver = (decoded as TokenInterface).isDriver;
