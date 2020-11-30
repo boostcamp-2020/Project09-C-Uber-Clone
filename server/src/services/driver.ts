@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 import { Driver } from '../repositories';
 import signToken from '../utils/signToken';

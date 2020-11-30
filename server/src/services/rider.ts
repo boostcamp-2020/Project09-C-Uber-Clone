@@ -1,11 +1,9 @@
-import jwt from 'jsonwebtoken' ;
 import bcrypt from 'bcrypt';
 
 import signToken from '../utils/signToken';
+import { Rider } from '../repositories';
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS || '10');
-
-import { Rider } from '../repositories';
 
 export default {
   login: async (context, payload) => {

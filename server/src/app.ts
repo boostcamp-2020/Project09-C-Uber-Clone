@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import express from 'express';
+import http from 'http';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { buildContext } from 'graphql-passport';
-import http from 'http';
 
 import verifyToken from './utils/verifyToken';
 import typeDefs from './graphql/typeDef';
