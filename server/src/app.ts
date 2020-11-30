@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, PubSub } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { buildContext } from 'graphql-passport';
-
+import http from 'http';
 import typeDefs from './graphql/typeDef';
 import resolvers from './graphql/resolvers';
 import { localStrategy, jwtStrategy } from './passport';
@@ -15,7 +15,6 @@ const options = {
   useUnifiedTopology: true,
   useCreateIndex: true,
 };
-
 mongoose.connect(process.env.MONGODB_URL || '', options)
   .then(() => console.log('Successfully connected to mongodb'))
   .catch(e => console.error(e));
@@ -26,8 +25,16 @@ const server = new ApolloServer({
   schemaDirectives: {
     isAuthorized: IsAuthorizedDirective,
   },
-  context: ({ req, res }) => buildContext({ req, res }) });
-
+  context: ({ req, res }) => buildContext({ req, res }),
+  subscriptions: {
+    onConnect: (connectionParams, webSocket, context) => {
+      console.log("connected");
+    },
+    onDisconnect: (webSocket, context) => {
+      console.log("disconnected");
+    },
+  }, });
+  
 const app = express();
 const path = '/graphql';
 
@@ -45,7 +52,14 @@ app.use(path, (req, res, next) =>
 
 server.applyMiddleware({ app, path });
 
-app.listen({ port: process.env.PORT }, () =>
-  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`),
-);
+const httpServer = http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+httpServer.listen(process.env.PORT, () => {
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`)
+  console.log(`🚀 Subscriptions ready at ws://localhost:${process.env.PORT}${server.subscriptionsPath}`)
+})
+// app.listen({ port: process.env.PORT }, () =>
+//   console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`),
+// );
 

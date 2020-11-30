@@ -34,4 +34,9 @@ type Mutation {
     profileImage: String
   ): Driver
   loginDriver(email: String!, password: String!): LoginResult
+  test(email: String): String
 }
+
+type Subscription {
+    callRequested: String
+  }
