@@ -1,5 +1,5 @@
-import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React, { useState, useCallback, memo, useRef, useEffect, ReactChild } from 'react';
+import { GoogleMap, LoadScript, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -43,6 +43,14 @@ const INIT_POS = {
   lng: 126.97,
 };
 
+enum TravelMode {
+  BICYCLING = 'BICYCLING',
+  DRIVING = 'DRIVING',
+  TRANSIT = 'TRANSIT',
+  TWO_WHEELER = 'TWO_WHEELER',
+  WALKING = 'WALKING',
+}
+
 function RiderSetCourseMap() {
   const {
     originPosition,
@@ -58,6 +66,7 @@ function RiderSetCourseMap() {
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
   const [center, setCenter] = useState(INIT_POS);
+  const [directionResponse, setDirectionResponse] = useState(null);
 
   const pickerEl = useRef(null);
 
@@ -146,6 +155,30 @@ function RiderSetCourseMap() {
         label={'도착'}
         visible={isDestVisible}
       />
+      {originPlace !== '' && destPlace !== '' &&
+        <DirectionsService
+          options={{
+            destination: destPosition,
+            origin: originPosition,
+            travelMode: TravelMode.DRIVING,
+          }}
+          callback={async (response: any, status) => {
+            if (response !== null && status === 'OK') {
+              setDirectionResponse(response);
+            };
+          }}
+        />
+      }
+      {directionResponse &&
+        <DirectionsRenderer
+          options={{
+            directions: directionResponse,
+            markerOptions: {
+              visible: false,
+            },
+          }}
+        />
+      }
     </GoogleMap>
   );
 }
