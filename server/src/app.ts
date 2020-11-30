@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { ApolloServer, PubSub } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { buildContext } from 'graphql-passport';
