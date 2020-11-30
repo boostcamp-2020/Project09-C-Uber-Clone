@@ -10,7 +10,7 @@ import { WhiteSpace } from 'antd-mobile';
 import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
-import Map from './Map';
+import Map from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
 
 import {
