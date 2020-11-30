@@ -96,27 +96,27 @@ function RiderSetCourseMap() {
     });
   };
 
-  const checkDestMarker = (tempPlace: string) => {
+  const checkDestMarker = (address: string) => {
     dispatch(setDestPosition(NEW_MARKER_POS));
-    dispatch(setDestPlace(tempPlace));
+    dispatch(setDestPlace(address));
     dispatch(setDestMarker('check'));
   };
 
-  const checkOriginMarker = (tempPlace: string) => {
+  const checkOriginMarker = (address: string) => {
     dispatch(setOriginPosition(NEW_MARKER_POS));
-    dispatch(setOriginPlace(tempPlace));
+    dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('check'));
   };
 
   const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
     NEW_MARKER_POS.lat = lat;
     NEW_MARKER_POS.lng = lng;
-    const tempPlace = await getAddressFromLatLng({ lat, lng });
+    const address = await getAddressFromLatLng({ lat, lng });
 
     if (originMarker === 'check') {
-      return checkDestMarker(tempPlace);
+      return checkDestMarker(address);
     }
-    checkOriginMarker(tempPlace);
+    checkOriginMarker(address);
   };
 
   const onDragEnd = () => {
