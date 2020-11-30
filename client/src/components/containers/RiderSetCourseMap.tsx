@@ -78,6 +78,24 @@ function RiderSetCourseMap() {
     setMap(null);
   }, []);
 
+  const getAddressFromLatLng = (position: {lat: number, lng: number}): Promise<string> => {
+    const geocoder = new google.maps.Geocoder;
+    return new Promise((resolve, reject) => {
+      geocoder.geocode(
+        { location: position },
+        (
+          results: google.maps.GeocoderResult[],
+          status: google.maps.GeocoderStatus,
+        ) => {
+          if (status === 'OK' && results[0]) {
+            resolve(results[0].formatted_address);
+          }
+          reject(new Error('cannot find address'));
+        },
+      );
+    });
+  };
+
   const checkDestMarker = (tempPlace: string) => {
     dispatch(setDestPosition(NEW_MARKER_POS));
     dispatch(setDestPlace(tempPlace));
@@ -90,10 +108,10 @@ function RiderSetCourseMap() {
     dispatch(setOriginMarker('check'));
   };
 
-  const addMarker = ({ lat, lng }: { lat: number, lng: number}) => {
+  const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
     NEW_MARKER_POS.lat = lat;
     NEW_MARKER_POS.lng = lng;
-    const tempPlace = `위도 :${NEW_MARKER_POS.lat} 경도:${NEW_MARKER_POS.lng}`;
+    const tempPlace = await getAddressFromLatLng({ lat, lng });
 
     if (originMarker === 'check') {
       return checkDestMarker(tempPlace);
