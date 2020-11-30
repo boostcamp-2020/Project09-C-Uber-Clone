@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { GoogleMap, LoadScript, Circle } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
-  height: '600px',
+  height: '700px',
 };
 
 const INIT_POS = {
@@ -25,7 +25,6 @@ const driverPositionOption = {
   zIndex: 1,
 };
 
-
 function DriverCurrentPositionMap() {
   const [map, setMap] = useState(null);
   const [center, setCenter] = useState(INIT_POS);
@@ -38,26 +37,34 @@ function DriverCurrentPositionMap() {
     setMap(null);
   }, []);
 
-  const makeStartingPointHere = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position: Position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCenter(pos);
-        },
-        () => {
-          console.log('Error: The Geolocation service failed.');
-        },
-      );
-    } else {
-      console.log('Error: Your browser doesn\'t support geolocation');
+  const success = (position: Position): any => {
+    const pos = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    if (JSON.stringify(center) !== JSON.stringify(pos)) {
+      setCenter(pos);
     }
   };
 
-  makeStartingPointHere();
+  const error = (): any => {
+    console.log('Error: The Geolocation service failed.');
+  };
+
+  const options = {
+    enableHighAccuracy: false,
+    maximumAge: 0,
+  };
+
+  const makeStartingPointHere = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(success, error, options);
+    }
+  };
+
+  useEffect(() => {
+    makeStartingPointHere();
+  }, []);
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
