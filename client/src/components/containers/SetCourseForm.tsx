@@ -186,6 +186,7 @@ function SetCourseForm() {
       <SubmitButton
         content={'결정'}
         onClick={handelCourseSubmitButton}
+        disabled={false}
       />
     </>
   );
