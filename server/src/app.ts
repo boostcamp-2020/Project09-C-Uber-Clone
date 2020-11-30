@@ -6,7 +6,7 @@ import passport from 'passport';
 import { buildContext } from 'graphql-passport';
 import http from 'http';
 
-import verifyToken from './util/verifyToken';
+import verifyToken from './utils/verifyToken';
 import typeDefs from './graphql/typeDef';
 import resolvers from './graphql/resolvers';
 import { localStrategy, jwtStrategy } from './passport';
