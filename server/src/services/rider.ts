@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken' ;
 import bcrypt from 'bcrypt';
 
+import signToken from '../utils/signToken';
+
 const saltRounds = parseInt(process.env.SALT_ROUNDS || '10');
 
 import { Rider } from '../repositories';
@@ -9,14 +11,7 @@ export default {
   login: async (context, payload) => {
     try {
       const { user } = await context.authenticate('rider-local', payload);
-      const token = jwt.sign({
-        email: user?.email,
-        isDriver: false,
-      },
-      process.env.JWT_SECRET_KEY || '',
-      {
-        expiresIn: '5m',
-      });
+      const token = signToken({ email: user.email, isDriver: false });
       return { success: true, name: user.name, role: 'rider', token: token };
     } catch (e) {
       return { success: false, message: e.message, role: 'rider' };
