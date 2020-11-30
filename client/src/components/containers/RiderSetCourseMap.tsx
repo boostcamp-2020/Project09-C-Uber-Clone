@@ -43,7 +43,7 @@ const INIT_POS = {
   lng: 126.97,
 };
 
-function Map() {
+function RiderSetCourseMap() {
   const {
     originPosition,
     destPosition,
@@ -150,4 +150,4 @@ function Map() {
   );
 }
 
-export default memo(Map);
+export default memo(RiderSetCourseMap);
