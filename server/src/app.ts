@@ -28,13 +28,13 @@ const server = new ApolloServer({
   context: ({ req, res }) => buildContext({ req, res }),
   subscriptions: {
     onConnect: (connectionParams, webSocket, context) => {
-      console.log("connected");
+      console.log('connected');
     },
     onDisconnect: (webSocket, context) => {
-      console.log("disconnected");
+      console.log('disconnected');
     },
-  }, });
-  
+  } });
+
 const app = express();
 const path = '/graphql';
 
@@ -56,6 +56,6 @@ const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(process.env.PORT, () => {
-  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`)
-  console.log(`🚀 Subscriptions ready at ws://localhost:${process.env.PORT}${server.subscriptionsPath}`)
-})
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`);
+  console.log(`🚀 Subscriptions ready at ws://localhost:${process.env.PORT}${server.subscriptionsPath}`);
+});
