@@ -1,7 +1,7 @@
-type VerifyUser {
+type VerifiedUser {
   role: String!
 }
 
 type Query {
-  verifyUser: VerifyUser
+  verifyUser: VerifiedUser
 }
