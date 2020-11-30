@@ -8,5 +8,5 @@ export const verifyUser = async (client: any, dispatch: any) => {
     fetchPolicy: 'no-cache',
   });
 
-  !!data.verifyUser.role ? dispatch(setLoginRole(data.verifyUser.role)) : dispatch(setLoginRole('null'));
+  !!data.verifyUser.role ? dispatch(setLoginRole(data.verifyUser.role)) : dispatch(setLoginRole('unknown'));
 };

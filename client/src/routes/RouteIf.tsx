@@ -47,7 +47,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             </Switch>
           );
         }
-        if (loginReducer.loginRole === 'null') {
+        if (loginReducer.loginRole === 'unknown') {
           localStorage.removeItem('token');
           return (
             <Switch>
