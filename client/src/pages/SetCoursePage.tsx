@@ -7,7 +7,7 @@ import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-ur
 
 const libraries: Libraries = ['places'];
 
-function LoginPage() {
+function SetCoursePage() {
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY} libraries={libraries}>
       <SetCourseForm />
@@ -15,4 +15,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SetCoursePage;
