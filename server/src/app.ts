@@ -12,7 +12,6 @@ import resolvers from './graphql/resolvers';
 import { localStrategy, jwtStrategy } from './passport';
 import IsAuthorizedDirective from './graphql/directives/auth';
 
-
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
