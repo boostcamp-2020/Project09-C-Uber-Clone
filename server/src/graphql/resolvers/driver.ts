@@ -17,7 +17,12 @@ interface LoginPayload{
   password:string
 }
 
-const CALL_REQUESTED = 'CALL_REQUESTED';
+interface DriverCallArgs {
+  riderId: string;
+  origin: string;
+  destination: string;
+}
+
 const pubsub = new PubSub();
 
 export default {
@@ -36,15 +41,14 @@ export default {
     async loginDriver(_: any, payload:LoginPayload, context) {
       return await Driver.login(context, payload);
     },
-    async test(root, args, context) {
-      pubsub.publish(CALL_REQUESTED, { callRequested: args.email });
-      return args.email;
+    async driverCall(root, args : DriverCallArgs, context) {
+      pubsub.publish("driverListen", { driverListen: args });
+      return await args;
     },
   },
   Subscription: {
-    callRequested: {
-      // Additional event labels can be passed to asyncIterator creation
-      subscribe: () => pubsub.asyncIterator([CALL_REQUESTED]),
+    driverListen: {
+      subscribe: () => pubsub.asyncIterator(["driverListen"]),
     },
   },
 };
