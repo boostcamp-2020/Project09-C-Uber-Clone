@@ -12,6 +12,7 @@ import { verifyUser } from '../apis/verifyUserAPI';
 
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
+import DriverPickUpPage from '../pages/DriverPickUpPage';
 import LoginPage from '../pages/LoginPage';
 
 interface Paths {
@@ -35,6 +36,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
           return (
             <Switch>
               <Route path='/driver/main' component={DriverWaitingPage} />
+              <Route path='/driver/pickup' component={DriverPickUpPage} />
               <Redirect path="*" to="/driver/main" />
             </Switch>
           );
