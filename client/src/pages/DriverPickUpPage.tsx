@@ -10,7 +10,7 @@ import RiderInfoBox from '../components/containers/RiderInfoBox';
 function DriverPickUpPage() {
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY} libraries={libraries}>
-      <PickUpMap />
+      <PickUpMap isDriver={true}/>
       <RiderInfoBox />
     </LoadScript>
   );
