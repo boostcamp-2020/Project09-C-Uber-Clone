@@ -1,6 +1,8 @@
 import { loginRiderQuery, loginDriverQuery } from '../queries/login';
 
-export const requestLogin = async (client: any, history: any, riderCheck : boolean, email: string, password: string) => {
+import { setLoginRole } from '../slices/loginSlice';
+
+export const requestLogin = async (client: any, history: any, riderCheck : boolean, email: string, password: string, dispatch: any) => {
   const { data } = await client.mutate({
     mutation: riderCheck ? loginRiderQuery : loginDriverQuery,
     variables: { email, password },
@@ -11,7 +13,8 @@ export const requestLogin = async (client: any, history: any, riderCheck : boole
 
   if (success) {
     localStorage.setItem('token', token);
-    riderCheck ? history.push('/setcourse') : history.push('/signup/select');
+    dispatch(setLoginRole(role));
+    riderCheck ? history.push('/setcourse') : history.push('/driver/main');
   } else {
     window.alert(message);
   }
