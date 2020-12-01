@@ -43,7 +43,6 @@ export default {
   },
   Subscription: {
     callRequested: {
-      // Additional event labels can be passed to asyncIterator creation
       subscribe: () => pubsub.asyncIterator([CALL_REQUESTED]),
     },
   },
