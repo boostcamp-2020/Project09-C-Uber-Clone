@@ -4,14 +4,14 @@ import { driverListen } from '../queries/driverListen';
 
 function DriverMainPage() {
   const { loading, error, data } = useSubscription(driverListen);
-  console.log (JSON.stringify(data))
-  if(error){
-    return <p>error</p>
+  console.log(JSON.stringify(data));
+  if (error) {
+    return <p>error</p>;
   }
-  if(loading){
-    return <p>Loading...</p>
+  if (loading) {
+    return <p>Loading...</p>;
   }
-  return  <p>riderId:</p>
+  return <p>riderId:</p>;
 }
 
 export default DriverMainPage;
