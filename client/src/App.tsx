@@ -4,7 +4,6 @@ import React from 'react';
 
 import { Route, Switch } from 'react-router-dom';
 
-import LoginPage from './pages/LoginPage';
 import SignUpSelectPage from './pages/SignUpSelectPage';
 import RiderSignUpPage from './pages/RiderSignUpPage';
 import DriverSignUpPage from './pages/DriverSignUpPage';
@@ -18,7 +17,6 @@ export default function App() {
         <Route path='/signup/select' component={SignUpSelectPage} />
         <Route path='/signup/rider' component={RiderSignUpPage} />
         <Route path='/signup/driver' component={DriverSignUpPage} />
-        <Route path='/login' component={LoginPage} />
         <RouteIf path='*' />
       </Switch>
     </>

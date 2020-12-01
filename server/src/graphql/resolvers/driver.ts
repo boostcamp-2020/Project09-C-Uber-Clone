@@ -48,7 +48,6 @@ export default {
   },
   Subscription: {
     driverListen: {
-      // Additional event labels can be passed to asyncIterator creation
       subscribe: () => pubsub.asyncIterator(["driverListen"]),
     },
   },

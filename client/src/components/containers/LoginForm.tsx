@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { useApolloClient } from '@apollo/client';
 
@@ -7,12 +8,11 @@ import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import Input from '../presentational/Input';
-
 import { requestLogin } from '../../apis/loginAPI';
 
 import { checkValidation } from '../../utils/validate';
 
+import Input from '../presentational/Input';
 import SubmitButton from '../presentational/SubmitButton';
 
 const Div = styled.div`
@@ -46,6 +46,7 @@ const SignupButton = styled.button`
 function LoginForm() {
   const client = useApolloClient();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
@@ -58,7 +59,7 @@ function LoginForm() {
   };
 
   const handleLoginButtonClick = () => {
-    requestLogin(client, history, riderCheck, email, password);
+    requestLogin(client, history, riderCheck, email, password, dispatch);
   };
 
   const checkToggle = (e: any) => {
