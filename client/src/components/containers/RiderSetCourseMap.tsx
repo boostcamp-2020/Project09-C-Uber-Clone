@@ -1,5 +1,5 @@
-import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React, { useState, useCallback, memo, useRef, useEffect, ReactChild } from 'react';
+import { GoogleMap, LoadScript, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -43,6 +43,14 @@ const INIT_POS = {
   lng: 126.97,
 };
 
+enum TravelMode {
+  BICYCLING = 'BICYCLING',
+  DRIVING = 'DRIVING',
+  TRANSIT = 'TRANSIT',
+  TWO_WHEELER = 'TWO_WHEELER',
+  WALKING = 'WALKING',
+}
+
 function RiderSetCourseMap() {
   const {
     originPosition,
@@ -58,6 +66,7 @@ function RiderSetCourseMap() {
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
   const [center, setCenter] = useState(INIT_POS);
+  const [directionResponse, setDirectionResponse] = useState(null);
 
   const pickerEl = useRef(null);
 
@@ -69,27 +78,45 @@ function RiderSetCourseMap() {
     setMap(null);
   }, []);
 
-  const checkDestMarker = (tempPlace: string) => {
+  const getAddressFromLatLng = (position: {lat: number, lng: number}): Promise<string> => {
+    const geocoder = new google.maps.Geocoder;
+    return new Promise((resolve, reject) => {
+      geocoder.geocode(
+        { location: position },
+        (
+          results: google.maps.GeocoderResult[],
+          status: google.maps.GeocoderStatus,
+        ) => {
+          if (status === 'OK' && results[0]) {
+            resolve(results[0].formatted_address);
+          }
+          reject(new Error('cannot find address'));
+        },
+      );
+    });
+  };
+
+  const checkDestMarker = (address: string) => {
     dispatch(setDestPosition(NEW_MARKER_POS));
-    dispatch(setDestPlace(tempPlace));
+    dispatch(setDestPlace(address));
     dispatch(setDestMarker('check'));
   };
 
-  const checkOriginMarker = (tempPlace: string) => {
+  const checkOriginMarker = (address: string) => {
     dispatch(setOriginPosition(NEW_MARKER_POS));
-    dispatch(setOriginPlace(tempPlace));
+    dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('check'));
   };
 
-  const addMarker = ({ lat, lng }: { lat: number, lng: number}) => {
+  const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
     NEW_MARKER_POS.lat = lat;
     NEW_MARKER_POS.lng = lng;
-    const tempPlace = `위도 :${NEW_MARKER_POS.lat} 경도:${NEW_MARKER_POS.lng}`;
+    const address = await getAddressFromLatLng({ lat, lng });
 
     if (originMarker === 'check') {
-      return checkDestMarker(tempPlace);
+      return checkDestMarker(address);
     }
-    checkOriginMarker(tempPlace);
+    checkOriginMarker(address);
   };
 
   const onDragEnd = () => {
@@ -146,6 +173,30 @@ function RiderSetCourseMap() {
         label={'도착'}
         visible={isDestVisible}
       />
+      {originPlace !== '' && destPlace !== '' &&
+        <DirectionsService
+          options={{
+            destination: destPosition,
+            origin: originPosition,
+            travelMode: TravelMode.DRIVING,
+          }}
+          callback={async (response: any, status) => {
+            if (response !== null && status === 'OK') {
+              setDirectionResponse(response);
+            };
+          }}
+        />
+      }
+      {directionResponse &&
+        <DirectionsRenderer
+          options={{
+            directions: directionResponse,
+            markerOptions: {
+              visible: false,
+            },
+          }}
+        />
+      }
     </GoogleMap>
   );
 }
