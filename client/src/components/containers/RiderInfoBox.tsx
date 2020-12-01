@@ -34,7 +34,7 @@ const Buttons = styled.div`
 
 const PickUpButton = styled.button`
     width: 54%;
-    height: 40px;
+    height: 50px;
     background-color: #56A902;
     color: #ffffff;
     border:none;
@@ -43,22 +43,18 @@ const PickUpButton = styled.button`
 
 const ChatButton = styled.button`
     width: 45%;
-    height: 40px;
+    height: 50px;
     background-color: #ffffff;
     border: 0.5px solid #e0e0e0;
     border-radius: 15px;
 `;
 
 function RiderInfoBox() {
-  const [riderName, setRiderName] = useState('');
-  const [pickUpLocation, setPickUpLocation] = useState('');
   return (
     <>
       <Modal>
-        <RiderName>{riderName ? riderName : '라이더 이름'}</RiderName>
-        <PickUpInfo>
-          {pickUpLocation ? pickUpLocation : '픽업 위치'}
-        </PickUpInfo>
+        <RiderName>라이더 이름</RiderName>
+        <PickUpInfo>픽업 위치</PickUpInfo>
         <Buttons>
           <PickUpButton>탑승완료</PickUpButton>
           <ChatButton>채팅하기</ChatButton>
