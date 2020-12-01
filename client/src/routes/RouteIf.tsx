@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 
 import SetCoursePage from '../pages/SetCoursePage';
+import DriverMainPage from '../pages/DriverMainPage';
 interface Paths {
   path: string;
 }
@@ -18,6 +19,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
           return (
             <Switch>
               <Route path='/setcourse' component={SetCoursePage} />
+              <Route path='/driverMain' component={DriverMainPage} />
               <Redirect path="*" to="/login" />
             </Switch>
           );

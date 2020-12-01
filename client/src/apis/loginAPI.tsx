@@ -11,7 +11,8 @@ export const requestLogin = async (client: any, history: any, riderCheck : boole
 
   if (success) {
     localStorage.setItem('token', token);
-    riderCheck ? history.push('/setcourse') : history.push('/signup/select');
+    riderCheck ? history.push('/setcourse') : history.push('/driverMain');
+    return success;
   } else {
     window.alert(message);
   }
