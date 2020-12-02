@@ -24,11 +24,21 @@ type driverCall  {
   destination: String
 }
 
+input DriverPositionInput {
+  lat: Float
+  lng: Float
+}
+
+type DriverPosition {
+  lat: Float
+  lng: Float
+}
+
 type driverStateNotify {
   operationId: String
   driverId: String
   riderId: String
-  driverPosition: String
+  driverPosition: DriverPosition
   isDrop: Boolean
 }
 
@@ -63,7 +73,7 @@ type Mutation {
     operationId: String
     driverId: String
     riderId: String
-    driverPosition: String
+    driverPosition: DriverPositionInput
     isDrop: Boolean
   ): driverStateNotify
 }
