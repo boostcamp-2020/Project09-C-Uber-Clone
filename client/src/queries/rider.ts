@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const notifyRiderState = gql`
+const notifyRiderStateQuery = gql`
   mutation ($tripId: ID!, $latitude: Float!, $longitude: Float!) {
     notifyRiderState(tripId: $tripId, latitude: $latitude, longitude: $$longitude) {
       Boolean
@@ -8,7 +8,7 @@ const notifyRiderState = gql`
   }
 `;
 
-const matchedRiderState = gql`
+const matchedRiderStateQuery = gql`
   subscription ($tripId: ID!) {
     matchedRiderState(tripId: $tripId) {
       tripId
@@ -18,4 +18,4 @@ const matchedRiderState = gql`
   }
 `;
 
-export { notifyRiderState, matchedRiderState };
+export { notifyRiderStateQuery, matchedRiderStateQuery };
