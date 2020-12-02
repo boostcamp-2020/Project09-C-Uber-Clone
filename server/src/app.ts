@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import http from 'http';
-import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError, PubSub } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { buildContext } from 'graphql-passport';
@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGODB_URL || '', options)
   .then(() => console.log('Successfully connected to mongodb'))
   .catch(e => console.error(e));
 
+const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -29,9 +30,9 @@ const server = new ApolloServer({
   },
   context: ({ req, res, connection }) => {
     if (connection) {
-      return connection.context;
+      return { data: connection.context, pubsub };
     }
-    return buildContext({ req, res });
+    return buildContext({ req, res, pubsub });
   },
   subscriptions: {
     onConnect: async (connectionParams:{Authorization?:string}, webSocket, context) => {
