@@ -70,7 +70,7 @@ function SetCourseForm() {
   const [skip, setSkip] = useState(true);
   useSubscription(driverResponded, { skip, onSubscriptionData: ({ subscriptionData: { data } }) => {
     console.log(data);
-    //TODO: data의 response메시지가 success이면 운행정보의 status를 matched로 변경 후 skip:true로 변경
+    //TODO: data의 response메시지가 success이면 skip:true로 변경 후 다음 화면
   } });
 
   const { originPlace, destPlace }: any = useSelector(selectMapReducer);

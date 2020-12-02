@@ -45,6 +45,10 @@ const ExpectationHeader = styled.div`
 `;
 
 function DriverPopup() {
+  //TODO: IGONRE 버튼 클릭 시 다음 호출 대기
+  //TODO: CONFIRM 버튼 클릭 시 driverResponse mutate,
+  //      response의 result가 success 이면 callRequested subscription 취소 후 다음 화면
+  //      response의 result가 fail 이면 다음 호출 대기
   return (
     <>
       <ModalOverlay />
