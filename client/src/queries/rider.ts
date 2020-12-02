@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
 
-const notifyRiderStateQuery = gql`
+export const notifyRiderStateQuery = gql`
   mutation notifyRiderState($tripId: ID!, $latitude: Float!, $longitude: Float!) {
     notifyRiderState(tripId: $tripId, latitude: $latitude, longitude: $longitude)
   }
 `;
 
-const matchedRiderStateQuery = gql`
+export const matchedRiderStateQuery = gql`
   subscription matchedRiderState($tripId: ID!) {
     matchedRiderState(tripId: $tripId) {
       tripId
@@ -15,5 +15,14 @@ const matchedRiderStateQuery = gql`
     }
   }
 `;
-
-export { notifyRiderStateQuery, matchedRiderStateQuery };
+export const matchedDriverState = gql`
+	subscription {
+		matchedDriverState { 
+	    operationId
+	    driverId
+	    riderId
+	    driverPosition
+	    isDrop
+	  }
+	}
+`;
