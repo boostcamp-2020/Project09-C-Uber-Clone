@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { split, HttpLink } from '@apollo/client';
+import { split } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { setContext } from '@apollo/client/link/context';
 
