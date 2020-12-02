@@ -6,8 +6,11 @@ export const matchedDriverState = gql`
 	    operationId
 	    driverId
 	    riderId
-	    driverPosition
 	    isDrop
+	    driverPosition {
+				lat
+				lng
+			}
 	  }
 	}
 `;
