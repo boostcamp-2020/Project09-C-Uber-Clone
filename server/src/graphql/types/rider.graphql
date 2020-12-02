@@ -6,6 +6,12 @@ type Rider {
   phoneNumber: String!
 }
 
+type DriverResponse{
+  riderID: ID!
+  driverID: ID!
+  response: String!
+}
+
 type Query {
   rider(email: String!): Rider
 }
@@ -18,4 +24,8 @@ type Mutation {
     password: String!,
     phoneNumber: String!
   ): Rider
+}
+
+type Subscription {
+  driverResponded: DriverResponse
 }

@@ -39,6 +39,7 @@ type Mutation {
   ): Driver
   loginDriver(email: String!, password: String!): LoginResult
   driverCall(riderId: String, origin: String, destination: String): driverCall
+  sendResponse(message: String!, riderID: ID!): String
 }
 
 type Subscription {
