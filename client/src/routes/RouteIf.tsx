@@ -16,6 +16,9 @@ import DriverPickUpPage from '../pages/DriverPickUpPage';
 import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
 
+import RiderPickUpForm from '../components/containers/RiderPickUpForm';
+import DriverPickUpForm from '../components/containers/DriverPickUpForm';
+
 interface Paths {
   path: string;
 }
@@ -45,8 +48,8 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
         if (loginReducer.loginRole === 'rider') {
           return (
             <Switch>
-              <Route path='/setcourse' component={SetCoursePage} />
-              <Route path='/pickup' component={RiderPickUpPage} />
+              <Route path='/rider/setcourse' component={SetCoursePage} />
+              <Route path='/rider/pickup' component={RiderPickUpPage} />
               <Redirect path="*" to="/setcourse" />
             </Switch>
           );
