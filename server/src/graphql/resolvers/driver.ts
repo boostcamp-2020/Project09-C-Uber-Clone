@@ -24,8 +24,8 @@ interface DriverCallArgs {
 }
 
 interface DriverResponse {
-  riderID: string;
-  tripID: string;
+  riderId: string;
+  tripId: string;
   response: string;
 }
 

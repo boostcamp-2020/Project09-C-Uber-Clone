@@ -3,18 +3,18 @@ import { gql } from '@apollo/client';
 export const driverResponded = gql`
     subscription {
         driverResponded { 
-            riderID
-            driverID
+            riderId
+            driverId
             response
         }
     }
 `;
 
 export const driverResponse = gql`
-    mutation test($response:String!,$riderID:ID!,$tripID:ID!){
-        sendResponse(response:$response,riderID:$riderID,tripID:$tripID){
-            riderID
-            tripID
+    mutation test($response:String!,$riderId:ID!,$tripId:ID!){
+        sendResponse(response:$response,riderId:$riderId,tripId:$tripId){
+            riderId
+            tripId
             result
         }
     }

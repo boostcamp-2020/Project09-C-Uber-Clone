@@ -33,7 +33,7 @@ export default {
         return context.pubsub.asyncIterator(['driverResponded']);
       },
       (payload, variables, context) => {
-        return payload.driverResponded.riderID === context.data.currentUser.data._id.toString();
+        return payload.driverResponded.riderId === context.data.currentUser.data._id.toString();
       },
       ),
     },

@@ -7,9 +7,9 @@ type Rider {
 }
 
 type DriverResponse{
-  riderID: ID!
-  driverID: ID!
-  tripID: ID!
+  riderId: ID!
+  driverId: ID!
+  tripId: ID!
   response: String!
 }
 
