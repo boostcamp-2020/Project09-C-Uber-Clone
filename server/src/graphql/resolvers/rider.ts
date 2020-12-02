@@ -1,4 +1,4 @@
-import { PubSub } from 'apollo-server-express';
+import { PubSub, withFilter } from 'apollo-server-express';
 
 import { Rider } from '../../services';
 
@@ -17,6 +17,7 @@ interface createRiderArgs {
 const pubsub = new PubSub();
 
 const MATCHED_RIDER_STATE = 'MATCHED_RIDER_STATE';
+
 export default {
   Query: {
     async rider(parent: any, args: { email: string }, context: any, info: any) {
@@ -36,7 +37,12 @@ export default {
   },
   Subscription: {
     matchedRiderState: {
-      subscribe: () => pubsub.asyncIterator([MATCHED_RIDER_STATE]),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([MATCHED_RIDER_STATE]),
+        (payload, variables) => {
+          return payload.matchedRiderState.tripId === variables.tripId;
+        },
+      ),
     },
   },
 };

@@ -8,8 +8,6 @@ type Rider {
 
 type RiderState {
   tripId: ID!
-  riderId: ID!
-  driverId: ID!
   latitude: Float!
   longitude: Float!
 }
@@ -26,9 +24,9 @@ type Mutation {
     password: String!,
     phoneNumber: String!
   ): Rider
-  notifyRiderState(tripId: ID, latitude: Float, longitude: Float): RiderState
+  notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): RiderState
 }
 
 type Subscription {
-  matchedRiderState: RiderState
+  matchedRiderState(tripId: ID!): RiderState
 }
