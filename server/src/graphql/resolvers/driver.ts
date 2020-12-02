@@ -42,13 +42,13 @@ export default {
       return await Driver.login(context, payload);
     },
     async driverCall(root, args : DriverCallArgs, context) {
-      pubsub.publish("driverListen", { driverListen: args });
+      pubsub.publish('driverListen', { driverListen: args });
       return await args;
     },
   },
   Subscription: {
     driverListen: {
-      subscribe: () => pubsub.asyncIterator(["driverListen"]),
+      subscribe: () => pubsub.asyncIterator(['driverListen']),
     },
   },
 };
