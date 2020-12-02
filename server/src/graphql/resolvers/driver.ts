@@ -1,5 +1,5 @@
 import { AuthenticationError } from 'apollo-server-express';
-import { Driver } from '../../services';
+import { Driver, Trip } from '../../services';
 
 interface createDriverArgs {
   email: string;
@@ -23,6 +23,12 @@ interface DriverCallArgs {
   destination: string;
 }
 
+interface DriverResponse {
+  riderID: string;
+  tripID: string;
+  response: string;
+}
+
 export default {
   Query: {
     async driver(parent: any, args: { email: string }, context: any, info: any) {
@@ -36,22 +42,20 @@ export default {
     async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
       return await Driver.signup(args);
     },
-    async loginDriver(_: any, payload:LoginPayload, context) {
+    async loginDriver(parent: any, payload:LoginPayload, context) {
       return await Driver.login(context, payload);
     },
-    async driverCall(root, args : DriverCallArgs, context) {
+    async driverCall(parent, args : DriverCallArgs, context) {
       context.pubsub.publish('driverListen', { driverListen: args });
-      return await args;
+      return args;
     },
-    async sendResponse(parent:any, args:{message:string, riderID:string}, context:any) {
-      const driverID = context.req.user.data._id;
-      context.pubsub.publish('driverResponded', { driverResponded: { riderID: args.riderID, driverID, response: args.message } });
-      return args.message ;
+    async sendResponse(parent:any, args:DriverResponse, context:any) {
+      return await Trip.sendDriverResponse(args, context);
     },
   },
   Subscription: {
     driverListen: {
-      subscribe: (prent, args, context) => context.pubsub.asyncIterator(['driverListen']),
+      subscribe: (parent:any, args:object, context:any) => context.pubsub.asyncIterator(['driverListen']),
     },
   },
 };
