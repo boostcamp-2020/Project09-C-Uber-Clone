@@ -1,11 +1,11 @@
 import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
 
-type riderInterface = {
-  email: String,
-  name: String,
-  password: String,
-  phoneNumber: String,
+interface riderInterface {
+  email: string;
+  name: string;
+  password: string;
+  phoneNumber: string;
 }
 
 const riderSchema = new Schema({
