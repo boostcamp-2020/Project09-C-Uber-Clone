@@ -25,6 +25,8 @@ interface DriverCallArgs {
 
 const pubsub = new PubSub();
 
+const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
+
 export default {
   Query: {
     async driver(parent: any, args: { email: string }, context: any, info: any) {
@@ -35,20 +37,26 @@ export default {
     },
   },
   Mutation: {
-    async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
+    async createDriver(_, args: createDriverArgs) {
       return await Driver.signup(args);
     },
     async loginDriver(_: any, payload:LoginPayload, context) {
       return await Driver.login(context, payload);
     },
-    async driverCall(root, args : DriverCallArgs, context) {
+    async driverCall(_, args : DriverCallArgs) {
       pubsub.publish('driverListen', { driverListen: args });
       return await args;
+    },
+    async driverStateNotify(_, args) {
+      pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
     },
   },
   Subscription: {
     driverListen: {
       subscribe: () => pubsub.asyncIterator(['driverListen']),
+    },
+    matchedDriverState: {
+      subscribe: () => pubsub.asyncIterator([MATCHED_DRIVER_STATE]),
     },
   },
 };
