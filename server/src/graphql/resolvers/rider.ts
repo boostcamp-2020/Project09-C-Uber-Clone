@@ -1,3 +1,4 @@
+import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 
 interface LoginPayload{
@@ -24,6 +25,17 @@ export default {
     },
     async createRider (parent: any, payload: createRiderArgs, context: any) {
       return await Rider.signup(payload);
+    },
+  },
+  Subscription: {
+    driverResponded: {
+      subscribe: withFilter((parent, args, context) => {
+        return context.pubsub.asyncIterator(['driverResponded']);
+      },
+      (payload, variables, context) => {
+        return payload.driverResponded.riderID === context.data.currentUser.data._id.toString();
+      },
+      ),
     },
   },
 };

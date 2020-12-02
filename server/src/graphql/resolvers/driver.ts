@@ -1,4 +1,4 @@
-import { AuthenticationError, PubSub } from 'apollo-server-express';
+import { AuthenticationError } from 'apollo-server-express';
 import { Driver } from '../../services';
 
 interface createDriverArgs {
@@ -23,8 +23,6 @@ interface DriverCallArgs {
   destination: string;
 }
 
-const pubsub = new PubSub();
-
 export default {
   Query: {
     async driver(parent: any, args: { email: string }, context: any, info: any) {
@@ -42,13 +40,18 @@ export default {
       return await Driver.login(context, payload);
     },
     async driverCall(root, args : DriverCallArgs, context) {
-      pubsub.publish("driverListen", { driverListen: args });
+      context.pubsub.publish('driverListen', { driverListen: args });
       return await args;
+    },
+    async sendResponse(parent:any, args:{message:string, riderID:string}, context:any) {
+      const driverID = context.req.user.data._id;
+      context.pubsub.publish('driverResponded', { driverResponded: { riderID: args.riderID, driverID, response: args.message } });
+      return args.message ;
     },
   },
   Subscription: {
     driverListen: {
-      subscribe: () => pubsub.asyncIterator(["driverListen"]),
+      subscribe: (prent, args, context) => context.pubsub.asyncIterator(['driverListen']),
     },
   },
 };
