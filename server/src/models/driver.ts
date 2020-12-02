@@ -1,15 +1,17 @@
 import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
 
-type driverInterface = {
-  email: String,
-  name: String,
-  password: String,
-  phoneNumber: String,
-  carType: String,
-  plateNumber: String,
-  description: String,
-  profileImage: String,
+interface driverInterface {
+  email: string;
+  name: string;
+  password: string;
+  phoneNumber: string;
+  carType: string;
+  plateNumber: string;
+  description: string;
+  profileImage: string;
+  latitude: number;
+  longitude: number;
 }
 
 const driverSchema = new Schema({
@@ -21,6 +23,8 @@ const driverSchema = new Schema({
   plateNumber: { type: String, unique: true, required: true },
   description: String,
   profileImage: String,
+  latitude: Number,
+  longitude: Number,
 });
 
 export default model<driverInterface & Document>('Driver', driverSchema);
