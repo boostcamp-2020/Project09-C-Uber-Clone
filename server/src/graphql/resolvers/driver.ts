@@ -47,8 +47,9 @@ export default {
       pubsub.publish('driverListen', { driverListen: args });
       return await args;
     },
-    async driverStateNotify(_, args) {
+    driverStateNotify(_, args) {
       pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
+      return args;
     },
   },
   Subscription: {
