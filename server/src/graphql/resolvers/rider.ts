@@ -33,6 +33,7 @@ export default {
     },
     async notifyRiderState(parent: any, args: any, context: any) {
       pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
+      return true;
     },
   },
   Subscription: {
