@@ -17,6 +17,7 @@ type LoginResult {
   role: String!
   token: String
 }
+
 type driverCall  {
   riderId: String
   origin: String
@@ -26,6 +27,7 @@ type driverCall  {
 type Query {
   driver(email: String!): Driver
 }
+
 type Mutation {
   createDriver(
     email: String!,
