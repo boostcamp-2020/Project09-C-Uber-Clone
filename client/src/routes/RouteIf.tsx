@@ -50,7 +50,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             <Switch>
               <Route path='/rider/setcourse' component={SetCoursePage} />
               <Route path='/rider/pickup' component={RiderPickUpPage} />
-              <Redirect path="*" to="/setcourse" />
+              <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );
         }
