@@ -24,7 +24,7 @@ type Mutation {
     password: String!,
     phoneNumber: String!
   ): Rider
-  notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): RiderState
+  notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): RiderState @isAuthorized
 }
 
 type Subscription {
