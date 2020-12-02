@@ -23,6 +23,12 @@ type driverCall  {
   destination: String
 }
 
+type matchedTrip {
+  riderID: ID!
+  tripID: ID!
+  result: String!
+}
+
 type Query {
   driver(email: String!): Driver
 }
@@ -39,7 +45,7 @@ type Mutation {
   ): Driver
   loginDriver(email: String!, password: String!): LoginResult
   driverCall(riderId: String, origin: String, destination: String): driverCall
-  sendResponse(message: String!, riderID: ID!): String
+  sendResponse(response: String!, riderID: ID!,tripID: ID!): matchedTrip
 }
 
 type Subscription {
