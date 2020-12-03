@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import { useSubscription } from '@apollo/client';
+
 import { driverListen } from '../queries/callRequest';
 
+import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
+import DriverPopup from '../components/presentational/DriverPopup';
+
 function DriverWaitingPage() {
-  const { loading, error, data } = useSubscription(driverListen, { onSubscriptionData: ({ subscriptionData: { data } }) => {
-    console.log(data);
-  } });
-  console.log(JSON.stringify(data));
+  const { loading, error, data } = useSubscription(driverListen);
+  const [riderCalls, setRiderCalls] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setRiderCalls([...riderCalls, data]);
+    }
+  }, [data]);
+
   if (error) {
-    return <p>error</p>;
+    console.log(error);
   }
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+
   return (
     <>
-      <p>riderId:</p>
+      {riderCalls.length > 0 && <DriverPopup />}
       <DriverCurrentPositionMap />
     </>
   );
