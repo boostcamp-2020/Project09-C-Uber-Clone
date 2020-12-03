@@ -3,15 +3,29 @@ import { driverCall } from '../queries/callRequest';
 import { ApolloClient } from '@apollo/client';
 
 interface Position {
-  lat: number;
-  lng: number;
+  lat: number
+  lng: number
 }
 
-export const callRequest = async (client: ApolloClient<Object>, driverIds: string[], riderId: string, origin : Position, destination: Position) => {
+interface riderPublishInfo {
+  riderId: string
+  riderEmail: string
+  riderName: string
+  riderPos: Position
+  pickUpPos: Position
+  pickUpAddress: string
+  destinationPos: Position
+  destinationAddress: string
+  tripStatus: string
+}
+
+export const callRequest = async (
+  client: ApolloClient<Object>,
+  riderPublishInfo: riderPublishInfo) => {
   try {
     await client.mutate({
       mutation: driverCall,
-      variables: { driverIds, riderId, origin, destination },
+      variables: { riderPublishInfo: riderPublishInfo },
       fetchPolicy: 'no-cache',
     });
     window.alert('경로 전송');

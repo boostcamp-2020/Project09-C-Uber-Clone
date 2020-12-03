@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
-import Map from './RiderSetCourseMap';
+import RiderSetCourseMap from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
 import { driverResponded } from '../../queries/driverResponded';
 
@@ -25,34 +25,26 @@ import {
 const Header = styled.div`
   height: 130px;
   padding:10px;
-
   background: #56A902;
 `;
 
 const PageTitle = styled.div`
   left: 30px;
   top: 44px;
-
   font-style: normal;
   font-weight: normal;
   font-size: 48px;
   line-height: 56px;
-
   color: #F8F8FF;
 `;
 
 const FormTitle = styled.div`
   padding:8px;
-
   font-style: normal;
   font-weight: bold;
   font-size: 20px;
   line-height: 27px;
-  /* identical to box height */
-
   letter-spacing: -0.02em;
-
-  /* 9 black */
   color: #000000;
 `;
 
@@ -65,18 +57,35 @@ const HereButton = styled.button`
   cursor: pointer;
 `;
 
+interface PublishPosition {
+  lat: number
+  lng: number
+}
+
+interface riderPublishInfo {
+  riderId: string
+  riderEmail: string
+  riderName: string
+  riderPos: PublishPosition
+  pickUpPos: PublishPosition
+  pickUpAddress: string
+  destinationPos: PublishPosition
+  destinationAddress: string
+  tripStatus: string
+}
+
 function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
 
+  const [riderPos, setRiderPos] = useState({ lat: 0, lng: 0 });
   const [skip, setSkip] = useState(true);
   useSubscription(driverResponded, { skip, onSubscriptionData: ({ subscriptionData: { data } }) => {
     console.log(data);
     //TODO: data의 response메시지가 success이면 skip:true로 변경 후 다음 화면
   } });
 
-  const { originPlace, destPlace }: any = useSelector(selectMapReducer);
-  const { originPosition, destPosition } : any = useSelector(selectMapReducer);
+  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
@@ -87,31 +96,50 @@ function SetCourseForm() {
     dispatch(setPosition({ lat: 0, lng: 0 }));
     dispatch(setMarker(''));
   };
-  const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
+
   const handelCourseSubmitButton = () => {
-    callRequest(client, driverIds, 'riderId', originPosition, destPosition);
+    const riderPublishInfo: riderPublishInfo = {
+      riderId: '',
+      riderEmail: '',
+      riderName: '',
+      riderPos: riderPos,
+      pickUpPos: originPosition,
+      pickUpAddress: originPlace,
+      destinationPos: destPosition,
+      destinationAddress: destPlace,
+      tripStatus: 'open',
+    };
+    callRequest(client, riderPublishInfo);
     setSkip(false);
   };
 
-  const makeStartingPointHere = () => {
+  const success = (position: Position): any => {
+    const pos = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    setRiderPos(pos);
+  };
+
+  const navError = (): any => {
+    console.log('Error: The Geolocation service failed.');
+  };
+
+  const options = {
+    enableHighAccuracy: false,
+    maximumAge: 0,
+  };
+
+  const getCurrentRiderPos = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position: Position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          dispatch(setOriginPosition(pos));
-          dispatch(setOriginPlace('현재위치'));
-          dispatch(setOriginMarker('현재위치'));
-        },
-        () => {
-          console.log('Error: The Geolocation service failed.');
-        },
-      );
-    } else {
-      console.log('Error: Your browser doesn\'t support geolocation');
+      navigator.geolocation.watchPosition(success, navError, options);
     }
+  };
+
+  const makeStartingPointHere = () => {
+    dispatch(setOriginPosition(riderPos));
+    dispatch(setOriginPlace('현재위치'));
+    dispatch(setOriginMarker('현재위치'));
   };
 
   const onOrignAutocompleteLoad = (autocomplete: any) => {
@@ -128,6 +156,7 @@ function SetCourseForm() {
       setOriginAutocomplete(originAutocomplete);
     }
   };
+
   const destAutocompleteLoad = (autocomplete: any) => {
     setDestAutocomplete(autocomplete);
   };
@@ -159,12 +188,16 @@ function SetCourseForm() {
     setDestInput(destPlace);
   }, [destPlace]);
 
+  useEffect(() => {
+    getCurrentRiderPos();
+  }, []);
+
   return (
     <>
       <Header>
         <PageTitle>라이더 <br/> 경로설정</PageTitle>
       </Header>
-      <Map />
+      <RiderSetCourseMap />
       <FormTitle>경로 선택</FormTitle>
       <PlaceSearchBox
         placeholder='출발지'
