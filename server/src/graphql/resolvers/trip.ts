@@ -6,8 +6,8 @@ interface cancelPayload{
 
 export default {
   Mutation: {
-    async cancelTrip(_: any, payload:cancelPayload, context) {
-      return await Trip.cancelTrip(payload);
+    async cancelTrip(_: any, payload:cancelPayload) {
+      return await Trip.cancel(payload);
     },
   },
 };
