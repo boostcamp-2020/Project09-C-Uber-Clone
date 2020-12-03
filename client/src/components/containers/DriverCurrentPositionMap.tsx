@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Circle } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
-  height: '700px',
+  height: '100vh',
 };
 
 const INIT_POS = {
