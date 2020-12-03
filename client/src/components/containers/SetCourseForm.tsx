@@ -87,10 +87,9 @@ function SetCourseForm() {
     dispatch(setPosition({ lat: 0, lng: 0 }));
     dispatch(setMarker(''));
   };
-
-  const driverIdList = [1, 2, 3];
+  const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
   const handelCourseSubmitButton = () => {
-    callRequest(client, driverIdList, 'riderId', originPosition, destPosition);
+    callRequest(client, driverIds, 'riderId', originPosition, destPosition);
     setSkip(false);
   };
 
