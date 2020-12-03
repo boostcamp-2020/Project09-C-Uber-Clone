@@ -1,0 +1,33 @@
+type MatchedRider {
+  id: ID!
+  email: String!
+  name: String!
+}
+
+type MatchedDriver {
+  id: ID!
+  email: String!
+  name: String!
+  carType: String!
+  plateNumber: String!
+  description: String
+  profileImage: String
+}
+
+type TripPlace {
+  address: String!
+  latitude: Float!
+  longitude: Float!
+}
+
+type Trip {
+  id: ID!
+  rider: MatchedRider!
+  driver: MatchedDriver!
+  origin: TripPlace!
+  destination: TripPlace!
+  startTime: Date!
+  arrivalTime: Date
+  status: String!
+  distance: Float
+}
