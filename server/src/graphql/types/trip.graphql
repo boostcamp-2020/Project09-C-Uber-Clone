@@ -31,3 +31,7 @@ type Trip {
   status: String!
   distance: Float
 }
+
+type Mutation {
+  openTrip(riderEmail: String, origin: TripPlace!, destination: TripPlace!, startTime: Date!, distance: Float) : Trip
+}
