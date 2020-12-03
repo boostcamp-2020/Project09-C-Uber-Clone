@@ -10,4 +10,10 @@ export default {
   findByEmail: async (payload: {email: string}) => {
     return await Driver.findOne({ email: payload.email });
   },
+  findAllByDistance: async({ lat, lng }:{lat:number, lng:number}) => {
+    const latitude = { $gte: lat - 0.03, $lte: lat + 0.03 };
+    const longitude = { $gte: lng - 0.03, $lte: lng + 0.03 };
+    return await Driver.find({ latitude, longitude }, '_id');
+  },
 };
+;
