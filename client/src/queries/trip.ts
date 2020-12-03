@@ -6,3 +6,7 @@ export const cancelCall = gql`mutation cancelCall($id:ID!){
     result
   }
 }`;
+
+export const getStatus = gql`query getStatus($id:ID!){
+  tripStatus(id:$id)
+}`;
