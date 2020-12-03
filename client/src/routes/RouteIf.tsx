@@ -16,9 +16,6 @@ import DriverPickUpPage from '../pages/DriverPickUpPage';
 import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
 
-import RiderPickUpForm from '../components/containers/RiderPickUpForm';
-import DriverPickUpForm from '../components/containers/DriverPickUpForm';
-
 interface Paths {
   path: string;
 }
