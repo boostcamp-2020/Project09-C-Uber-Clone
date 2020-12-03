@@ -1,5 +1,5 @@
-import React, { useState, useCallback, memo, useRef, useEffect, ReactChild } from 'react';
-import { GoogleMap, LoadScript, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
+import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
+import { GoogleMap, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
