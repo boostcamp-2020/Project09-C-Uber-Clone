@@ -7,6 +7,6 @@ export default ({ email, isDriver }:{email:string, isDriver:boolean}) => {
   },
   process.env.JWT_SECRET_KEY || '',
   {
-    expiresIn: '1h',
+    expiresIn: '1d',
   });
 };

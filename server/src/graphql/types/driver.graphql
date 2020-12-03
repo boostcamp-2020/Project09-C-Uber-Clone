@@ -33,9 +33,34 @@ type driverCall  {
   destination: Position
 }
 
+type matchedTrip {
+  riderId: ID!
+  tripId: ID!
+  result: String!
+}
+
+input DriverPositionInput {
+  lat: Float
+  lng: Float
+}
+
+type DriverPosition {
+  lat: Float
+  lng: Float
+}
+
+type driverStateNotify {
+  tripId: String
+  driverId: String
+  riderId: String
+  driverPosition: DriverPosition
+  isDrop: Boolean
+}
+
 type Query {
   driver(email: String!): Driver
 }
+
 type Mutation {
   createDriver(
     email: String!,
@@ -49,8 +74,35 @@ type Mutation {
   ): Driver
   loginDriver(email: String!, password: String!): LoginResult
   driverCall(driverIds: [String], riderId: String, origin: PositionInput, destination: PositionInput): driverCall
+
+  sendResponse(
+    response: String!, 
+    riderId: ID!,
+    tripId: ID!
+  ): matchedTrip
+
+  loginDriver(
+    email: String!,
+    password: String!
+  ): LoginResult
+  
+  driverCall(
+    riderId: String,
+    origin: String,
+    destination: String
+  ): driverCall
+  
+  driverStateNotify(
+    tripId: String
+    driverId: String
+    riderId: String
+    driverPosition: DriverPositionInput
+    isDrop: Boolean
+  ): driverStateNotify
+
 }
 
 type Subscription {
   driverListen: driverCall
+  matchedDriverState: driverStateNotify
 }

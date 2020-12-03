@@ -1,8 +1,10 @@
 import { PubSub } from 'apollo-server-express';
 
+import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 import { Trip } from '../../services';
 
+import { DRIVER_RESPONDED } from '../subscriptions';
 interface LoginPayload{
   email:string;
   password:string;
@@ -41,6 +43,17 @@ export default {
     async driverCall(parent:any, args: DriverCallArgs, context:any) {
       pubsub.publish('driverListen', { driverListen: args });
       return await Trip.create(args);
+    },
+  },
+  Subscription: {
+    driverResponded: {
+      subscribe: withFilter((parent, args, context) => {
+        return context.pubsub.asyncIterator([DRIVER_RESPONDED]);
+      },
+      (payload, variables, context) => {
+        return payload.driverResponded.riderId === context.data.currentUser.data._id.toString();
+      },
+      ),
     },
   },
 };

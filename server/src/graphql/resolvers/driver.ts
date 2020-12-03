@@ -1,5 +1,7 @@
 import { AuthenticationError, PubSub, withFilter } from 'apollo-server-express';
-import { Driver } from '../../services';
+import { Driver, Trip } from '../../services';
+
+import { DRIVER_RESPONDED } from '../subscriptions';
 
 interface createDriverArgs {
   email: string;
@@ -18,10 +20,23 @@ interface LoginPayload{
 }
 
 const pubsub = new PubSub();
+interface DriverCallArgs {
+  riderId: string;
+  origin: string;
+  destination: string;
+}
+
+interface DriverResponse {
+  riderId: string;
+  tripId: string;
+  response: string;
+}
+
+const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
 
 export default {
   Query: {
-    async driver(parent: any, args: { email: string }, context: any, info: any) {
+    async driver(_: any, args: { email: string }, context: any) {
       if (!context.req.user) {
         throw new AuthenticationError('No authorization');
       };
@@ -29,11 +44,28 @@ export default {
     },
   },
   Mutation: {
-    async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
+
+    async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
-    async loginDriver(_: any, payload:LoginPayload, context) {
+    async loginDriver(_: any, payload:LoginPayload, context:any) {
       return await Driver.login(context, payload);
+    },
+    async driverCall(_:any, args : DriverCallArgs, context:any) {
+      context.pubsub.publish('driverListen', { driverListen: args });
+      return args;
+    },
+    async sendResponse(_:any, args:DriverResponse, context:any) {
+      const driverId = context.req.user.data._id;
+      const checkResult = await Trip.checkTripStatus(args);
+      if (checkResult.result === 'success') {
+        context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
+      }
+      return checkResult;
+    },
+    driverStateNotify(_:any, args, context:any) {
+      context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
+      return args;
     },
   },
   Subscription: {
@@ -46,5 +78,9 @@ export default {
       },
       ),
     },
+    matchedDriverState: {
+      subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]),
+    },
   },
 };
+

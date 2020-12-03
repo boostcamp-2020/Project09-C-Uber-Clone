@@ -45,9 +45,9 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
         if (loginReducer.loginRole === 'rider') {
           return (
             <Switch>
-              <Route path='/setcourse' component={SetCoursePage} />
-              <Route path='/pickup' component={RiderPickUpPage} />
-              <Redirect path="*" to="/setcourse" />
+              <Route path='/rider/setcourse' component={SetCoursePage} />
+              <Route path='/rider/pickup' component={RiderPickUpPage} />
+              <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );
         }
