@@ -1,8 +1,10 @@
+import { ApolloClient } from '@apollo/client';
+
 import { loginRiderQuery, loginDriverQuery } from '../queries/login';
 
 import { setLoginRole } from '../slices/loginSlice';
 
-export const requestLogin = async (client: any, history: any, riderCheck : boolean, email: string, password: string, dispatch: any) => {
+export const requestLogin = async (client: ApolloClient<object>, history: any, riderCheck : boolean, email: string, password: string, dispatch: any) => {
   const { data } = await client.mutate({
     mutation: riderCheck ? loginRiderQuery : loginDriverQuery,
     variables: { email, password },

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
-import Map from './RiderSetCourseMap';
+import RiderSetCourseMap from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
 import { driverResponded } from '../../queries/driverResponded';
 
@@ -164,7 +164,7 @@ function SetCourseForm() {
       <Header>
         <PageTitle>라이더 <br/> 경로설정</PageTitle>
       </Header>
-      <Map />
+      <RiderSetCourseMap />
       <FormTitle>경로 선택</FormTitle>
       <PlaceSearchBox
         placeholder='출발지'

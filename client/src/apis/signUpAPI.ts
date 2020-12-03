@@ -1,3 +1,5 @@
+import { ApolloClient } from '@apollo/client';
+
 import { signUpDriver, signUpRider } from '../queries/signup';
 
 interface RiderInfo {
@@ -16,7 +18,7 @@ interface DriverInfo {
   plateNumber: string;
 }
 
-export const requestRiderSignUp = async(client: any, history: any, riderInfo: RiderInfo) => {
+export const requestRiderSignUp = async(client: ApolloClient<object>, history: any, riderInfo: RiderInfo) => {
   try {
     await client.mutate({
       mutation: signUpRider,
@@ -30,7 +32,7 @@ export const requestRiderSignUp = async(client: any, history: any, riderInfo: Ri
   }
 };
 
-export const requestDriverSignUp = async(client: any, history: any, driverInfo: DriverInfo) => {
+export const requestDriverSignUp = async(client: ApolloClient<object>, history: any, driverInfo: DriverInfo) => {
   try {
     await client.mutate({
       mutation: signUpDriver,
