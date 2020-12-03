@@ -132,7 +132,7 @@ function RiderSetCourseMap() {
     }
   };
 
-  const directionCallback = useCallback(async (response: any, status: any) => {
+  const directionCallback = useCallback((response: any, status: any) => {
     if (response !== null && status === 'OK') {
       setDirectionResponse(response);
     };
