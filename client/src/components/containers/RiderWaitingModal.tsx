@@ -5,6 +5,10 @@ import styled from 'styled-components';
 import CarLoadingImage from '../presentational/CarLoadingImage';
 import PickUpCancelButton from '../presentational/PickUpCancelButton';
 
+import { requestCancelCall } from '../../apis/callCancelAPI';
+import { useApolloClient } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -32,13 +36,21 @@ const Message = styled.div`
   color: rgba(117, 215, 1, 0.6);
 `;
 
+//TODO: call Request 결과 생성된 trip id 로 대체
+const TRIP_ID = '';
+
 function RiderWaitingForm() {
+  const client = useApolloClient();
+  const history = useHistory();
+  const handleClickCancel = () => {
+    requestCancelCall(client, history, { tripId: TRIP_ID });
+  };
   return (
     <>
       <Overlay >
         <CarLoadingImage />
       </Overlay>
-      <PickUpCancelButton content={'호출 취소'} onClick={false}/>
+      <PickUpCancelButton content={'호출 취소'} onClick={handleClickCancel}/>
       <Message >Searching for a driver..</Message>
     </>
   );
