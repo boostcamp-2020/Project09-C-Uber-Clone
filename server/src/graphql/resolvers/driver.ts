@@ -1,6 +1,8 @@
 import { AuthenticationError } from 'apollo-server-express';
 import { Driver, Trip } from '../../services';
 
+import { DRIVER_RESPONDED } from '../subscriptions';
+
 interface createDriverArgs {
   email: string;
   name: string;
@@ -31,7 +33,7 @@ interface DriverResponse {
 
 export default {
   Query: {
-    async driver(parent: any, args: { email: string }, context: any, info: any) {
+    async driver(_: any, args: { email: string }, context: any) {
       if (!context.req.user) {
         throw new AuthenticationError('No authorization');
       };
@@ -39,23 +41,28 @@ export default {
     },
   },
   Mutation: {
-    async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
+    async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
-    async loginDriver(parent: any, payload:LoginPayload, context) {
+    async loginDriver(_: any, payload:LoginPayload, context:any) {
       return await Driver.login(context, payload);
     },
-    async driverCall(parent, args : DriverCallArgs, context) {
+    async driverCall(_:any, args : DriverCallArgs, context:any) {
       context.pubsub.publish('driverListen', { driverListen: args });
       return args;
     },
-    async sendResponse(parent:any, args:DriverResponse, context:any) {
-      return await Trip.sendDriverResponse(args, context);
+    async sendResponse(_:any, args:DriverResponse, context:any) {
+      const driverId = context.req.user.data._id;
+      const checkResult = await Trip.checkTripStatus(args);
+      if (checkResult.result === 'success') {
+        context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
+      }
+      return checkResult;
     },
   },
   Subscription: {
     driverListen: {
-      subscribe: (parent:any, args:object, context:any) => context.pubsub.asyncIterator(['driverListen']),
+      subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator(['driverListen']),
     },
   },
 };
