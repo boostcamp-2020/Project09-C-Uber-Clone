@@ -43,7 +43,6 @@ export default {
     },
   },
   Mutation: {
-
     async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
@@ -69,7 +68,7 @@ export default {
   },
   Subscription: {
     driverListen: {
-      subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator(['driverListen']),
+      subscribe: (_: any, __: object, context) => context.pubsub.asyncIterator(['driverListen']),
     },
     matchedDriverState: {
       subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]),

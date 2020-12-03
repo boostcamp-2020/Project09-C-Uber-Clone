@@ -63,6 +63,7 @@ type Mutation {
     description: String,
     profileImage: String
   ): Driver
+  
 
   sendResponse(
     response: String!, 
@@ -88,7 +89,6 @@ type Mutation {
     driverPosition: DriverPositionInput
     isDrop: Boolean
   ): driverStateNotify
-
 }
 
 type Subscription {
