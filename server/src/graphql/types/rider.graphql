@@ -12,6 +12,13 @@ type RiderState {
   longitude: Float!
 }
 
+type DriverResponse{
+  riderId: ID!
+  driverId: ID!
+  tripId: ID!
+  response: String!
+}
+
 type Query {
   rider(email: String!): Rider
 }
@@ -29,4 +36,8 @@ type Mutation {
 
 type Subscription {
   matchedRiderState(tripId: ID!): RiderState
+}
+
+type Subscription {
+  driverResponded: DriverResponse
 }

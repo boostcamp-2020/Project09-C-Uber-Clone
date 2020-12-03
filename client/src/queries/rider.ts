@@ -15,6 +15,7 @@ export const matchedRiderStateQuery = gql`
     }
   }
 `;
+
 export const matchedDriverState = gql`
 	subscription {
 		matchedDriverState { 
