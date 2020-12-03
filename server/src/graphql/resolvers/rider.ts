@@ -1,6 +1,7 @@
 import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 
+import { DRIVER_RESPONDED } from '../subscriptions';
 interface LoginPayload{
   email:string;
   password:string;
@@ -30,7 +31,7 @@ export default {
   Subscription: {
     driverResponded: {
       subscribe: withFilter((parent, args, context) => {
-        return context.pubsub.asyncIterator(['driverResponded']);
+        return context.pubsub.asyncIterator([DRIVER_RESPONDED]);
       },
       (payload, variables, context) => {
         return payload.driverResponded.riderId === context.data.currentUser.data._id.toString();
