@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { split } from '@apollo/client';
+import { split, HttpLink } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { setContext } from '@apollo/client/link/context';
 
@@ -26,6 +26,9 @@ const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_WEBSOCKET_URI,
   options: {
     reconnect: true,
+    connectionParams: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
   },
 });
 
@@ -47,7 +50,7 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  authLink.concat(wsLink),
+  wsLink,
   authLink.concat(httpLink),
 );
 
