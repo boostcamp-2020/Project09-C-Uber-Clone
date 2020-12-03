@@ -22,6 +22,8 @@ import {
   setDestMarker,
 } from '../../slices/mapSlice';
 
+import { reverseGoecoding } from '../../utils/geocoding';
+
 const Header = styled.div`
   height: 130px;
   padding:10px;
@@ -106,13 +108,14 @@ function SetCourseForm() {
   const makeStartingPointHere = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position: Position) => {
+        async (position: Position) => {
           const pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
+          const address = await reverseGoecoding(pos);
           dispatch(setOriginPosition(pos));
-          dispatch(setOriginPlace('현재위치'));
+          dispatch(setOriginPlace(address));
           dispatch(setOriginMarker('현재위치'));
         },
         () => {
