@@ -1,5 +1,7 @@
 import { driverStateNotifyQuery } from '../queries/driver';
 
+import { ApolloClient } from '@apollo/client';
+
 interface driverPosition {
   lat: number
   lng: number
@@ -13,7 +15,7 @@ interface driverStateNotifyProps {
   isDrop: Boolean
 }
 
-export const driverStateNotify = async (client: any, driverState: driverStateNotifyProps) => {
+export const driverStateNotify = async (client: ApolloClient<Object>, driverState: driverStateNotifyProps) => {
   try {
     const { data } = await client.mutate({
       mutation: driverStateNotifyQuery,
