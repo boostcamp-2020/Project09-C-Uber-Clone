@@ -7,10 +7,10 @@ export default {
   findAll: async () => {
     return await Driver.find({});
   },
-  findByEmail: async (payload: {email: string}) => {
-    return await Driver.findOne({ email: payload.email });
+  findByEmail: async ({ email }: {email: string}) => {
+    return await Driver.findOne({ email });
   },
-  findById: async (payload: {id: string}) => {
-    return await Driver.findById(payload.id);
+  findById: async ({ id }:{id: string}) => {
+    return await Driver.findById(id);
   },
 };
