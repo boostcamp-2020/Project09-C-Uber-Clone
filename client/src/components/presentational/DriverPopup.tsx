@@ -69,12 +69,10 @@ const Alert = styled.div`
   z-index: 11;
 `;
 
-interface TripObject{
-  id: number
-}
-
 const PAYLOAD = { response: 'confirm', riderId: '5fbf5149f35512f0653ec7f1', tripId: '5fc7a18bab179a163b73302b' };
-function DriverPopup({ trip, setDriverStatus }:{trip:TripObject, setDriverStatus:any}) {
+
+function DriverPopup({ setDriverStatus, pickUpAddress, destinationAddress }:
+  { setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [status, setStatus] = useState('');
@@ -110,10 +108,10 @@ function DriverPopup({ trip, setDriverStatus }:{trip:TripObject, setDriverStatus
       <Modal>
         <Flex>
           <Flex.Item>
-            <PlaceHeader>픽업 위치 {trip.id}</PlaceHeader>
+            <PlaceHeader>픽업 위치 : {pickUpAddress}</PlaceHeader>
           </Flex.Item>
           <Flex.Item>
-            <PlaceHeader>도착지 위치</PlaceHeader>
+            <PlaceHeader>도착지 위치 : {destinationAddress}</PlaceHeader>
           </Flex.Item>
         </Flex>
         <Expectation>

@@ -2,6 +2,7 @@ import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
 
 interface driverInterface {
+  _id: string;
   email: string;
   name: string;
   password: string;
