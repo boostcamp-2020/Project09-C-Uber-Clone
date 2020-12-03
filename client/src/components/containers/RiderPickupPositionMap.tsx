@@ -4,6 +4,7 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { useSelector } from 'react-redux';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { useApolloClient, useSubscription } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 
 import { subscribeDriverResponse } from '../../apis/driverResponseAPI';
 
@@ -17,6 +18,7 @@ const TRIP_ID = '';
 
 function RiderPickupPositionMap() {
   const client = useApolloClient();
+  const history = useHistory();
 
   const [map, setMap] = useState(null);
   const { originPosition }: any = useSelector(selectMapReducer);
@@ -30,7 +32,7 @@ function RiderPickupPositionMap() {
   }, []);
 
   useEffect(() => {
-    const subscription = subscribeDriverResponse(client);
+    const subscription = subscribeDriverResponse(client, history);
     return () => {
       subscription.unsubscribe();
     };

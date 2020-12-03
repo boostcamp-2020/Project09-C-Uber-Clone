@@ -1,5 +1,7 @@
 import { driverResponse, driverResponded } from '../queries/driverResponded';
 
+import { MATCHING_CONFIRM } from '../constants/matchingResult';
+
 interface Payload {
     response: string
     riderId: string
@@ -7,21 +9,26 @@ interface Payload {
 }
 
 export const sendDriverResponse = async (client: any, dispatch: any, payload:Payload) => {
-  const { data } = await client.mutate({
+  const { data: { sendResponse } } = await client.mutate({
     mutation: driverResponse,
     variables: payload,
     fetchPolicy: 'no-cache',
   });
+  return sendResponse;
 };
 
-export const subscribeDriverResponse = (client:any) => {
+export const subscribeDriverResponse = (client:any, history:any) => {
   return client
     .subscribe({
       query: driverResponded,
     })
     .subscribe(
-      ({ data }:{data:any}) => {
-        console.log(data);
+      ({ data: { driverResponded } }:{data:any}) => {
+        const { response, driverId, tripId } = driverResponded;
+        if (response === MATCHING_CONFIRM) {
+          //TODO: 운행정보 전역으로 저장
+          history.push('/rider/pickup');
+        }
       },
       (error:any) => {
         console.log(error);
