@@ -16,6 +16,8 @@ import GlobalStyle from './GlobalStyle';
 import store from './store';
 import App from './App';
 
+import getToken from './utils/getToken';
+
 const rootElement = document.getElementById('app');
 
 const httpLink = createHttpLink({
@@ -26,8 +28,8 @@ const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_WEBSOCKET_URI,
   options: {
     reconnect: true,
-    connectionParams: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    connectionParams: () => {
+      return { Authorization: getToken() };
     },
   },
 });
