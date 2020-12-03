@@ -11,7 +11,7 @@ const containerStyle = {
   height: '75vh',
 };
 
-export default function PickUpMap({ isRider, riderLat, riderLng, driverLat, driverLng, pickUpLat, pickUpLng }: {isRider: Boolean, riderLat: number, riderLng: number, driverLat: number, driverLng: number, pickUpLat: number, pickUpLng: number}) {
+export default function PickUpMap({ isRider, riderLat, riderLng, driverLat, driverLng, pickUpLat, pickUpLng }: {isRider: boolean, riderLat: number, riderLng: number, driverLat: number, driverLng: number, pickUpLat: number, pickUpLng: number}) {
   const [driverPos, setDriverPos] = useState({
     lat: driverLat,
     lng: driverLng,
