@@ -3,6 +3,7 @@ import 'dotenv/config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { onError } from '@apollo/link-error';
 
 import { Provider } from 'react-redux';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
@@ -17,6 +18,18 @@ import store from './store';
 import App from './App';
 
 import getToken from './utils/getToken';
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
+    );
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
 
 const rootElement = document.getElementById('app');
 
@@ -53,7 +66,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  authLink.concat(httpLink),
+  authLink.concat(errorLink.concat(httpLink)),
 );
 
 const client = new ApolloClient({

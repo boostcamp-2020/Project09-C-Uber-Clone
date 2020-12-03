@@ -18,6 +18,7 @@ const options = {
   useCreateIndex: true,
   useFindAndModify: false,
 };
+
 mongoose.connect(process.env.MONGODB_URL || '', options)
   .then(() => console.log('Successfully connected to mongodb'))
   .catch(e => console.error(e));

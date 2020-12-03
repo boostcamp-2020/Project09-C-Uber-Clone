@@ -9,6 +9,13 @@ export default {
       throw e.message;
     }
   },
+  create: async (payload) => {
+    try {
+      return await Trip.create({ ...payload });
+    } catch (e) {
+      throw e.message;
+    }
+  },
   checkStatus: async (args) => {
     try {
       const data = await Trip.findOneStatus(args.tripId);

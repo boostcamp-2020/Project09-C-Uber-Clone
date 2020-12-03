@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { useSubscription } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
+import { notifyRiderState } from '../../apis/riderAPI';
 
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
@@ -13,6 +14,7 @@ const INIT_POS = {
 };
 
 export default function RiderPickUpForm() {
+  const client = useApolloClient();
   const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
 
@@ -33,15 +35,24 @@ export default function RiderPickUpForm() {
     maximumAge: 0,
   };
 
-  const getDriverPosition = () => {
+  const getRiderPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
-    getDriverPosition();
+    getRiderPosition();
   }, []);
+
+  useEffect(() => {
+    const riderState = {
+      tripId: '1',
+      latitude: riderPos.lat,
+      longitude: riderPos.lng,
+    };
+    notifyRiderState(client, riderState);
+  }, [riderPos]);
 
   if (error) {
     return <p>error</p>;

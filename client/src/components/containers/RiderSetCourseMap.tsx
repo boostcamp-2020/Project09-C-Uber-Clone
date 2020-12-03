@@ -1,5 +1,5 @@
-import React, { useState, useCallback, memo, useRef, useEffect, ReactChild } from 'react';
-import { GoogleMap, LoadScript, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
+import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
+import { GoogleMap, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -113,7 +113,7 @@ function RiderSetCourseMap() {
     NEW_MARKER_POS.lng = lng;
     const address = await getAddressFromLatLng({ lat, lng });
 
-    if (originMarker === 'check') {
+    if (originMarker !== '') {
       return checkDestMarker(address);
     }
     checkOriginMarker(address);
@@ -132,9 +132,16 @@ function RiderSetCourseMap() {
     }
   };
 
+  const directionCallback = useCallback((response: any, status: any) => {
+    if (response !== null && status === 'OK') {
+      setDirectionResponse(response);
+    };
+  }, []);
+
   useEffect(() => {
     if (originMarker === '') {
       setIsOriginVisible(false);
+      setDirectionResponse(null);
       return;
     }
     setCenter(originPosition);
@@ -144,6 +151,7 @@ function RiderSetCourseMap() {
   useEffect(() => {
     if (destMarker === '') {
       setIsDestVisible(false);
+      setDirectionResponse(null);
       return;
     }
     setCenter(destPosition);
@@ -180,11 +188,7 @@ function RiderSetCourseMap() {
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
           }}
-          callback={async (response: any, status) => {
-            if (response !== null && status === 'OK') {
-              setDirectionResponse(response);
-            };
-          }}
+          callback={directionCallback}
         />
       }
       {directionResponse &&
