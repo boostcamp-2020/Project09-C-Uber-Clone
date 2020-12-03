@@ -141,6 +141,7 @@ function RiderSetCourseMap() {
   useEffect(() => {
     if (originMarker === '') {
       setIsOriginVisible(false);
+      setDirectionResponse(null);
       return;
     }
     setCenter(originPosition);
@@ -150,6 +151,7 @@ function RiderSetCourseMap() {
   useEffect(() => {
     if (destMarker === '') {
       setIsDestVisible(false);
+      setDirectionResponse(null);
       return;
     }
     setCenter(destPosition);
