@@ -24,6 +24,12 @@ type driverCall  {
   destination: String
 }
 
+type matchedTrip {
+  riderId: ID!
+  tripId: ID!
+  result: String!
+}
+
 input DriverPositionInput {
   lat: Float
   lng: Float
@@ -57,7 +63,13 @@ type Mutation {
     description: String,
     profileImage: String
   ): Driver
-  
+
+  sendResponse(
+    response: String!, 
+    riderId: ID!,
+    tripId: ID!
+  ): matchedTrip
+
   loginDriver(
     email: String!,
     password: String!
@@ -76,6 +88,7 @@ type Mutation {
     driverPosition: DriverPositionInput
     isDrop: Boolean
   ): driverStateNotify
+
 }
 
 type Subscription {

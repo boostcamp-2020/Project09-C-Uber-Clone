@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
-
 import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import Map from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
+import { driverResponded } from '../../queries/driverResponded';
 
 import {
   selectMapReducer,
@@ -69,6 +66,13 @@ const HereButton = styled.button`
 function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
+
+  const [skip, setSkip] = useState(true);
+  useSubscription(driverResponded, { skip, onSubscriptionData: ({ subscriptionData: { data } }) => {
+    console.log(data);
+    //TODO: data의 response메시지가 success이면 skip:true로 변경 후 다음 화면
+  } });
+
   const { originPlace, destPlace }: any = useSelector(selectMapReducer);
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
@@ -84,7 +88,7 @@ function SetCourseForm() {
   };
 
   const handelCourseSubmitButton = () => {
-    // TODO: dispatch(sendCourse(client, { startingPoint, destination }));
+    setSkip(false);
   };
 
   const makeStartingPointHere = () => {
