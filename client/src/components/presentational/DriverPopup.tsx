@@ -14,7 +14,6 @@ import SubmitButton from '../presentational/SubmitButton';
 import { DRIVER_IGNORED, DRIVER_MATCHING_SUCCESS } from '../../constants/driverStatus';
 import { ALREADY_MATCHED, MATCHING_SUCCESS, MATCHING_CANCEL } from '../../constants/matchingResult';
 
-
 const Modal = styled.div`
   position: absolute;
   top: 30%;
