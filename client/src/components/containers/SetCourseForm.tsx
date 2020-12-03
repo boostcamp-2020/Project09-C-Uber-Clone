@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useApolloClient } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
 
 import styled from 'styled-components';
 
+import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import Map from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
@@ -70,12 +69,11 @@ function SetCourseForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const { originPlace, destPlace }: any = useSelector(selectMapReducer);
+  const { originPosition, destPosition } : any = useSelector(selectMapReducer);
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
   const [destInput, setDestInput] = useState('');
-
-  const [mapView, setMapView] = useState(false);
 
   const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
@@ -83,8 +81,9 @@ function SetCourseForm() {
     dispatch(setMarker(''));
   };
 
+  const driverIdList = [1, 2, 3];
   const handelCourseSubmitButton = () => {
-    // TODO: dispatch(sendCourse(client, { startingPoint, destination }));
+    callRequest(client, driverIdList, 'riderId', originPosition, destPosition);
   };
 
   const makeStartingPointHere = () => {
@@ -135,10 +134,6 @@ function SetCourseForm() {
       dispatch(setDestMarker(destAutocomplete.getPlace().name));
       setDestAutocomplete(destAutocomplete);
     }
-  };
-
-  const showMapView = () => {
-    //TODO: 출발지나 도착지를 dropdown list를 통하여 확정하면 세부 설정 할 수 있도록 setMapView(true)
   };
 
   const handleOnChangeOrigin = (event: any) => {
