@@ -1,5 +1,19 @@
 import { Trip, Driver } from '../repositories';
 
+interface PlaceInterface {
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface OpenArgs {
+  riderEmail: string;
+  origin: PlaceInterface;
+  destination: PlaceInterface;
+  startTime: Date;
+  distance?: number;
+}
+
 export default {
   getStatus: async({ id }) => {
     try {
@@ -41,6 +55,14 @@ export default {
       return await Trip.update(tripId, { status: 'matched', driver });
     } catch (e) {
       throw e.message;
+    }
+  },
+  openTrip: async (args: OpenArgs) => {
+    const { riderEmail, origin, destination, startTime, distance } = args;
+    try {
+      return await Trip.open(riderEmail, origin, destination, startTime, distance);
+    } catch (e) {
+      throw e;
     }
   },
 };

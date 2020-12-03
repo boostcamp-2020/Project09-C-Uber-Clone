@@ -23,6 +23,8 @@ import {
 } from '../../slices/mapSlice';
 import { useHistory } from 'react-router-dom';
 
+import { reverseGoecoding } from '../../utils/geocoding';
+
 const Header = styled.div`
   height: 130px;
   padding:10px;
@@ -77,6 +79,8 @@ function SetCourseForm() {
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
   const [destInput, setDestInput] = useState('');
+  const [originInputError, setOriginInputError] = useState(false);
+  const [destInputError, setDestInputError] = useState(false);
 
   const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
@@ -85,19 +89,28 @@ function SetCourseForm() {
   };
   const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
   const handelCourseSubmitButton = () => {
+    if (originPlace === '') {
+      setOriginInputError(true);
+      return;
+    }
+    if (destPlace === '') {
+      setDestInputError(true);
+      return;
+    }
     callRequest(client, driverIds, 'riderId', originPosition, destPosition);
   };
 
   const makeStartingPointHere = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position: Position) => {
+        async (position: Position) => {
           const pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
+          const address = await reverseGoecoding(pos);
           dispatch(setOriginPosition(pos));
-          dispatch(setOriginPlace('현재위치'));
+          dispatch(setOriginPlace(address));
           dispatch(setOriginMarker('현재위치'));
         },
         () => {
@@ -148,10 +161,12 @@ function SetCourseForm() {
 
   useEffect(() => {
     setOriginInput(originPlace);
+    setOriginInputError(false);
   }, [originPlace]);
 
   useEffect(() => {
     setDestInput(destPlace);
+    setDestInputError(false);
   }, [destPlace]);
 
   return (
@@ -168,6 +183,7 @@ function SetCourseForm() {
         onCancelClicked={handleClickCancel(setOriginPlace, setOriginPosition, setOriginMarker)}
         value={originInput}
         onChange={handleOnChangeOrigin}
+        error={originInputError}
       />
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
@@ -178,6 +194,7 @@ function SetCourseForm() {
         onCancelClicked={handleClickCancel(setDestPlace, setDestPosition, setDestMarker)}
         value={destInput}
         onChange={handleOnChangeDest}
+        error={destInputError}
       />
       <WhiteSpace />
       <SubmitButton
