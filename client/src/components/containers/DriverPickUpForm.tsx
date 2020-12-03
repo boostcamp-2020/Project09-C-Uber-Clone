@@ -45,7 +45,7 @@ export default function DriverPickUpForm() {
 
   useEffect(() => {
     const driverState = {
-      operationId: '1',
+      tripId: '1',
       driverId: 'driver@test.com',
       riderId: 'rider@test.com',
       driverPosition: driverPos,

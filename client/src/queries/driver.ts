@@ -2,19 +2,19 @@ import { gql } from '@apollo/client';
 
 export const driverStateNotifyQuery = gql`
 mutation driverStateNotify(
-  $operationId:String,
+  $tripId:String,
   $driverId:String,
   $riderId:String,
   $driverPosition:DriverPositionInput,
   $isDrop:Boolean){
       driverStateNotify(
-        operationId:$operationId,
+        tripId:$tripId,
         driverId:$driverId,
         riderId:$riderId,
         driverPosition:$driverPosition,
         isDrop:$isDrop
       ){
-        operationId
+        tripId
         driverId
         riderId
         isDrop

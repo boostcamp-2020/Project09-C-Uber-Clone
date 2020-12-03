@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const matchedDriverState = gql`
 	subscription {
 		matchedDriverState { 
-	    operationId
+	    tripId
 	    driverId
 	    riderId
 	    isDrop
