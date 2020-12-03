@@ -1,0 +1,8 @@
+type CancelResult{
+    id: ID!
+    result: String!
+}
+
+type Mutation {
+  cancelTrip(id: ID!): CancelResult
+}

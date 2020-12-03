@@ -13,4 +13,12 @@ export default {
       throw e.message;
     }
   },
+  cancelTrip: async ({ id }) => {
+    try {
+      await Trip.updateStatus(id, 'cancel');
+      return { id, result: 'canceled' };
+    } catch (e) {
+      throw e.message;
+    }
+  },
 };
