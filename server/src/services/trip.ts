@@ -1,6 +1,14 @@
 import { Trip, Driver } from '../repositories';
 
 export default {
+  getStatus: async({ id }) => {
+    try {
+      const result = await Trip.findOneStatus(id);
+      return result?.status;
+    } catch (e) {
+      throw e.message;
+    }
+  },
   checkStatus: async (args) => {
     try {
       const data = await Trip.findOneStatus(args.tripId);

@@ -1,13 +1,18 @@
 import { Trip } from '../../services';
 
-interface cancelPayload{
+interface ID{
     id:string
 }
 
 export default {
+  Query: {
+    async tripStatus(_:any, args:ID) {
+      return await Trip.getStatus(args);
+    },
+  },
   Mutation: {
-    async cancelTrip(_: any, payload:cancelPayload) {
-      return await Trip.cancel(payload);
+    async cancelTrip(_: any, args:ID) {
+      return await Trip.cancel(args);
     },
   },
 };

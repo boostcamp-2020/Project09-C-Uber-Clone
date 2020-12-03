@@ -3,6 +3,10 @@ type CancelResult{
     result: String!
 }
 
+type Query {
+  tripStatus(id: ID!): String!
+}
+
 type Mutation {
   cancelTrip(id: ID!): CancelResult
 }
