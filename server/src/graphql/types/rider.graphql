@@ -6,6 +6,12 @@ type Rider {
   phoneNumber: String!
 }
 
+type RiderState {
+  tripId: ID!
+  latitude: Float!
+  longitude: Float!
+}
+
 type DriverResponse{
   riderId: ID!
   driverId: ID!
@@ -78,6 +84,12 @@ type Mutation {
   ): Rider
 
   driverCall(riderPublishInfo: riderPublishInfoInput): driverCallResult
+  
+  notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): Boolean @isAuthorized
+}
+
+type Subscription {
+  matchedRiderState(tripId: ID!): RiderState
 }
 
 type Subscription {

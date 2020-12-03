@@ -38,6 +38,8 @@ interface DriverCallArgs {
   riderPublishInfo: riderPublishInfo
 }
 
+const MATCHED_RIDER_STATE = 'MATCHED_RIDER_STATE';
+
 export default {
   Query: {
     async rider(parent: any, args: { email: string }, context: any, info: any) {
@@ -65,8 +67,20 @@ export default {
       pubsub.publish(CALL_REQUESTED, { driverListen: args });
       return args;
     },
+    async notifyRiderState(parent: any, args: any, context: any) {
+      context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
+      return true;
+    },
   },
   Subscription: {
+    matchedRiderState: {
+      subscribe: withFilter(
+        (_, __, context) => context.pubsub.asyncIterator([MATCHED_RIDER_STATE]),
+        (payload, variables) => {
+          return payload.matchedRiderState.tripId === variables.tripId;
+        },
+      ),
+    },
     driverResponded: {
       subscribe: withFilter((parent, args, context) => {
         return context.pubsub.asyncIterator([DRIVER_RESPONDED]);

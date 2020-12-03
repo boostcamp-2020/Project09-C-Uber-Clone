@@ -1,4 +1,3 @@
-import { ObjectID } from 'mongodb';
 import mongoose, { Document } from 'mongoose';
 const { Schema, model } = mongoose;
 
@@ -14,8 +13,8 @@ interface Driver {
   name: string;
   carType: string;
   plateNumber: string;
-  description: string;
-  profileImage: string;
+  description?: string;
+  profileImage?: string;
 }
 
 interface Rider {
@@ -25,21 +24,25 @@ interface Rider {
 }
 
 interface TripInterface {
+  _id: string
   origin: Place;
   destination: Place;
   startTime: Date;
-  arrivalTime: Date;
+  arrivalTime?: Date;
   status: 'open' | 'matched' | 'close' | 'cancel';
-  distance: number;
-  driver: Driver;
+  distance?: number;
+  driver?: Driver;
   rider: Rider;
 }
 
 const tripSchema = new Schema({
   origin: {
-    address: { type: String, required: true },
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true },
+    type: {
+      address: { type: String, required: true },
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+    },
+    required: true,
   },
   destination: {
     address: { type: String, required: true },
@@ -47,16 +50,19 @@ const tripSchema = new Schema({
     longitude: { type: Number, required: true },
   },
   startTime: { type: Date, required: true },
-  arrivalTime: { type: Date, required: true },
+  arrivalTime: Date,
   status: { type: String, required: true },
   distance: Number,
   rider: {
-    _id: { type: ObjectID, required: true },
-    email: { type: String, required: true },
-    name: { type: String, required: true },
+    type: {
+      _id: String,
+      email: String,
+      name: String,
+    },
+    required: true,
   },
   driver: {
-    _id: ObjectID,
+    _id: String,
     email: String,
     name: String,
     carType: String,

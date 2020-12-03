@@ -15,5 +15,7 @@ export default {
     const longitude = { $gte: lng - 0.03, $lte: lng + 0.03 };
     return await Driver.find({ latitude, longitude }, '_id');
   },
+  findById: async (payload: {id: string}) => {
+    return await Driver.findById(payload.id);
+  },
 };
-;

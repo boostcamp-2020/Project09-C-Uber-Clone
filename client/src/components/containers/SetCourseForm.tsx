@@ -21,6 +21,7 @@ import {
   setOriginMarker,
   setDestMarker,
 } from '../../slices/mapSlice';
+import { useHistory } from 'react-router-dom';
 
 const Header = styled.div`
   height: 130px;
@@ -76,6 +77,7 @@ interface riderPublishInfo {
 
 function SetCourseForm() {
   const client = useApolloClient();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const [riderPos, setRiderPos] = useState({ lat: 0, lng: 0 });

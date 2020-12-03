@@ -17,6 +17,7 @@ import GlobalStyle from './GlobalStyle';
 import store from './store';
 import App from './App';
 
+import getToken from './utils/getToken';
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) =>
@@ -40,8 +41,8 @@ const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_WEBSOCKET_URI,
   options: {
     reconnect: true,
-    connectionParams: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    connectionParams: () => {
+      return { Authorization: getToken() };
     },
   },
 });
