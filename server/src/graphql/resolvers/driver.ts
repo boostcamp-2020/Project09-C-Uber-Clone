@@ -56,9 +56,10 @@ export default {
     },
     async sendResponse(_:any, args:DriverResponse, context:any) {
       const driverId = context.req.user.data._id;
-      const checkResult = await Trip.checkTripStatus(args);
+      const checkResult = await Trip.checkStatus(args);
       if (checkResult.result === 'success') {
         context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
+        await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
       }
       return checkResult;
     },
