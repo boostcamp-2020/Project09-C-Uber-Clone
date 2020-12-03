@@ -1,4 +1,4 @@
-import { AuthenticationError, PubSub, withFilter } from 'apollo-server-express';
+import { AuthenticationError, withFilter } from 'apollo-server-express';
 import { Driver, Trip } from '../../services';
 
 import { DRIVER_RESPONDED, CALL_REQUESTED } from '../subscriptions';
@@ -19,11 +19,16 @@ interface LoginPayload{
   password:string
 }
 
-const pubsub = new PubSub();
+interface Position{
+  lat: number,
+  lng: number
+}
+
 interface DriverCallArgs {
   riderId: string;
-  origin: string;
-  destination: string;
+  driverIds: string[];
+  origin: Position;
+  destination: Position;
 }
 
 interface DriverResponse {
@@ -44,7 +49,6 @@ export default {
     },
   },
   Mutation: {
-
     async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
@@ -66,11 +70,14 @@ export default {
   },
   Subscription: {
     driverListen: {
-      subscribe: withFilter((_, args, context) => {
-        return context.pubsub.asyncIterator(['driverListen']);
+      subscribe: withFilter((_, args:object, context:any) => {
+        return context.pubsub.asyncIterator([CALL_REQUESTED]);
       },
       (payload, variables, context) => {
-        return payload.driverListen.driveIds.include(context.data.currentUser.data._id.toString);
+        if (payload.driverListen.driverIds) {
+          return payload.driverListen.driverIds.includes(context.data.currentUser.data._id.toString());
+        }
+        return false;
       },
       ),
     },
