@@ -38,10 +38,20 @@ type Trip {
   distance: Float
 }
 
+type CancelResult{
+    id: ID!
+    result: String!
+}
+
 type Mutation {
   openTrip(
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
     distance: Float) : Trip @isAuthorized
+  cancelTrip(id: ID!): CancelResult
+}
+
+type Query {
+  tripStatus(id: ID!): String!
 }
