@@ -17,6 +17,8 @@ function DriverWaitingPage() {
   const [riderCalls, setRiderCalls] = useState([]);
   const [trip, setTrip] = useState({ id: undefined }); //TODO: type 다시 지정
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
+  const [pickUpAddress, setPickUpAddress] = useState('');
+  const [destinationAddress, setDestinationAddress] = useState('');
 
   if (error) {
     console.log(error);
@@ -25,6 +27,13 @@ function DriverWaitingPage() {
   useEffect(() => {
     if (data && driverStatus !== DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([...riderCalls, data]);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      setPickUpAddress(data.driverListen.riderPublishInfo.pickUpAddress);
+      setDestinationAddress(data.driverListen.riderPublishInfo.destinationAddress);
     }
   }, [data]);
 
@@ -53,7 +62,12 @@ function DriverWaitingPage() {
 
   return (
     <>
-      {driverStatus === DRIVER_POPUP && <DriverPopup trip={trip} setDriverStatus={setDriverStatus}/>}
+      {driverStatus === DRIVER_POPUP &&
+      <DriverPopup
+        pickUpAddress={pickUpAddress}
+        destinationAddress={destinationAddress}
+        setDriverStatus={setDriverStatus}
+      />}
       <DriverCurrentPositionMap />
     </>
   );

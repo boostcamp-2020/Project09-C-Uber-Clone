@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
@@ -27,34 +27,26 @@ import { reverseGoecoding } from '../../utils/geocoding';
 const Header = styled.div`
   height: 130px;
   padding:10px;
-
   background: #56A902;
 `;
 
 const PageTitle = styled.div`
   left: 30px;
   top: 44px;
-
   font-style: normal;
   font-weight: normal;
   font-size: 48px;
   line-height: 56px;
-
   color: #F8F8FF;
 `;
 
 const FormTitle = styled.div`
   padding:8px;
-
   font-style: normal;
   font-weight: bold;
   font-size: 20px;
   line-height: 27px;
-  /* identical to box height */
-
   letter-spacing: -0.02em;
-
-  /* 9 black */
   color: #000000;
 `;
 
@@ -67,13 +59,30 @@ const HereButton = styled.button`
   cursor: pointer;
 `;
 
+interface PublishPosition {
+  lat: number
+  lng: number
+}
+
+interface riderPublishInfo {
+  riderId: string
+  riderEmail: string
+  riderName: string
+  riderPos: PublishPosition
+  pickUpPos: PublishPosition
+  pickUpAddress: string
+  destinationPos: PublishPosition
+  destinationAddress: string
+  tripStatus: string
+}
+
 function SetCourseForm() {
   const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { originPlace, destPlace }: any = useSelector(selectMapReducer);
-  const { originPosition, destPosition } : any = useSelector(selectMapReducer);
+  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const [riderPos, setRiderPos] = useState({ lat: 0, lng: 0 });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
@@ -86,7 +95,7 @@ function SetCourseForm() {
     dispatch(setPosition({ lat: 0, lng: 0 }));
     dispatch(setMarker(''));
   };
-  const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
+
   const handelCourseSubmitButton = () => {
     if (originPlace === '') {
       setOriginInputError(true);
@@ -96,29 +105,47 @@ function SetCourseForm() {
       setDestInputError(true);
       return;
     }
-    callRequest(client, history, driverIds, 'riderId', originPosition, destPosition);
+    const riderPublishInfo: riderPublishInfo = {
+      riderId: '',
+      riderEmail: '',
+      riderName: '',
+      riderPos: riderPos,
+      pickUpPos: originPosition,
+      pickUpAddress: originPlace,
+      destinationPos: destPosition,
+      destinationAddress: destPlace,
+      tripStatus: 'open',
+    };
+    callRequest(client, history, riderPublishInfo);
+  };
+
+  const success = (position: Position): any => {
+    const pos = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    setRiderPos(pos);
+  };
+
+  const navError = (): any => {
+    console.log('Error: The Geolocation service failed.');
+  };
+
+  const options = {
+    enableHighAccuracy: false,
+    maximumAge: 0,
+  };
+
+  const getCurrentRiderPos = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(success, navError, options);
+    }
   };
 
   const makeStartingPointHere = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position: Position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          const address = await reverseGoecoding(pos);
-          dispatch(setOriginPosition(pos));
-          dispatch(setOriginPlace(address));
-          dispatch(setOriginMarker('현재위치'));
-        },
-        () => {
-          console.log('Error: The Geolocation service failed.');
-        },
-      );
-    } else {
-      console.log('Error: Your browser doesn\'t support geolocation');
-    }
+    dispatch(setOriginPosition(riderPos));
+    dispatch(setOriginPlace('현재위치'));
+    dispatch(setOriginMarker('현재위치'));
   };
 
   const onOrignAutocompleteLoad = (autocomplete: any) => {
@@ -135,6 +162,7 @@ function SetCourseForm() {
       setOriginAutocomplete(originAutocomplete);
     }
   };
+
   const destAutocompleteLoad = (autocomplete: any) => {
     setDestAutocomplete(autocomplete);
   };
@@ -167,6 +195,10 @@ function SetCourseForm() {
     setDestInput(destPlace);
     setDestInputError(false);
   }, [destPlace]);
+
+  useEffect(() => {
+    getCurrentRiderPos();
+  }, []);
 
   return (
     <>
