@@ -9,10 +9,10 @@ interface driverInterface {
   phoneNumber: string;
   carType: string;
   plateNumber: string;
-  description: string;
-  profileImage: string;
-  latitude: number;
-  longitude: number;
+  description?: string;
+  profileImage?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 const driverSchema = new Schema({
