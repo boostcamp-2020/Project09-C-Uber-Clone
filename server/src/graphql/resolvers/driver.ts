@@ -31,6 +31,8 @@ interface DriverResponse {
   response: string;
 }
 
+const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
+
 export default {
   Query: {
     async driver(_: any, args: { email: string }, context: any) {
@@ -41,6 +43,7 @@ export default {
     },
   },
   Mutation: {
+
     async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
@@ -59,10 +62,17 @@ export default {
       }
       return checkResult;
     },
+    driverStateNotify(_:any, args, context:any) {
+      context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
+      return args;
+    },
   },
   Subscription: {
     driverListen: {
       subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator(['driverListen']),
+    },
+    matchedDriverState: {
+      subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]),
     },
   },
 };
