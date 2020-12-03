@@ -113,7 +113,7 @@ function RiderSetCourseMap() {
     NEW_MARKER_POS.lng = lng;
     const address = await getAddressFromLatLng({ lat, lng });
 
-    if (originMarker === 'check') {
+    if (originMarker !== '') {
       return checkDestMarker(address);
     }
     checkOriginMarker(address);
