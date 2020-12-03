@@ -62,7 +62,8 @@ function DriverWaitingPage() {
 
   return (
     <>
-      {driverStatus === DRIVER_POPUP &&
+      {/* {driverStatus === DRIVER_POPUP */}
+      {pickUpAddress !== '' &&
       <DriverPopup
         pickUpAddress={pickUpAddress}
         destinationAddress={destinationAddress}
