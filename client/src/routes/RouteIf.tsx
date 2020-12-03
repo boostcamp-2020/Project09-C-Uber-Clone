@@ -15,6 +15,7 @@ import DriverWaitingPage from '../pages/DriverWaitingPage';
 import DriverPickUpPage from '../pages/DriverPickUpPage';
 import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
+import RiderWaitingPage from '../pages/RiderWaitingPage';
 
 interface Paths {
   path: string;
@@ -47,6 +48,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             <Switch>
               <Route path='/rider/setcourse' component={SetCoursePage} />
               <Route path='/rider/pickup' component={RiderPickUpPage} />
+              <Route path='/rider/waiting' component={RiderWaitingPage}/>
               <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );

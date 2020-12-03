@@ -21,6 +21,7 @@ import {
   setOriginMarker,
   setDestMarker,
 } from '../../slices/mapSlice';
+import { useHistory } from 'react-router-dom';
 
 const Header = styled.div`
   height: 130px;
@@ -67,13 +68,8 @@ const HereButton = styled.button`
 
 function SetCourseForm() {
   const client = useApolloClient();
+  const history = useHistory();
   const dispatch = useDispatch();
-
-  const [skip, setSkip] = useState(true);
-  useSubscription(driverResponded, { skip, onSubscriptionData: ({ subscriptionData: { data } }) => {
-    console.log(data);
-    //TODO: data의 response메시지가 success이면 skip:true로 변경 후 다음 화면
-  } });
 
   const { originPlace, destPlace }: any = useSelector(selectMapReducer);
   const { originPosition, destPosition } : any = useSelector(selectMapReducer);
@@ -90,7 +86,6 @@ function SetCourseForm() {
   const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
   const handelCourseSubmitButton = () => {
     callRequest(client, driverIds, 'riderId', originPosition, destPosition);
-    setSkip(false);
   };
 
   const makeStartingPointHere = () => {

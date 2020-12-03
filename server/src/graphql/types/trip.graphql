@@ -1,0 +1,12 @@
+type CancelResult{
+    id: ID!
+    result: String!
+}
+
+type Query {
+  tripStatus(id: ID!): String!
+}
+
+type Mutation {
+  cancelTrip(id: ID!): CancelResult
+}

@@ -13,8 +13,8 @@ export default {
   findOneStatus: async (id) => {
     return await Trip.findById(id, 'status');
   },
-  updateStatus: async(id, status) => {
-    return await Trip.findByIdAndUpdate(id, { status });
+  update: async(id, payload) => {
+    return await Trip.findByIdAndUpdate(id, payload);
   },
   open: async (
     riderEmail: string,
