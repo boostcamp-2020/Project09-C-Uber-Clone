@@ -14,6 +14,12 @@ type MatchedDriver {
   profileImage: String
 }
 
+input TripPlaceInput {
+  address: String!
+  latitude: Float!
+  longitude: Float!
+}
+
 type TripPlace {
   address: String!
   latitude: Float!
@@ -26,12 +32,17 @@ type Trip {
   driver: MatchedDriver!
   origin: TripPlace!
   destination: TripPlace!
-  startTime: Date!
-  arrivalTime: Date
+  startTime: String!
+  arrivalTime: String
   status: String!
   distance: Float
 }
 
 type Mutation {
-  openTrip(riderEmail: String, origin: TripPlace!, destination: TripPlace!, startTime: Date!, distance: Float) : Trip
+  openTrip(
+    riderEmail: String,
+    origin: TripPlaceInput!,
+    destination: TripPlaceInput!,
+    startTime: String!,
+    distance: Float) : Trip @isAuthorized
 }
