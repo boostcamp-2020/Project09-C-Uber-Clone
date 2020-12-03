@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
 import { notifyRiderStateQuery } from '../queries/rider';
 
@@ -9,7 +9,7 @@ interface RiderStateInterface {
 }
 
 const notifyRiderState = async (
-  client: ApolloClient<NormalizedCacheObject>,
+  client: ApolloClient<object>,
   riderState: RiderStateInterface,
 ) => {
   try {
