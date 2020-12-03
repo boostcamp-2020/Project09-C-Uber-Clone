@@ -26,6 +26,9 @@ const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_WEBSOCKET_URI,
   options: {
     reconnect: true,
+    connectionParams: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
   },
 });
 
@@ -47,7 +50,7 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  authLink.concat(wsLink),
+  wsLink,
   authLink.concat(httpLink),
 );
 
