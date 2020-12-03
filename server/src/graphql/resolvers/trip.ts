@@ -16,8 +16,9 @@ interface OpenTripArgs {
 
 export default {
   Mutation: {
-    async openTrip(_: any, args: OpenTripArgs) {
-      return await Trip.openTrip(args);
+    async openTrip(_: any, args: OpenTripArgs, context: any) {
+      const riderEmail = context.req.user.data.email;
+      return await Trip.openTrip({ ...args, riderEmail });
     },
   },
 };

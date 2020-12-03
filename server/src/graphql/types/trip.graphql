@@ -40,7 +40,6 @@ type Trip {
 
 type Mutation {
   openTrip(
-    riderEmail: String,
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
