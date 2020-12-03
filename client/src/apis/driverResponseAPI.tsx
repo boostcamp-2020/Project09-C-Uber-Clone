@@ -1,4 +1,4 @@
-import { driverResponse } from '../queries/driverResponded';
+import { driverResponse, driverResponded } from '../queries/driverResponded';
 
 interface Payload {
     response: string
@@ -12,4 +12,22 @@ export const sendDriverResponse = async (client: any, dispatch: any, payload:Pay
     variables: payload,
     fetchPolicy: 'no-cache',
   });
+};
+
+export const subscribeDriverResponse = (client:any) => {
+  return client
+    .subscribe({
+      query: driverResponded,
+    })
+    .subscribe(
+      ({ data }:{data:any}) => {
+        console.log(data);
+      },
+      (error:any) => {
+        console.log(error);
+      },
+      (loading:any) => {
+        console.log(loading);
+      },
+    );
 };
