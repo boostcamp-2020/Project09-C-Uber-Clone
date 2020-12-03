@@ -11,7 +11,7 @@ export const driverResponded = gql`
 `;
 
 export const driverResponse = gql`
-    mutation test($response:String!,$riderId:ID!,$tripId:ID!){
+    mutation responseMutation($response:String!,$riderId:ID!,$tripId:ID!){
         sendResponse(response:$response,riderId:$riderId,tripId:$tripId){
             riderId
             tripId
