@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
 import styled from 'styled-components';
@@ -10,7 +10,6 @@ import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
-import { driverResponded } from '../../queries/driverResponded';
 
 import {
   selectMapReducer,
@@ -85,7 +84,7 @@ function SetCourseForm() {
   };
   const driverIds = ['5fc4aab0aa5f0a79191c2bd5', '2', '3'];
   const handelCourseSubmitButton = () => {
-    callRequest(client, driverIds, 'riderId', originPosition, destPosition);
+    callRequest(client, history, driverIds, 'riderId', originPosition, destPosition);
   };
 
   const makeStartingPointHere = () => {

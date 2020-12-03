@@ -7,7 +7,7 @@ interface Position {
   lng: number;
 }
 
-export const callRequest = async (client: ApolloClient<Object>, driverIds: string[], riderId: string, origin : Position, destination: Position) => {
+export const callRequest = async (client: ApolloClient<Object>, history:any, driverIds: string[], riderId: string, origin : Position, destination: Position) => {
   try {
     await client.mutate({
       mutation: driverCall,
@@ -15,6 +15,9 @@ export const callRequest = async (client: ApolloClient<Object>, driverIds: strin
       fetchPolicy: 'no-cache',
     });
     window.alert('경로 전송');
+
+    //TODO: 호출 요청에 성공한 경우 조건 추가
+    history.push('/rider/waiting');
   } catch (error) {
     window.alert('실패');
     console.log(error);
