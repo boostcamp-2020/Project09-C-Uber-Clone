@@ -1,22 +1,29 @@
-import { Trip } from '../repositories';
+import { Trip, Driver } from '../repositories';
 
 export default {
-  checkTripStatus: async (args) => {
+  checkStatus: async (args) => {
     try {
       const data = await Trip.findOneStatus(args.tripId);
       if (data?.status === 'open') {
-        await Trip.updateStatus(args.tripId, 'matched');
         return { tripId: args.tripId, riderId: args.riderId, result: 'success' };
       }
-      return { tripId: args.tripId, riderId: args.riderId, result: 'fail' };
+      return { tripId: args.tripId, riderId: args.riderId, result: data?.status };
     } catch (e) {
       throw e.message;
     }
   },
-  cancelTrip: async ({ id }) => {
+  cancel: async ({ id }) => {
     try {
-      await Trip.updateStatus(id, 'cancel');
+      await Trip.update(id, { status: 'cancel' });
       return { id, result: 'canceled' };
+    } catch (e) {
+      throw e.message;
+    }
+  },
+  setMatchedDriver: async ({ driverId, tripId }) => {
+    try {
+      const driver = await Driver.findById({ id: driverId });
+      return await Trip.update(tripId, { status: 'matched', driver });
     } catch (e) {
       throw e.message;
     }
