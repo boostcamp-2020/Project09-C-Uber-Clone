@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { driverStateNotify } from '../../apis/driverAPI';
+import { matchedRiderStateQuery } from '../../queries/driver';
 
 import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
@@ -15,6 +16,10 @@ const INIT_POS = {
 export default function DriverPickUpForm() {
   const client = useApolloClient();
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const { loading, error, data } = useSubscription(
+    matchedRiderStateQuery,
+    { variables: { tripId: '1' } },
+  );
 
   const success = (position: Position): any => {
     const pos = {
@@ -54,12 +59,19 @@ export default function DriverPickUpForm() {
     driverStateNotify(client, driverState);
   }, [driverPos]);
 
+  if (error) {
+    return <p>error</p>;
+  }
+  if (loading) {
+    return <p>라이더 위치정보를 불러오는 중입니다</p>;
+  }
+
   return (
     <>
       <PickUpMap
         isRider={false}
-        riderLat={35.6895}
-        riderLng={139.691706}
+        riderLat={data.matchedRiderState.latitude}
+        riderLng={data.matchedRiderState.longitude}
         driverLat={driverPos.lat}
         driverLng={driverPos.lng}
         pickUpLat={35.689487}
