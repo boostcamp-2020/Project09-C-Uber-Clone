@@ -15,6 +15,13 @@ interface OpenArgs {
 }
 
 export default {
+  create: async (payload) => {
+    try {
+      return await Trip.create({ ...payload });
+    } catch (e) {
+      throw e.message;
+    }
+  },
   checkTripStatus: async (args) => {
     try {
       const data = await Trip.findOneStatus(args.tripId);

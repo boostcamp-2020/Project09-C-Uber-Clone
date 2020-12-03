@@ -1,7 +1,8 @@
 import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 
-import { DRIVER_RESPONDED, MATCHED_RIDER_STATE } from '../subscriptions';
+import { DRIVER_RESPONDED, MATCHED_RIDER_STATE, CALL_REQUESTED } from '../subscriptions';
+
 interface LoginPayload{
   email:string;
   password:string;
@@ -12,6 +13,14 @@ interface createRiderArgs {
   password: string;
   name: string;
   phoneNumber: string;
+}
+
+interface DriverCallArgs {
+  riderId: string;
+  driverId: string;
+  origin: string;
+  destination: string;
+  state: string;
 }
 
 export default {
@@ -26,6 +35,10 @@ export default {
     },
     async createRider (parent: any, payload: createRiderArgs, context: any) {
       return await Rider.signup(payload);
+    },
+    driverCall(parent:any, args: DriverCallArgs, context:any) {
+      context.pubsub.publish(CALL_REQUESTED, { driverListen: args });
+      return args;
     },
     async notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
