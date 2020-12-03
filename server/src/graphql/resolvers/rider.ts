@@ -1,4 +1,7 @@
+import { PubSub } from 'apollo-server-express';
+
 import { Rider } from '../../services';
+import { Trip } from '../../services';
 
 interface LoginPayload{
   email:string;
@@ -12,6 +15,16 @@ interface createRiderArgs {
   phoneNumber: string;
 }
 
+interface DriverCallArgs {
+  riderId: string;
+  driverId: string;
+  origin: string;
+  destination: string;
+  state: string;
+}
+
+const pubsub = new PubSub();
+
 export default {
   Query: {
     async rider(parent: any, args: { email: string }, context: any, info: any) {
@@ -24,6 +37,10 @@ export default {
     },
     async createRider (parent: any, payload: createRiderArgs, context: any) {
       return await Rider.signup(payload);
+    },
+    async driverCall(parent:any, args: DriverCallArgs, context:any) {
+      pubsub.publish('driverListen', { driverListen: args });
+      return await Trip.create(args);
     },
   },
 };
