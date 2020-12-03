@@ -51,10 +51,6 @@ export default {
     async loginDriver(_: any, payload:LoginPayload, context:any) {
       return await Driver.login(context, payload);
     },
-    async driverCall(_:any, args : DriverCallArgs, context:any) {
-      context.pubsub.publish('driverListen', { driverListen: args });
-      return args;
-    },
     async sendResponse(_:any, args:DriverResponse, context:any) {
       const driverId = context.req.user.data._id;
       const checkResult = await Trip.checkTripStatus(args);
