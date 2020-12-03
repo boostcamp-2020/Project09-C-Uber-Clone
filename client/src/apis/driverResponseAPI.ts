@@ -26,6 +26,7 @@ export const subscribeDriverResponse = (client:any, history:any) => {
       ({ data: { driverResponded } }:{data:any}) => {
         const { response, driverId, tripId } = driverResponded;
         if (response === MATCHING_CONFIRM) {
+          //TODO: 운행정보 전역으로 저장
           history.push('/rider/pickup');
         }
       },

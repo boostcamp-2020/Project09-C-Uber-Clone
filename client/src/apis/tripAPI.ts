@@ -12,7 +12,6 @@ export const getTripStatus = async (client: ApolloClient<Object>, tripInfo:{id:s
       variables: tripInfo,
       fetchPolicy: 'no-cache',
     });
-    console.log(tripStatus);
     if (tripStatus === OPEN) {
       setDriverStatus(DRIVER_POPUP);
     } else {
