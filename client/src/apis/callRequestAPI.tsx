@@ -6,4 +6,8 @@ export const callRequest = async (client: any, driverIds: any, riderId: any, ori
     variables: { driverIds, riderId, origin, destination },
     fetchPolicy: 'no-cache',
   });
+interface Position {
+  lat: number;
+  lng: number;
+}
 };
