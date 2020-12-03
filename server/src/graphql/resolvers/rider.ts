@@ -1,7 +1,7 @@
 import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 
-import { DRIVER_RESPONDED } from '../subscriptions';
+import { DRIVER_RESPONDED, MATCHED_RIDER_STATE } from '../subscriptions';
 interface LoginPayload{
   email:string;
   password:string;
@@ -13,8 +13,6 @@ interface createRiderArgs {
   name: string;
   phoneNumber: string;
 }
-
-const MATCHED_RIDER_STATE = 'MATCHED_RIDER_STATE';
 
 export default {
   Query: {
