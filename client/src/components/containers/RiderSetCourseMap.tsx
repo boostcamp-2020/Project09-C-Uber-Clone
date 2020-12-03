@@ -132,6 +132,12 @@ function RiderSetCourseMap() {
     }
   };
 
+  const directionCallback = useCallback(async (response: any, status: any) => {
+    if (response !== null && status === 'OK') {
+      setDirectionResponse(response);
+    };
+  }, []);
+
   useEffect(() => {
     if (originMarker === '') {
       setIsOriginVisible(false);
@@ -180,11 +186,7 @@ function RiderSetCourseMap() {
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
           }}
-          callback={async (response: any, status) => {
-            if (response !== null && status === 'OK') {
-              setDirectionResponse(response);
-            };
-          }}
+          callback={directionCallback}
         />
       }
       {directionResponse &&
