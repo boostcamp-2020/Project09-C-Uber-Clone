@@ -6,16 +6,6 @@ export const notifyRiderStateQuery = gql`
   }
 `;
 
-export const matchedRiderStateQuery = gql`
-  subscription matchedRiderState($tripId: ID!) {
-    matchedRiderState(tripId: $tripId) {
-      tripId
-      latitude
-      longitude
-    }
-  }
-`;
-
 export const matchedDriverState = gql`
 	subscription {
 		matchedDriverState { 
