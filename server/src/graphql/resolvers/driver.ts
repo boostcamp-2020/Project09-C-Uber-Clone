@@ -19,18 +19,6 @@ interface LoginPayload{
   password:string
 }
 
-interface Position{
-  lat: number,
-  lng: number
-}
-
-interface DriverCallArgs {
-  riderId: string;
-  driverIds: string[];
-  origin: Position;
-  destination: Position;
-}
-
 interface DriverResponse {
   riderId: string;
   tripId: string;
@@ -74,8 +62,8 @@ export default {
         return context.pubsub.asyncIterator([CALL_REQUESTED]);
       },
       (payload, variables, context) => {
-        if (payload.driverListen.driverIds) {
-          return payload.driverListen.driverIds.includes(context.data.currentUser.data._id.toString());
+        if (payload.driverListen.riderPublishInfo.driverIds) {
+          return payload.driverListen.riderPublishInfo.driverIds.includes(context.data.currentUser.data._id.toString());
         }
         return false;
       },
