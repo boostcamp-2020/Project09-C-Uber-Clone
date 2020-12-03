@@ -1,5 +1,19 @@
 import { Trip } from '../repositories';
 
+interface PlaceInterface {
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface OpenArgs {
+  riderEmail: string;
+  origin: PlaceInterface;
+  destination: PlaceInterface;
+  startTime: Date;
+  distance?: number;
+}
+
 export default {
   checkTripStatus: async (args) => {
     try {
@@ -11,6 +25,14 @@ export default {
       return { tripId: args.tripId, riderId: args.riderId, result: 'fail' };
     } catch (e) {
       throw e.message;
+    }
+  },
+  openTrip: async (args: OpenArgs) => {
+    const { riderEmail, origin, destination, startTime, distance } = args;
+    try {
+      return await Trip.open(riderEmail, origin, destination, startTime, distance);
+    } catch (e) {
+      throw e;
     }
   },
 };
