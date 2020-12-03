@@ -18,7 +18,7 @@ export const matchedRiderStateQuery = gql`
 export const matchedDriverState = gql`
 	subscription {
 		matchedDriverState { 
-	    operationId
+	    tripId
 	    driverId
 	    riderId
 	    isDrop

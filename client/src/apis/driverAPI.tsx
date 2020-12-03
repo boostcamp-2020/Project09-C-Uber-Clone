@@ -6,7 +6,7 @@ interface driverPosition {
 }
 
 interface driverStateNotifyProps {
-  operationId: String
+  tripId: String
   driverId: String
   riderId: String
   driverPosition: driverPosition
