@@ -44,7 +44,7 @@ const ExpectationHeader = styled.div`
   color: gray;
 `;
 
-function DriverPopup() {
+function DriverPopup({ pickUpAddress, destinationAddress }:{ pickUpAddress: string, destinationAddress: string }) {
   //TODO: IGONRE 버튼 클릭 시 다음 호출 대기
   //TODO: CONFIRM 버튼 클릭 시 driverResponse mutate,
   //      response의 result가 success 이면 callRequested subscription 취소 후 다음 화면
@@ -55,10 +55,10 @@ function DriverPopup() {
       <Modal>
         <Flex>
           <Flex.Item>
-            <PlaceHeader>픽업 위치</PlaceHeader>
+            <PlaceHeader>픽업 위치 : {pickUpAddress}</PlaceHeader>
           </Flex.Item>
           <Flex.Item>
-            <PlaceHeader>도착지 위치</PlaceHeader>
+            <PlaceHeader>도착지 위치 : {destinationAddress}</PlaceHeader>
           </Flex.Item>
         </Flex>
         <Expectation>

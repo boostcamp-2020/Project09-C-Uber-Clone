@@ -9,11 +9,13 @@ import DriverPopup from '../components/presentational/DriverPopup';
 
 function DriverWaitingPage() {
   const { loading, error, data } = useSubscription(driverListen);
-  const [riderCalls, setRiderCalls] = useState([]);
+  const [pickUpAddress, setPickUpAddress] = useState('');
+  const [destinationAddress, setDestinationAddress] = useState('');
 
   useEffect(() => {
     if (data) {
-      setRiderCalls([...riderCalls, data]);
+      setPickUpAddress(data.driverListen.riderPublishInfo.pickUpAddress);
+      setDestinationAddress(data.driverListen.riderPublishInfo.destinationAddress);
     }
   }, [data]);
 
@@ -23,7 +25,11 @@ function DriverWaitingPage() {
 
   return (
     <>
-      {riderCalls.length > 0 && <DriverPopup />}
+      {pickUpAddress !== '' &&
+      <DriverPopup
+        pickUpAddress={pickUpAddress}
+        destinationAddress={destinationAddress}
+      />}
       <DriverCurrentPositionMap />
     </>
   );
