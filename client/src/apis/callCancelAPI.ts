@@ -13,6 +13,7 @@ export const requestCancelCall = async (client: any, history: any, payload:Paylo
   console.log(cancelTrip);
   if (cancelTrip.result === 'canceled') {
     //TODO: 전역으로 관리되는 trip id 도 삭제
+    window.alert('호출이 취소되었습니다.');
     history.push('/rider/setcourse');
   }
 };
