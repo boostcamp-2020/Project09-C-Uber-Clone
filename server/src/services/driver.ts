@@ -31,4 +31,12 @@ export default {
       throw e.message;
     }
   },
+  getDriverList: async (payload) => {
+    try {
+      return await Driver.findAllByDistance(payload);
+    } catch (e) {
+      throw e.message;
+    }
+  },
+
 };
