@@ -7,6 +7,9 @@ interface PlaceInterface {
 }
 
 export default {
+  findById: async(id) => {
+    return await Trip.findById(id);
+  },
   create: async (payload) => {
     return await Trip.create(payload);
   },

@@ -7,6 +7,7 @@ import { Flex } from 'antd-mobile';
 import styled from 'styled-components';
 
 import { sendDriverResponse } from '../../apis/driverResponseAPI';
+import { getPickUpPos } from '../../apis/tripAPI';
 
 import IgnoreButton from '../presentational/IgnoreButton';
 import SubmitButton from '../presentational/SubmitButton';
@@ -92,6 +93,7 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
     if (data.result === MATCHING_SUCCESS) {
       sessionStorage.setItem('riderId', riderId);
       sessionStorage.setItem('tripId', tripId);
+      await getPickUpPos(client, { id: tripId });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     } else {
       showAlert(data.result);
