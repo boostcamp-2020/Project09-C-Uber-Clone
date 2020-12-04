@@ -142,9 +142,10 @@ function SetCourseForm() {
     }
   };
 
-  const makeStartingPointHere = () => {
+  const makeStartingPointHere = async() => {
     dispatch(setOriginPosition(riderPos));
-    dispatch(setOriginPlace('현재위치'));
+    const address = await reverseGoecoding(riderPos);
+    dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('현재위치'));
   };
 

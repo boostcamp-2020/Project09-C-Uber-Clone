@@ -148,7 +148,7 @@ function RiderSetCourseMap() {
       zoom={14}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      center={center}
+      center={originPosition}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
     >

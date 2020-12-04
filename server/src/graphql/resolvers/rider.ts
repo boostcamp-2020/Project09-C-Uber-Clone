@@ -1,7 +1,8 @@
 import { withFilter } from 'apollo-server-express';
 import { Rider, Trip } from '../../services';
 
-import DriverRepository from '../../repositories/driver';
+import DriverService from '../../services/driver';
+
 import { DRIVER_RESPONDED, CALL_REQUESTED, MATCHED_RIDER_STATE } from '../subscriptions';
 
 interface LoginPayload{

@@ -57,7 +57,8 @@ function DriverWaitingPage() {
 
   return (
     <>
-      {driverStatus === DRIVER_POPUP &&
+      {/* {driverStatus === DRIVER_POPUP */}
+      {pickUpAddress !== '' &&
       <DriverPopup
         riderId={data.driverListen.riderPublishInfo.riderId}
         tripId={trip.id}
