@@ -1,5 +1,7 @@
-import { AuthenticationError } from 'apollo-server-express';
-import { Driver } from '../../services';
+import { AuthenticationError, withFilter } from 'apollo-server-express';
+import { Driver, Trip } from '../../services';
+
+import { DRIVER_RESPONDED, CALL_REQUESTED } from '../subscriptions';
 
 interface createDriverArgs {
   email: string;
@@ -17,9 +19,17 @@ interface LoginPayload{
   password:string
 }
 
+interface DriverResponse {
+  riderId: string;
+  tripId: string;
+  response: string;
+}
+
+const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
+
 export default {
   Query: {
-    async driver(parent: any, args: { email: string }, context: any, info: any) {
+    async driver(_: any, args: { email: string }, context: any) {
       if (!context.req.user) {
         throw new AuthenticationError('No authorization');
       };
@@ -27,11 +37,45 @@ export default {
     },
   },
   Mutation: {
-    async createDriver(parent: any, args: createDriverArgs, context: any, info: any) {
+    async createDriver(_: any, args: createDriverArgs) {
       return await Driver.signup(args);
     },
-    async loginDriver(_: any, payload:LoginPayload, context) {
+    async loginDriver(_: any, payload:LoginPayload, context:any) {
       return await Driver.login(context, payload);
+    },
+    async sendResponse(_:any, args:DriverResponse, context:any) {
+      const driverId = context.req.user.data._id;
+      const checkResult = await Trip.checkStatus(args);
+      if (checkResult.result === 'success') {
+        context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
+        await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
+      }
+      return checkResult;
+    },
+    driverStateNotify(_:any, args, context:any) {
+      context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
+      return args;
+    },
+  },
+  Subscription: {
+    driverListen: {
+      subscribe: withFilter((_, args:object, context:any) => {
+        return context.pubsub.asyncIterator([CALL_REQUESTED]);
+      },
+      (payload, variables, context) => {
+        if (payload.driverListen.riderPublishInfo.driverIds) {
+          return payload.driverListen.riderPublishInfo.driverIds.includes(context.data.currentUser.data._id.toString());
+        }
+        return false;
+      },
+      ),
+    },
+    matchedDriverState: {
+      //TODO: filter 적용
+      subscribe: (_:any, __:object, context:any) => {
+        return context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]);
+      },
     },
   },
 };
+

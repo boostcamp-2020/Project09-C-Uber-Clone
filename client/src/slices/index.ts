@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
+import mapReducer from './mapSlice';
 import loginReducer from './loginSlice';
-import signUpReducer from './signUpSlice';
 
 const reducer = combineReducers({
+  mapReducer,
   loginReducer,
-  signUpReducer,
 });
 
 export default reducer;

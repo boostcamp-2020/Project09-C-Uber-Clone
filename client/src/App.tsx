@@ -4,10 +4,11 @@ import React from 'react';
 
 import { Route, Switch } from 'react-router-dom';
 
-import LoginPage from './pages/LoginPage';
 import SignUpSelectPage from './pages/SignUpSelectPage';
 import RiderSignUpPage from './pages/RiderSignUpPage';
 import DriverSignUpPage from './pages/DriverSignUpPage';
+
+import RouteIf from './routes/RouteIf';
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
         <Route path='/signup/select' component={SignUpSelectPage} />
         <Route path='/signup/rider' component={RiderSignUpPage} />
         <Route path='/signup/driver' component={DriverSignUpPage} />
-        <Route path='/' component={LoginPage} />
+        <RouteIf path='*' />
       </Switch>
     </>
   );

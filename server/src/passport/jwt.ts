@@ -12,11 +12,11 @@ export const jwtStrategy = () => {
       },
       async function ({ isDriver, email }, done) {
         try {
-          const user = isDriver ? Driver.findByEmail({ email }) : Rider.findByEmail({ email });
-          if (!user) {
+          const data = isDriver ? await Driver.findByEmail({ email }) : await Rider.findByEmail({ email });
+          if (!data) {
             return done(null, false);
           }
-          return done(null, user);
+          return done(null, { data, isDriver });
         } catch (err) {
           return done(err, null);
         }

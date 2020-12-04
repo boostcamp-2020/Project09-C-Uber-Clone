@@ -18,9 +18,53 @@ type LoginResult {
   token: String
 }
 
+type matchedTrip {
+  riderId: ID!
+  tripId: ID!
+  result: String!
+}
+
+input DriverPositionInput {
+  lat: Float
+  lng: Float
+}
+
+type DriverPosition {
+  lat: Float
+  lng: Float
+}
+
+type driverStateNotify {
+  tripId: String
+  driverPosition: DriverPosition
+  isDrop: Boolean
+}
+
+type Position {
+  lat: Float
+  lng: Float
+}
+
+type driverRecievedInfo {
+  riderId: String
+  riderEmail: String
+  riderName: String
+  riderPos: Position
+  pickUpPos: Position
+  pickUpAddress: String
+  destinationPos: Position
+  destinationAddress: String
+  tripStatus: String
+  tripId: String
+}
+
+type callRequested {
+  riderPublishInfo: driverRecievedInfo
+}
+
 type Query {
   driver(email: String!): Driver
-}
+} 
 
 type Mutation {
   createDriver(
@@ -33,5 +77,27 @@ type Mutation {
     description: String,
     profileImage: String
   ): Driver
-  loginDriver(email: String!, password: String!): LoginResult
+  
+
+  sendResponse(
+    response: String!, 
+    riderId: ID!,
+    tripId: ID!
+  ): matchedTrip
+
+  loginDriver(
+    email: String!,
+    password: String!
+  ): LoginResult
+
+  driverStateNotify(
+    tripId: String
+    driverPosition: DriverPositionInput
+    isDrop: Boolean
+  ): driverStateNotify
+}
+
+type Subscription {
+  driverListen: callRequested
+  matchedDriverState: driverStateNotify
 }

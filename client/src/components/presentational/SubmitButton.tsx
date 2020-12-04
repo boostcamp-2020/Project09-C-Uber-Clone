@@ -2,21 +2,23 @@ import React, { FunctionComponent } from 'react';
 
 import { Button } from 'antd-mobile';
 
-interface SignUpButtonProps {
+interface SubmitButtonProps {
   content: string;
   onClick: any;
+  disabled: boolean;
 }
 
-const SignUpButton: FunctionComponent<SignUpButtonProps> = ({ content, onClick }) => {
+const SubmitButton: FunctionComponent<SubmitButtonProps> = ({ content, onClick, disabled }) => {
   return (
     <Button
       type='primary'
       style={{ backgroundColor: '#56A902' }}
       onClick={onClick}
+      disabled={disabled}
     >
       {content}
     </Button>
   );
 };
 
-export default SignUpButton;
+export default SubmitButton;

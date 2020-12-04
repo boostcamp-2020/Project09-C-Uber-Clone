@@ -1,30 +1,32 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { useApolloClient } from '@apollo/client';
 
-import { Button, WhiteSpace, Checkbox } from 'antd-mobile';
+import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import Input from '../presentational/Input';
+import { requestLogin } from '../../apis/loginAPI';
 
-import {
-  setLoginEmail,
-  setLoginPassword,
-  requestLogin,
-} from '../../slices/loginSlice';
+import { checkValidation } from '../../utils/validate';
+
+import Input from '../presentational/Input';
+import SubmitButton from '../presentational/SubmitButton';
+
+const Div = styled.div`
+  width: 90%;
+  margin: 0 auto;
+`;
 
 const Header = styled.div`
   display: flex;
-  width: 180px;
-  height: 117px;
-  left: calc(50% - 180px/2 + 6px);
-  top: calc(50% - 117px/2 - 191.5px);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 250px;
 
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 64px;
@@ -33,19 +35,31 @@ const Header = styled.div`
   color: #243443;
 `;
 
+const SignupButton = styled.button`
+  width:100%;
+  margin-top: 5px;
+  color: #56A902;
+  border: none;
+  background-color: transparent;
+`;
+
 function LoginForm() {
   const client = useApolloClient();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isValidate, setIsValidate] = useState(false);
 
   const handleChangeInput = (setState: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setState(value));
+    setState(value);
   };
 
   const handleLoginButtonClick = () => {
-    dispatch(requestLogin(client, riderCheck));
+    requestLogin(client, history, riderCheck, email, password, dispatch);
   };
 
   const checkToggle = (e: any) => {
@@ -59,43 +73,52 @@ function LoginForm() {
     }
   };
 
+  const propertyToCheck = { email, password };
+  const propertyToWatch = [email, password];
+
+  useEffect(() => {
+    checkValidation(propertyToCheck, setIsValidate);
+  }, propertyToWatch);
+
   return (
-    <>
+    <Div>
       <Header>UBER</Header>
       <Checkbox
         onChange={checkToggle}
         checked={riderCheck}
+        style={{ margin: '0 10px 10px 0' }}
       >
          라이더
       </Checkbox>
       <Checkbox
         onChange={checkToggle}
         checked={driverCheck}
+        style={{ margin: '0 0 10px 10px' }}
       >
         드라이버
       </Checkbox>
+      <WhiteSpace />
       <Input
         type='text'
         placeholder='Enter your email'
-        onChange={handleChangeInput(setLoginEmail)}
+        onChange={handleChangeInput(setEmail)}
       />
       <WhiteSpace />
       <Input
         type='password'
         placeholder='Enter your password'
-        onChange={handleChangeInput(setLoginPassword)}
+        onChange={handleChangeInput(setPassword)}
       />
       <WhiteSpace />
-      <Button
+      <SubmitButton
+        content={'로그인'}
         onClick={handleLoginButtonClick}
-        type='primary'
-        style={{ backgroundColor: '#56A902' }}
-      >로그인
-      </Button>
+        disabled={!isValidate}
+      />
       <Link to='/signup/select'>
-        <button>Sign up here</button>
+        <SignupButton>Sign up here</SignupButton>
       </Link>
-    </>
+    </Div>
   );
 }
 
