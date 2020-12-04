@@ -62,7 +62,7 @@ export default {
         startTime: new Date(),
       };
       const result = await Trip.openTrip(payload);
-      const driverIds = await DriverRepository.findAllByDistance(args.riderPublishInfo.pickUpPos);
+      const driverIds = await DriverService.getDriverList(args.riderPublishInfo.pickUpPos);
       args.riderPublishInfo = {
         ...args.riderPublishInfo,
         driverIds: driverIds.map(v => v._id.toString()),
