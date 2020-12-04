@@ -15,6 +15,13 @@ interface OpenArgs {
 }
 
 export default {
+  get: async({ id }) => {
+    try {
+      return await Trip.findById(id);
+    } catch (e) {
+      throw e.message;
+    }
+  },
   getStatus: async({ id }) => {
     try {
       const result = await Trip.findOneStatus(id);

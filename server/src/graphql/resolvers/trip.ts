@@ -1,3 +1,4 @@
+import trip from '../../models/trip';
 import { Trip } from '../../services';
 
 interface PlaceInterface {
@@ -20,6 +21,9 @@ interface OpenTripArgs {
 
 export default {
   Query: {
+    async trip(_:any, args:ID) {
+      return await Trip.get(args);
+    },
     async tripStatus(_:any, args:ID) {
       return await Trip.getStatus(args);
     },
