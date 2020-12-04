@@ -36,8 +36,6 @@ type DriverPosition {
 
 type driverStateNotify {
   tripId: String
-  driverId: String
-  riderId: String
   driverPosition: DriverPosition
   isDrop: Boolean
 }
@@ -47,8 +45,21 @@ type Position {
   lng: Float
 }
 
+type driverRecievedInfo {
+  riderId: String
+  riderEmail: String
+  riderName: String
+  riderPos: Position
+  pickUpPos: Position
+  pickUpAddress: String
+  destinationPos: Position
+  destinationAddress: String
+  tripStatus: String
+  tripId: String
+}
+
 type callRequested {
-  riderPublishInfo: riderPublishInfo
+  riderPublishInfo: driverRecievedInfo
 }
 
 type Query {
@@ -81,8 +92,6 @@ type Mutation {
 
   driverStateNotify(
     tripId: String
-    driverId: String
-    riderId: String
     driverPosition: DriverPositionInput
     isDrop: Boolean
   ): driverStateNotify

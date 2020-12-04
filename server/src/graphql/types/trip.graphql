@@ -29,7 +29,7 @@ type TripPlace {
 type Trip {
   id: ID!
   rider: MatchedRider!
-  driver: MatchedDriver!
+  driver: MatchedDriver
   origin: TripPlace!
   destination: TripPlace!
   startTime: String!
