@@ -17,6 +17,7 @@ export default function RiderPickUpForm() {
   const client = useApolloClient();
   const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
+  const [pickUpPos, setPickUpPos] = useState({ lat: parseFloat(sessionStorage.getItem('lat')), lng: parseFloat(sessionStorage.getItem('lng')) });
 
   const success = (position: Position): any => {
     const pos = {
@@ -70,8 +71,8 @@ export default function RiderPickUpForm() {
         riderLng={riderPos.lng}
         driverLat={data.matchedDriverState.driverPosition.lat}
         driverLng={data.matchedDriverState.driverPosition.lng}
-        pickUpLat={37.8077879}
-        pickUpLng={-122.4748409}
+        pickUpLat={pickUpPos.lat}
+        pickUpLng={pickUpPos.lng}
       />
       <DriverInfoBox />
     </>
