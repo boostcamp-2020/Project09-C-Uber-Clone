@@ -1,7 +1,8 @@
 import { withFilter } from 'apollo-server-express';
 import { Rider } from '../../services';
 
-import DriverRepository from '../../repositories/driver';
+import DriverService from '../../services/driver';
+
 import { DRIVER_RESPONDED, CALL_REQUESTED, MATCHED_RIDER_STATE } from '../subscriptions';
 
 interface LoginPayload{
@@ -52,16 +53,18 @@ export default {
       return await Rider.signup(payload);
     },
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
-      const driverIds = await DriverRepository.findAllByDistance(args.riderPublishInfo.riderPos);
+      // const driverIds = await DriverService.getDriverList(args.riderPublishInfo.riderPos);
+      // TODO: 드라이버 위치 실시간 업데이트 로직 추가
+      const driverIds = ['5fc9334db59b0e7f1b474d37'];
 
       args.riderPublishInfo = {
         ...args.riderPublishInfo,
-        driverIds: driverIds.map(v => v.toString()),
+        // driverIds: driverIds.map(v => v.toString()),
+        driverIds: driverIds,
         riderId: req.user.data._id,
         riderEmail: req.user.data.email,
         riderName: req.user.data.name,
       };
-
       pubsub.publish(CALL_REQUESTED, { driverListen: args });
       return args;
     },
