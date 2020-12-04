@@ -1,5 +1,5 @@
 import { withFilter } from 'apollo-server-express';
-import { Rider } from '../../services';
+import { Rider, Trip } from '../../services';
 
 import DriverRepository from '../../repositories/driver';
 import { DRIVER_RESPONDED, CALL_REQUESTED, MATCHED_RIDER_STATE } from '../subscriptions';
@@ -32,11 +32,13 @@ interface riderPublishInfo {
   destinationPos: Position
   destinationAddress: string
   tripStatus: string
+  tripId: string
 }
 
 interface DriverCallArgs {
   riderPublishInfo: riderPublishInfo
 }
+
 
 export default {
   Query: {
@@ -52,18 +54,24 @@ export default {
       return await Rider.signup(payload);
     },
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
-      const driverIds = await DriverRepository.findAllByDistance(args.riderPublishInfo.riderPos);
-
+      //TODO: args 타입을 openTrip payload 타입이랑 맞추기
+      const payload = { riderEmail: req.user.data.email,
+        origin: { address: args.riderPublishInfo.pickUpAddress, latitude: args.riderPublishInfo.pickUpPos.lat, longitude: args.riderPublishInfo.pickUpPos.lng },
+        destination: { address: args.riderPublishInfo.destinationAddress, latitude: args.riderPublishInfo.destinationPos.lat, longitude: args.riderPublishInfo.destinationPos.lng },
+        startTime: new Date(),
+      };
+      const result = await Trip.openTrip(payload);
+      const driverIds = await DriverRepository.findAllByDistance(args.riderPublishInfo.pickUpPos);
       args.riderPublishInfo = {
         ...args.riderPublishInfo,
-        driverIds: driverIds.map(v => v.toString()),
+        driverIds: driverIds.map(v => v._id.toString()),
         riderId: req.user.data._id,
         riderEmail: req.user.data.email,
         riderName: req.user.data.name,
+        tripId: result?._id,
       };
-
-      pubsub.publish(CALL_REQUESTED, { driverListen: args });
-      return args;
+      pubsub.publish(CALL_REQUESTED, { driverListen: { ...args } });
+      return args.riderPublishInfo;
     },
     async notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
@@ -73,7 +81,9 @@ export default {
   Subscription: {
     matchedRiderState: {
       subscribe: withFilter(
-        (_, __, context) => context.pubsub.asyncIterator([MATCHED_RIDER_STATE]),
+        (_, __, context) => {
+          return context.pubsub.asyncIterator([MATCHED_RIDER_STATE]);
+        },
         (payload, variables) => {
           return payload.matchedRiderState.tripId === variables.tripId;
         },

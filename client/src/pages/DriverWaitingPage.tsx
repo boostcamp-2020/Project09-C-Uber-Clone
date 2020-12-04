@@ -26,12 +26,7 @@ function DriverWaitingPage() {
 
   useEffect(() => {
     if (data && driverStatus !== DRIVER_MATCHING_SUCCESS) {
-      setRiderCalls([...riderCalls, data]);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
+      setRiderCalls([...riderCalls, { id: data.driverListen.riderPublishInfo.tripId }]);
       setPickUpAddress(data.driverListen.riderPublishInfo.pickUpAddress);
       setDestinationAddress(data.driverListen.riderPublishInfo.destinationAddress);
     }
@@ -45,7 +40,7 @@ function DriverWaitingPage() {
 
   useEffect(() => {
     //TODO: trip 의 id
-    getTripStatus(client, { id: '5fc7a18bab179a163b73302b' }, setDriverStatus);
+    getTripStatus(client, trip, setDriverStatus);
   }, [trip]);
 
   useEffect(() => {
@@ -64,6 +59,8 @@ function DriverWaitingPage() {
     <>
       {driverStatus === DRIVER_POPUP &&
       <DriverPopup
+        riderId={data.driverListen.riderPublishInfo.riderId}
+        tripId={trip.id}
         pickUpAddress={pickUpAddress}
         destinationAddress={destinationAddress}
         setDriverStatus={setDriverStatus}
