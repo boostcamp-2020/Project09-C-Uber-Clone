@@ -9,8 +9,8 @@ import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
 
 const INIT_POS = {
-  lat: 34.047,
-  lng: -118.249,
+  lat: 37.8058,
+  lng: -122.4782,
 };
 
 export default function RiderPickUpForm() {
@@ -47,7 +47,7 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     const riderState = {
-      tripId: '1',
+      tripId: sessionStorage.getItem('tripId'),
       latitude: riderPos.lat,
       longitude: riderPos.lng,
     };
@@ -60,6 +60,8 @@ export default function RiderPickUpForm() {
   if (loading) {
     return <p>드라이버 위치정보를 불러오는 중입니다</p>;
   }
+
+  //TODO: pickup 위치 및 드라이버 정보 tripId로 조회
   return (
     <>
       <PickUpMap
@@ -68,8 +70,8 @@ export default function RiderPickUpForm() {
         riderLng={riderPos.lng}
         driverLat={data.matchedDriverState.driverPosition.lat}
         driverLng={data.matchedDriverState.driverPosition.lng}
-        pickUpLat={35.689487}
-        pickUpLng={139.691706}
+        pickUpLat={37.8077879}
+        pickUpLng={-122.4748409}
       />
       <DriverInfoBox />
     </>

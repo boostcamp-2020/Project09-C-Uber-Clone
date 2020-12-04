@@ -1,4 +1,4 @@
-import { driverCall } from '../queries/callRequest';
+import { sendDriverCall } from '../queries/callRequest';
 
 import { ApolloClient } from '@apollo/client';
 
@@ -21,15 +21,17 @@ interface riderPublishInfo {
 
 export const callRequest = async (client: ApolloClient<Object>, history:any, riderPublishInfo: riderPublishInfo) => {
   try {
-    await client.mutate({
-      mutation: driverCall,
+    const { data: { driverCall } } = await client.mutate({
+      mutation: sendDriverCall,
       variables: { riderPublishInfo: riderPublishInfo },
       fetchPolicy: 'no-cache',
     });
     window.alert('경로 전송');
-
-    //TODO: 호출 요청에 성공한 경우 조건 추가
-    history.push('/rider/waiting');
+    //TODO: sessionStorage 대신 redux로 관리
+    if (driverCall.tripId) {
+      sessionStorage.setItem('tripId', driverCall.tripId);
+      history.push('/rider/waiting');
+    }
   } catch (error) {
     window.alert('실패');
     console.log(error);

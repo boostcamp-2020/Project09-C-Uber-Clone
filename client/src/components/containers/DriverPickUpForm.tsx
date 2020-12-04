@@ -9,8 +9,8 @@ import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
 
 const INIT_POS = {
-  lat: 34.047,
-  lng: -118.249,
+  lat: 37.7749,
+  lng: -122.419416,
 };
 
 export default function DriverPickUpForm() {
@@ -18,7 +18,7 @@ export default function DriverPickUpForm() {
   const [driverPos, setDriverPos] = useState(INIT_POS);
   const { loading, error, data } = useSubscription(
     matchedRiderStateQuery,
-    { variables: { tripId: '1' } },
+    { variables: { tripId: sessionStorage.getItem('tripId') } },
   );
 
   const success = (position: Position): any => {
@@ -50,12 +50,11 @@ export default function DriverPickUpForm() {
 
   useEffect(() => {
     const driverState = {
-      tripId: '1',
-      driverId: 'driver@test.com',
-      riderId: 'rider@test.com',
+      tripId: sessionStorage.getItem('tripId'),
       driverPosition: driverPos,
       isDrop: false,
     };
+    console.log('driver move');
     driverStateNotify(client, driverState);
   }, [driverPos]);
 
@@ -65,7 +64,7 @@ export default function DriverPickUpForm() {
   if (loading) {
     return <p>라이더 위치정보를 불러오는 중입니다</p>;
   }
-
+  //TODO: pickup 위치 및 라이더 정보 tripId로 조회
   return (
     <>
       <PickUpMap
@@ -74,8 +73,8 @@ export default function DriverPickUpForm() {
         riderLng={data.matchedRiderState.longitude}
         driverLat={driverPos.lat}
         driverLng={driverPos.lng}
-        pickUpLat={35.689487}
-        pickUpLng={139.691706}
+        pickUpLat={37.8077879}
+        pickUpLng={-122.4748409}
       />
       <RiderInfoBox />
     </>

@@ -69,10 +69,8 @@ const Alert = styled.div`
   z-index: 11;
 `;
 
-const PAYLOAD = { response: 'confirm', riderId: '5fbf5149f35512f0653ec7f1', tripId: '5fc7a18bab179a163b73302b' };
-
-function DriverPopup({ setDriverStatus, pickUpAddress, destinationAddress }:
-  { setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
+function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinationAddress }:
+  { riderId:string, tripId:string, setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [status, setStatus] = useState('');
@@ -89,18 +87,21 @@ function DriverPopup({ setDriverStatus, pickUpAddress, destinationAddress }:
   };
 
   const handleClickSubmitButton = async() => {
-    const { result, riderId, tripId } = await sendDriverResponse(client, dispatch, PAYLOAD);
-    if (result === MATCHING_SUCCESS) {
+    const payload = { response: 'confirm', riderId, tripId };
+    const data = await sendDriverResponse(client, dispatch, payload);
+    if (data.result === MATCHING_SUCCESS) {
+      sessionStorage.setItem('riderId', riderId);
+      sessionStorage.setItem('tripId', tripId);
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     } else {
-      showAlert(result);
+      showAlert(data.result);
     }
   };
 
   useEffect(() => {
     setTimeout(() => {
       setDriverStatus(DRIVER_IGNORED);
-    }, 5000);
+    }, 7000);
   });
   return (
 
