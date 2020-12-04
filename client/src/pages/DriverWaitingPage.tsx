@@ -39,8 +39,9 @@ function DriverWaitingPage() {
   }, [riderCalls]);
 
   useEffect(() => {
-    //TODO: trip 의 id
-    getTripStatus(client, trip, setDriverStatus);
+    if (trip.id) {
+      getTripStatus(client, trip, setDriverStatus);
+    }
   }, [trip]);
 
   useEffect(() => {
@@ -57,8 +58,7 @@ function DriverWaitingPage() {
 
   return (
     <>
-      {/* {driverStatus === DRIVER_POPUP */}
-      {pickUpAddress !== '' &&
+      {driverStatus === DRIVER_POPUP &&
       <DriverPopup
         riderId={data.driverListen.riderPublishInfo.riderId}
         tripId={trip.id}

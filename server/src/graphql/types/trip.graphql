@@ -53,5 +53,6 @@ type Mutation {
 }
 
 type Query {
+  trip(id: ID!):Trip
   tripStatus(id: ID!): String!
 }

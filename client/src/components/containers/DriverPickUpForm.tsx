@@ -9,13 +9,15 @@ import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
 
 const INIT_POS = {
-  lat: 37.7749,
-  lng: -122.419416,
+  lat: 37.8035,
+  lng: -122.46,
 };
 
 export default function DriverPickUpForm() {
   const client = useApolloClient();
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const [pickUpPos, setPickUpPos] = useState({ lat: parseFloat(sessionStorage.getItem('lat')), lng: parseFloat(sessionStorage.getItem('lng')) });
+
   const { loading, error, data } = useSubscription(
     matchedRiderStateQuery,
     { variables: { tripId: sessionStorage.getItem('tripId') } },
@@ -54,7 +56,6 @@ export default function DriverPickUpForm() {
       driverPosition: driverPos,
       isDrop: false,
     };
-    console.log('driver move');
     driverStateNotify(client, driverState);
   }, [driverPos]);
 
@@ -73,8 +74,8 @@ export default function DriverPickUpForm() {
         riderLng={data.matchedRiderState.longitude}
         driverLat={driverPos.lat}
         driverLng={driverPos.lng}
-        pickUpLat={37.8077879}
-        pickUpLng={-122.4748409}
+        pickUpLat={pickUpPos.lat}
+        pickUpLng={pickUpPos.lng}
       />
       <RiderInfoBox />
     </>
