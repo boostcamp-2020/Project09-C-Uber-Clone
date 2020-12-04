@@ -10,8 +10,6 @@ export const matchedDriverState = gql`
 	subscription {
 		matchedDriverState { 
 	    tripId
-	    driverId
-	    riderId
 	    isDrop
 	    driverPosition {
 				lat

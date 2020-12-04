@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const driverResponded = gql`
     subscription {
         driverResponded { 
-            riderId
+            tripId
             driverId
             response
         }

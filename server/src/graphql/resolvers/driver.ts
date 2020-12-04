@@ -71,7 +71,10 @@ export default {
       ),
     },
     matchedDriverState: {
-      subscribe: (_:any, __:object, context:any) => context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]),
+      //TODO: filter 적용
+      subscribe: (_:any, __:object, context:any) => {
+        return context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]);
+      },
     },
   },
 };

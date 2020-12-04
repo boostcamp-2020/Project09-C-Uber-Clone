@@ -22,30 +22,15 @@ subscription {
       }
       destinationAddress
       tripStatus
+      tripId
     }
   }
 }`;
 
-export const driverCall = gql`
+export const sendDriverCall = gql`
   mutation driverCall($riderPublishInfo: riderPublishInfoInput){
     driverCall(riderPublishInfo:$riderPublishInfo){
       riderId
-      riderEmail
-      riderName
-      riderPos {
-        lat
-        lng
-      }
-      pickUpPos {
-        lat
-        lng
-      }
-      pickUpAddress
-      destinationPos {
-        lat
-        lng
-      }
-      destinationAddress
-      tripStatus
+      tripId
     }
 }`;

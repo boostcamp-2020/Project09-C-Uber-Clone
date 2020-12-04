@@ -36,14 +36,13 @@ const Message = styled.div`
   color: rgba(117, 215, 1, 0.6);
 `;
 
-//TODO: call Request 결과 생성된 trip id 로 대체
-const TRIP_ID = '';
-
 function RiderWaitingForm() {
   const client = useApolloClient();
   const history = useHistory();
   const handleClickCancel = () => {
-    requestCancelCall(client, history, { tripId: TRIP_ID });
+    //TODO: sessionStorage 대신 redux로 관리
+    const tripId = sessionStorage.getItem('tripId');
+    requestCancelCall(client, history, { tripId });
   };
   return (
     <>

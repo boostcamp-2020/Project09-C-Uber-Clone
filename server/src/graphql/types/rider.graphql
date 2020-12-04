@@ -67,6 +67,7 @@ type driverCallResult  {
   destinationPos: Position
   destinationAddress: String
   tripStatus: String
+  tripId: String
 }
 
 type Query {

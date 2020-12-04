@@ -9,8 +9,6 @@ interface driverPosition {
 
 interface driverStateNotifyProps {
   tripId: String
-  driverId: String
-  riderId: String
   driverPosition: driverPosition
   isDrop: Boolean
 }
