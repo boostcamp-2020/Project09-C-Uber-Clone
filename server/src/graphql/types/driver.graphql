@@ -1,3 +1,41 @@
+type Query {
+  driver(email: String!): Driver
+} 
+
+type Mutation {
+  loginDriver(email: String!, password: String!): LoginResult
+
+  createDriver(
+    email: String!,
+    name: String!,
+    password: String!,
+    phoneNumber: String!,
+    carType: String!,
+    plateNumber: String!,
+    description: String,
+    profileImage: String
+  ): Driver
+  
+
+  sendResponse(
+    response: String!, 
+    riderId: ID!,
+    tripId: ID!
+  ): matchedTrip
+
+  driverStateNotify(
+    tripId: String
+    driverPosition: DriverPositionInput
+    isDrop: Boolean
+  ): driverStateNotify
+}
+
+type Subscription {
+  driverListen: driverListenResult
+
+  matchedDriverState: driverStateNotify
+}
+
 type Driver {
   id: ID!
   email: String!
@@ -29,14 +67,9 @@ input DriverPositionInput {
   lng: Float
 }
 
-type DriverPosition {
-  lat: Float
-  lng: Float
-}
-
 type driverStateNotify {
   tripId: String
-  driverPosition: DriverPosition
+  driverPosition: Position
   isDrop: Boolean
 }
 
@@ -45,59 +78,8 @@ type Position {
   lng: Float
 }
 
-type driverRecievedInfo {
-  riderId: String
-  riderEmail: String
-  riderName: String
-  riderPos: Position
-  pickUpPos: Position
-  pickUpAddress: String
-  destinationPos: Position
-  destinationAddress: String
-  tripStatus: String
-  tripId: String
+type driverListenResult{
+  trip: Trip!
+  driverIds: [String]
 }
 
-type callRequested {
-  riderPublishInfo: driverRecievedInfo
-}
-
-type Query {
-  driver(email: String!): Driver
-} 
-
-type Mutation {
-  createDriver(
-    email: String!,
-    name: String!,
-    password: String!,
-    phoneNumber: String!,
-    carType: String!,
-    plateNumber: String!,
-    description: String,
-    profileImage: String
-  ): Driver
-  
-
-  sendResponse(
-    response: String!, 
-    riderId: ID!,
-    tripId: ID!
-  ): matchedTrip
-
-  loginDriver(
-    email: String!,
-    password: String!
-  ): LoginResult
-
-  driverStateNotify(
-    tripId: String
-    driverPosition: DriverPositionInput
-    isDrop: Boolean
-  ): driverStateNotify
-}
-
-type Subscription {
-  driverListen: callRequested
-  matchedDriverState: driverStateNotify
-}
