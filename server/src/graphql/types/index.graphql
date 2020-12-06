@@ -1,5 +1,10 @@
 directive @isAuthorized on FIELD_DEFINITION
 
+type Query {
+  user: User @isAuthorized
+  verifyUser: VerifiedUser
+}
+
 type User {
   id: ID!
   email: String!
@@ -12,6 +17,6 @@ type User {
   profileImage: String
 }
 
-type Query {
-  user: User @isAuthorized
+type VerifiedUser {
+  role: String!
 }

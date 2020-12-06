@@ -1,7 +1,0 @@
-type VerifiedUser {
-  role: String!
-}
-
-type Query {
-  verifyUser: VerifiedUser
-}
