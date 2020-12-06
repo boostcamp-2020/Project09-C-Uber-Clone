@@ -35,9 +35,15 @@ const Header = styled.div`
   color: #243443;
 `;
 
+const CheckContent = styled.div`
+  padding-left: 10px;
+`;
+
 const SignupButton = styled.button`
   width:100%;
-  margin-top: 5px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bolder;
   color: #56A902;
   border: none;
   background-color: transparent;
@@ -83,20 +89,20 @@ function LoginForm() {
   return (
     <Div>
       <Header>UBER</Header>
-      <Checkbox
-        onChange={checkToggle}
-        checked={riderCheck}
-        style={{ margin: '0 10px 10px 0' }}
-      >
-         라이더
-      </Checkbox>
-      <Checkbox
-        onChange={checkToggle}
-        checked={driverCheck}
-        style={{ margin: '0 0 10px 10px' }}
-      >
-        드라이버
-      </Checkbox>
+      <CheckContent>
+        <Checkbox
+          onChange={checkToggle}
+          checked={riderCheck}
+          style={{ margin: '0 5px 10px 0' }}
+        />
+        <span>라이더</span>
+        <Checkbox
+          onChange={checkToggle}
+          checked={driverCheck}
+          style={{ margin: '0 5px 10px 10px' }}
+        />
+        <span>드라이버</span>
+      </CheckContent>
       <WhiteSpace />
       <Input
         type='text'
