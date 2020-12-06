@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Flex } from 'antd-mobile';
 
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 import { sendDriverResponse } from '../../apis/driverResponseAPI';
 import { getPickUpPos } from '../../apis/tripAPI';
+import { setTrip, setRider } from '../../slices/tripSlice';
 
 import IgnoreButton from '../presentational/IgnoreButton';
 import SubmitButton from '../presentational/SubmitButton';
@@ -91,9 +92,9 @@ function DriverPopup({ trip, setDriverStatus }:
     const payload = { response: 'confirm', riderId: trip.rider.id, tripId: trip.id };
     const data = await sendDriverResponse(client, dispatch, payload);
     if (data === MATCHING_SUCCESS) {
-      sessionStorage.setItem('riderId', trip.rider.id);
-      sessionStorage.setItem('tripId', trip.id);
-      await getPickUpPos(client, { id: trip.id });
+      dispatch(setTrip({ id: trip.id }));
+      dispatch(setRider({ id: trip.rider.id }));
+      await getPickUpPos(client, dispatch, { id: trip.id });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     } else {
       showAlert(data.result);

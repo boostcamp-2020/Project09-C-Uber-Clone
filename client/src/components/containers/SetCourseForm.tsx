@@ -106,7 +106,7 @@ function SetCourseForm() {
       destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
       startTime: (new Date()).toString(),
     };
-    callRequest(client, history, riderPublishInfo);
+    callRequest(client, history, dispatch, riderPublishInfo);
   };
 
   const success = (position: Position): any => {

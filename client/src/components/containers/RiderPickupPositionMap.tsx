@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { useApolloClient, useSubscription } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
@@ -13,12 +13,10 @@ const containerStyle = {
   height: '100vh',
 };
 
-//TODO: call Request 결과 생성된 trip id 로 대체
-const TRIP_ID = '';
-
 function RiderPickupPositionMap() {
   const client = useApolloClient();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [map, setMap] = useState(null);
   const { originPosition }: any = useSelector(selectMapReducer);
@@ -32,7 +30,7 @@ function RiderPickupPositionMap() {
   }, []);
 
   useEffect(() => {
-    const subscription = subscribeDriverResponse(client, history);
+    const subscription = subscribeDriverResponse(client, history, dispatch);
     return () => {
       subscription.unsubscribe();
     };
