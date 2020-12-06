@@ -29,3 +29,12 @@ export const matchedRiderStateQuery = gql`
     }
   }
 `;
+
+export const updateDriverPosQuery = gql`
+  mutation updateDriverPosition($driverPosition: DriverPositionInput) {
+    updateDriverPosition(driverPosition:$driverPosition) {
+      lat
+      lng
+    }
+  }
+`;
