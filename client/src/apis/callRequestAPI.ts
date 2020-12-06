@@ -16,7 +16,6 @@ interface riderPublishInfo {
 }
 
 export const callRequest = async (client: ApolloClient<Object>, history:any, payload: riderPublishInfo) => {
-  console.log(payload);
   try {
     const { data: { driverCall } } = await client.mutate({
       mutation: sendDriverCall,
