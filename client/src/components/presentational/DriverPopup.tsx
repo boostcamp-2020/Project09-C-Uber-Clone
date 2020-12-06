@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 
-import { Flex } from 'antd-mobile';
+import { Flex, Icon } from 'antd-mobile';
 
 import styled from 'styled-components';
 
@@ -70,11 +70,25 @@ const Alert = styled.div`
   z-index: 11;
 `;
 
+const LoadingIcon = styled.div`
+  text-align: center;
+`;
+
+const Counter = styled.div`
+  text-align: center;
+  font-size: 20px;
+  margin: 6px 0 20px 0;
+  font-weight: bolder;
+`;
+
+const COUNT_TIME = 7000;
+
 function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinationAddress }:
   { riderId:string, tripId:string, setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [status, setStatus] = useState('');
+  const [count, setCount] = useState(COUNT_TIME / 1000);
 
   const showAlert = (result:string) => {
     setStatus(result);
@@ -100,11 +114,22 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
     }
   };
 
+  const disCount = () => {
+    setTimeout(() => {
+      setCount(count - 1);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    disCount();
+  }, [count]);
+
   useEffect(() => {
     setTimeout(() => {
       setDriverStatus(DRIVER_IGNORED);
-    }, 7000);
-  });
+    }, COUNT_TIME);
+  }, []);
+
   return (
 
     <ModalOverlay >
@@ -120,6 +145,10 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
         <Expectation>
           <ExpectationHeader>예상 금액 및 예상 시간</ExpectationHeader>
         </Expectation>
+        <LoadingIcon>
+          <Icon type='loading' size='lg'/>
+        </LoadingIcon>
+        <Counter>{count}</Counter>
         <Flex>
           <Flex.Item>
             <IgnoreButton content='IGNORE' onClick={handleClickIgnoreButton} />
