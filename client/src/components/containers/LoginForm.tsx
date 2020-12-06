@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { useApolloClient } from '@apollo/client';
 
-import { WhiteSpace, Checkbox } from 'antd-mobile';
+import { WhiteSpace, Checkbox, List, Switch } from 'antd-mobile';
 
 import styled from 'styled-components';
 
@@ -94,14 +94,16 @@ function LoginForm() {
           onChange={checkToggle}
           checked={riderCheck}
           style={{ margin: '0 5px 10px 0' }}
-        />
-        <span>라이더</span>
+        >
+          라이더
+        </Checkbox>
         <Checkbox
           onChange={checkToggle}
           checked={driverCheck}
           style={{ margin: '0 5px 10px 10px' }}
-        />
-        <span>드라이버</span>
+        >
+          드라이버
+        </Checkbox>
       </CheckContent>
       <WhiteSpace />
       <Input
