@@ -25,6 +25,11 @@ interface DriverResponse {
   response: string;
 }
 
+interface DriverPosition {
+  lat: number;
+  lng: number;
+}
+
 const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
 
 export default {
@@ -55,6 +60,11 @@ export default {
     driverStateNotify(_:any, args, context:any) {
       context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
       return args;
+    },
+    async updateDriverPosition(_:any, args: any, { req }:any) {
+      const driverPosition = JSON.parse(JSON.stringify(args)).driverPosition;
+      await Driver.updateDriverPosition({ driverId: req.user.data._id, ...driverPosition });
+      return driverPosition;
     },
   },
   Subscription: {
