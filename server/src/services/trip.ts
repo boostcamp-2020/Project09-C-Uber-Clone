@@ -41,9 +41,9 @@ export default {
     try {
       const data = await Trip.findOneStatus(args.tripId);
       if (data?.status === 'open') {
-        return { tripId: args.tripId, riderId: args.riderId, result: 'success' };
+        return 'success' ;
       }
-      return { tripId: args.tripId, riderId: args.riderId, result: data?.status };
+      return data?.status;
     } catch (e) {
       throw e.message;
     }

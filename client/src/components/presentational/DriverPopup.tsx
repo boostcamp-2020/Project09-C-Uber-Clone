@@ -90,7 +90,7 @@ function DriverPopup({ trip, setDriverStatus }:
   const handleClickSubmitButton = async() => {
     const payload = { response: 'confirm', riderId: trip.rider.id, tripId: trip.id };
     const data = await sendDriverResponse(client, dispatch, payload);
-    if (data.result === MATCHING_SUCCESS) {
+    if (data === MATCHING_SUCCESS) {
       sessionStorage.setItem('riderId', trip.rider.id);
       sessionStorage.setItem('tripId', trip.id);
       await getPickUpPos(client, { id: trip.id });

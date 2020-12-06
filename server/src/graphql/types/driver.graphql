@@ -21,7 +21,7 @@ type Mutation {
     response: String!, 
     riderId: ID!,
     tripId: ID!
-  ): matchedTrip
+  ): String
 
   driverStateNotify(
     tripId: String
@@ -54,12 +54,6 @@ type LoginResult {
   name: String
   role: String!
   token: String
-}
-
-type matchedTrip {
-  riderId: ID!
-  tripId: ID!
-  result: String!
 }
 
 input DriverPositionInput {
