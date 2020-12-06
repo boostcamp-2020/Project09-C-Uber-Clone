@@ -59,21 +59,17 @@ const HereButton = styled.button`
   cursor: pointer;
 `;
 
-interface PublishPosition {
-  lat: number
-  lng: number
+interface TripPlace {
+  address: string
+  latitude: number
+  longitude: number
 }
 
 interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: PublishPosition
-  pickUpPos: PublishPosition
-  pickUpAddress: string
-  destinationPos: PublishPosition
-  destinationAddress: string
-  tripStatus: string
+  origin: TripPlace
+  destination: TripPlace
+  startTime: string
+  distance?:number
 }
 
 function SetCourseForm() {
@@ -106,15 +102,9 @@ function SetCourseForm() {
       return;
     }
     const riderPublishInfo: riderPublishInfo = {
-      riderId: '',
-      riderEmail: '',
-      riderName: '',
-      riderPos: riderPos,
-      pickUpPos: originPosition,
-      pickUpAddress: originPlace,
-      destinationPos: destPosition,
-      destinationAddress: destPlace,
-      tripStatus: 'open',
+      origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
+      destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
+      startTime: (new Date()).toString(),
     };
     callRequest(client, history, riderPublishInfo);
   };
