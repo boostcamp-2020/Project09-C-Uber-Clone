@@ -63,8 +63,8 @@ export default {
         return context.pubsub.asyncIterator([CALL_REQUESTED]);
       },
       (payload, variables, context) => {
-        if (payload.driverListen.riderPublishInfo.driverIds) {
-          return payload.driverListen.riderPublishInfo.driverIds.includes(context.data.currentUser.data._id.toString());
+        if (payload.driverListen.driverIds) {
+          return payload.driverListen.driverIds.includes(context.data.currentUser.data._id.toString());
         }
         return false;
       },
