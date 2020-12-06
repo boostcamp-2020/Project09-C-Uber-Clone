@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useApolloClient, useSubscription } from '@apollo/client';
 
-import { driverListen } from '../queries/callRequest';
+import { driverListenSubscription } from '../queries/callRequest';
 import { getTripStatus } from '../apis/tripAPI';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
@@ -13,12 +13,10 @@ function DriverWaitingPage() {
   //TODO: 이 페이지 전체를 container로 이동
   const client = useApolloClient();
   const history = useHistory();
-  const { loading, error, data } = useSubscription(driverListen);
+  const { loading, error, data } = useSubscription(driverListenSubscription);
   const [riderCalls, setRiderCalls] = useState([]);
-  const [trip, setTrip] = useState({ id: undefined }); //TODO: type 다시 지정
+  const [trip, setTrip] = useState({ id: undefined, rider: undefined, origin: undefined, destination: undefined, startTime: undefined, status: undefined }); //TODO: type 다시 지정
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
-  const [pickUpAddress, setPickUpAddress] = useState('');
-  const [destinationAddress, setDestinationAddress] = useState('');
 
   if (error) {
     console.log(error);
@@ -26,9 +24,7 @@ function DriverWaitingPage() {
 
   useEffect(() => {
     if (data && driverStatus !== DRIVER_MATCHING_SUCCESS) {
-      setRiderCalls([...riderCalls, { id: data.driverListen.riderPublishInfo.tripId }]);
-      setPickUpAddress(data.driverListen.riderPublishInfo.pickUpAddress);
-      setDestinationAddress(data.driverListen.riderPublishInfo.destinationAddress);
+      setRiderCalls([...riderCalls, data.driverListen.trip]);
     }
   }, [data]);
 
@@ -60,10 +56,7 @@ function DriverWaitingPage() {
     <>
       {driverStatus === DRIVER_POPUP &&
       <DriverPopup
-        riderId={data.driverListen.riderPublishInfo.riderId}
-        tripId={trip.id}
-        pickUpAddress={pickUpAddress}
-        destinationAddress={destinationAddress}
+        trip={trip}
         setDriverStatus={setDriverStatus}
       />}
       <DriverCurrentPositionMap />

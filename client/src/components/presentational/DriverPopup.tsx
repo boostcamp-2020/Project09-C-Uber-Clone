@@ -70,8 +70,8 @@ const Alert = styled.div`
   z-index: 11;
 `;
 
-function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinationAddress }:
-  { riderId:string, tripId:string, setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
+function DriverPopup({ trip, setDriverStatus }:
+  { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}}, setDriverStatus:any}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [status, setStatus] = useState('');
@@ -88,12 +88,12 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
   };
 
   const handleClickSubmitButton = async() => {
-    const payload = { response: 'confirm', riderId, tripId };
+    const payload = { response: 'confirm', riderId: trip.rider.id, tripId: trip.id };
     const data = await sendDriverResponse(client, dispatch, payload);
     if (data.result === MATCHING_SUCCESS) {
-      sessionStorage.setItem('riderId', riderId);
-      sessionStorage.setItem('tripId', tripId);
-      await getPickUpPos(client, { id: tripId });
+      sessionStorage.setItem('riderId', trip.rider.id);
+      sessionStorage.setItem('tripId', trip.id);
+      await getPickUpPos(client, { id: trip.id });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     } else {
       showAlert(data.result);
@@ -111,10 +111,10 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
       <Modal>
         <Flex>
           <Flex.Item>
-            <PlaceHeader>픽업 위치 : {pickUpAddress}</PlaceHeader>
+            <PlaceHeader>픽업 위치 : {trip.origin.address}</PlaceHeader>
           </Flex.Item>
           <Flex.Item>
-            <PlaceHeader>도착지 위치 : {destinationAddress}</PlaceHeader>
+            <PlaceHeader>도착지 위치 : {trip.destination.address}</PlaceHeader>
           </Flex.Item>
         </Flex>
         <Expectation>
