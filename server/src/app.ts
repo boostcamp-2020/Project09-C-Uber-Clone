@@ -47,7 +47,6 @@ const server = new ApolloServer({
       throw new AuthenticationError('Missing token');
     },
     onDisconnect: (webSocket, context) => {
-      console.log('disconnected');
     },
   } });
 
