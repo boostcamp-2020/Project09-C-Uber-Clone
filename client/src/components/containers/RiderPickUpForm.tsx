@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
+import { useSubscription, useMutation, useQuery } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
 import { notifyRiderState } from '../../apis/riderAPI';
-import { getTripInfo } from '../../apis/tripAPI';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
+import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
 import { selectMapReducer } from '../../slices/mapSlice';
@@ -23,6 +25,14 @@ export default function RiderPickUpForm() {
   const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
+
+  useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
+    variables: { id: trip.id },
+    onCompleted: tripInfo => {
+      dispatch(setOriginPosition({ lat: tripInfo.trip.origin.latitude, lng: tripInfo.trip.origin.longitude }));
+      dispatch(setDestPosition({ lat: tripInfo.trip.destination.latitude, lng: tripInfo.trip.destination.longitude }));
+    },
+  });
 
   const { loading, error, data } = useSubscription(
     matchedDriverState,
@@ -70,7 +80,6 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     localStorage.setItem('tripId', trip.id);
-    getTripInfo(client, dispatch, trip.id);
   }, []);
 
   if (error) {
