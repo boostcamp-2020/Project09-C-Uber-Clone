@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useApolloClient, useSubscription } from '@apollo/client';
 import { useSubscription, useMutation, useQuery } from '@apollo/client';
 
-import { matchedDriverState } from '../../queries/rider';
 import { LISTEN_MATCHED_DRIVER_STATE, NOTIFY_RIDER_STATE } from '../../queries/rider';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
@@ -19,7 +17,6 @@ const INIT_POS = {
 };
 
 export default function RiderPickUpForm() {
-  const client = useApolloClient();
   const dispatch = useDispatch();
   const [riderPos, setRiderPos] = useState(INIT_POS);
   const [count, setCount] = useState(0);
@@ -37,7 +34,7 @@ export default function RiderPickUpForm() {
   });
 
   const { loading, error, data } = useSubscription(
-    matchedDriverState,
+    LISTEN_MATCHED_DRIVER_STATE,
     { variables: { tripId: trip.id } },
   );
 
