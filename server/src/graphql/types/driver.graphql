@@ -1,5 +1,5 @@
 type Query {
-  driver(email: String!): Driver
+  driver(email: String!): Driver @isAuthorized
 } 
 
 type Mutation {
@@ -20,17 +20,17 @@ type Mutation {
     response: String!, 
     riderId: ID!,
     tripId: ID!
-  ): String
+  ): String @isAuthorized
 
   driverStateNotify(
     tripId: String
     driverPosition: DriverPositionInput
     isDrop: Boolean
-  ): driverStateNotify
+  ): driverStateNotify @isAuthorized
 
   updateDriverPosition(
     lat:Float, lng:Float
-  ): Result
+  ): Result @isAuthorized
 }
 
 type Subscription {
