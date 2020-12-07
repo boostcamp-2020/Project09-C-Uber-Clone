@@ -40,11 +40,6 @@ const NEW_MARKER_POS = {
   lng: 0,
 };
 
-const INIT_POS = {
-  lat: 37.55,
-  lng: 126.97,
-};
-
 enum TravelMode {
   BICYCLING = 'BICYCLING',
   DRIVING = 'DRIVING',
@@ -53,7 +48,7 @@ enum TravelMode {
   WALKING = 'WALKING',
 }
 
-function RiderSetCourseMap() {
+function RiderSetCourseMap({ riderPos }:{riderPos:{lat:number, lng:number}}) {
   const {
     originPosition,
     destPosition,
@@ -67,7 +62,7 @@ function RiderSetCourseMap() {
   const [map, setMap] = useState(null);
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
-  const [center, setCenter] = useState(INIT_POS);
+  const [center, setCenter] = useState(riderPos);
   const [directionResponse, setDirectionResponse] = useState(null);
 
   const pickerEl = useRef(null);
@@ -153,7 +148,7 @@ function RiderSetCourseMap() {
       zoom={14}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      center={originPosition}
+      center={center}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
     >
