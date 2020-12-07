@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
 import { notifyRiderState } from '../../apis/riderAPI';
+import { getTripInfo } from '../../apis/tripAPI';
 
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
@@ -17,10 +18,16 @@ const INIT_POS = {
 
 export default function RiderPickUpForm() {
   const client = useApolloClient();
-  const { loading, error, data } = useSubscription(matchedDriverState);
+  const dispatch = useDispatch();
   const [riderPos, setRiderPos] = useState(INIT_POS);
-  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const [count, setCount] = useState(0);
+  const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
+
+  const { loading, error, data } = useSubscription(
+    matchedDriverState,
+    { variables: { tripId: trip.id } },
+  );
 
   const success = (position: Position): any => {
     const pos = {
@@ -35,7 +42,7 @@ export default function RiderPickUpForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
@@ -47,7 +54,10 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     getRiderPosition();
-  }, []);
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+  }, [count]);
 
   useEffect(() => {
     const riderState = {
@@ -58,6 +68,11 @@ export default function RiderPickUpForm() {
     notifyRiderState(client, riderState);
   }, [riderPos]);
 
+  useEffect(() => {
+    localStorage.setItem('tripId', trip.id);
+    getTripInfo(client, dispatch, trip.id);
+  }, []);
+
   if (error) {
     return <p>error</p>;
   }
@@ -65,7 +80,6 @@ export default function RiderPickUpForm() {
     return <p>드라이버 위치정보를 불러오는 중입니다</p>;
   }
 
-  //TODO: pickup 위치 및 드라이버 정보 tripId로 조회
   return (
     <>
       <PickUpMap

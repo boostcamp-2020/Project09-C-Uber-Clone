@@ -1,10 +1,10 @@
 import { ApolloClient } from '@apollo/client';
 
-import { getStatus, pickUpPos } from '../queries/trip';
+import { getStatus, pickUpPos, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
+import { setOriginPosition, setDestPosition } from '../slices/mapSlice';
 
 import { OPEN } from '../constants/tripStatus';
 import { DRIVER_POPUP, DRIVER_IGNORED } from '../constants/driverStatus';
-import { setOriginPosition } from '../slices/mapSlice';
 
 export const getTripStatus = async (client: ApolloClient<Object>, tripInfo:{id:string}, setDriverStatus:any) => {
   try {
@@ -29,8 +29,32 @@ export const getPickUpPos = async (client: ApolloClient<Object>, dispatch:any, t
       variables: tripInfo,
       fetchPolicy: 'no-cache',
     });
-    //TODO: trip정보 전체를 전역으로 관리(redux)
-    dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
   } catch (error) {
+  }
+};
+
+export const getTripInfo = async (client: ApolloClient<Object>, dispatch:any, tripInfo:{id:string}) => {
+  try {
+    const { data: { trip } } = await client.query({
+      query: getOriginPositionAndDestinationPostion,
+      variables: tripInfo,
+      fetchPolicy: 'no-cache',
+    });
+    dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
+    dispatch(setDestPosition({ lat: trip.destination.latitude, lng: trip.destination.longitude }));
+  } catch (error) {
+  }
+};
+
+export const setTripStatus = async (client: ApolloClient<Object>, tripId: string, newTripStatus: string) => {
+  try {
+    await client.mutate({
+      mutation: setTripStateQuery,
+      variables: { tripId, newTripStatus },
+      fetchPolicy: 'no-cache',
+    });
+
+  } catch (error) {
+    console.log(error);
   }
 };

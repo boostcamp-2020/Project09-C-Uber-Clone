@@ -19,3 +19,24 @@ export const pickUpPos = gql`query pickUpPos($id:ID!){
     }
   }
 }`;
+
+export const getOriginPositionAndDestinationPostion = gql`query getOriginPositionAndDestinationPostion($id:ID!){
+  trip(id:$id){
+    origin{
+      latitude
+      longitude
+    }
+    destination{
+      latitude
+      longitude
+    }
+  }
+}`;
+
+export const setTripStateQuery = gql`
+  mutation setTripStatus($tripId: ID!, $newTripStatus: String!) {
+    setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
+      result
+    }
+  }
+`;
