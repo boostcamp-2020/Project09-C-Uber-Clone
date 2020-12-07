@@ -4,7 +4,7 @@ import { useApolloClient, useSubscription } from '@apollo/client';
 import { useSubscription, useMutation, useQuery } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
-import { notifyRiderState } from '../../apis/riderAPI';
+import { LISTEN_MATCHED_DRIVER_STATE, NOTIFY_RIDER_STATE } from '../../queries/rider';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
 import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
@@ -25,6 +25,8 @@ export default function RiderPickUpForm() {
   const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
+
+  const [notifyRiderState] = useMutation(NOTIFY_RIDER_STATE);
 
   useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
     variables: { id: trip.id },
@@ -70,12 +72,7 @@ export default function RiderPickUpForm() {
   }, [count]);
 
   useEffect(() => {
-    const riderState = {
-      tripId: trip.id,
-      latitude: riderPos.lat,
-      longitude: riderPos.lng,
-    };
-    notifyRiderState(client, riderState);
+    notifyRiderState({ variables: { tripId: trip.id, latitude: riderPos.lat, longitude: riderPos.lng } });
   }, [riderPos]);
 
   useEffect(() => {
