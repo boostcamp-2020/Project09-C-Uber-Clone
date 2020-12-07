@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const driverStateNotifyQuery = gql`
+export const NOTIFY_DRIVER_STATE = gql`
 mutation driverStateNotify(
   $tripId:String,
   $driverPosition:DriverPositionInput,
@@ -20,7 +20,7 @@ mutation driverStateNotify(
   }
 `;
 
-export const matchedRiderStateQuery = gql`
+export const LISTEN_MATCHED_RIDER_STATE = gql`
   subscription matchedRiderState($tripId: ID!) {
     matchedRiderState(tripId: $tripId) {
       tripId

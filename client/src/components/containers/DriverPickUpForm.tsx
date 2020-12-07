@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 
-import { matchedRiderStateQuery } from '../../queries/driver';
 import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
+import { LISTEN_MATCHED_RIDER_STATE, NOTIFY_DRIVER_STATE } from '../../queries/driver';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
 import PickUpMap from '../containers/PickUpMap';
@@ -17,11 +17,10 @@ const INIT_POS = {
 };
 
 export default function DriverPickUpForm() {
-  const client = useApolloClient();
   const dispatch = useDispatch();
   const [driverPos, setDriverPos] = useState(INIT_POS);
   const [count, setCount] = useState(0);
-  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
   useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
@@ -35,7 +34,7 @@ export default function DriverPickUpForm() {
   const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
 
   const { loading, error, data } = useSubscription(
-    matchedRiderStateQuery,
+    LISTEN_MATCHED_RIDER_STATE,
     { variables: { tripId: trip.id } },
   );
 
