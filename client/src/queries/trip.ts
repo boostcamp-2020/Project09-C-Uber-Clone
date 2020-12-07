@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const cancelCall = gql`mutation cancelCall($id:ID!){
+export const CANCEL_CALL = gql`mutation cancelCall($id:ID!){
   cancelTrip(id:$id){
     id
     result

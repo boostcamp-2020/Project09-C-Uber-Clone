@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
 import CarLoadingImage from '../presentational/CarLoadingImage';
 import PickUpCancelButton from '../presentational/PickUpCancelButton';
 
-import { requestCancelCall } from '../../apis/callCancelAPI';
-import { useApolloClient } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { selectTripReducer } from '../../slices/tripSlice';
+import { selectTripReducer, setTrip } from '../../slices/tripSlice';
+import { CANCEL_CALL } from '../../queries/trip';
 
 const Overlay = styled.div`
   position: fixed;
@@ -40,16 +39,24 @@ const Message = styled.div`
 `;
 
 function RiderWaitingForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const [cancelCall, { data }] = useMutation(CANCEL_CALL);
   const { trip } = useSelector(selectTripReducer);
 
   const handleClickCancel = () => {
     const tripId = trip.id;
-    requestCancelCall(client, history, dispatch, { tripId });
+    cancelCall({ variables: { id: tripId } });
   };
+
+  useEffect(() => {
+    if (data && data.cancelTrip.result === 'canceled') {
+      dispatch(setTrip({ id: '' }));
+      history.push('/rider/setcourse');
+    }
+  }, [data]);
+
   return (
     <>
       <Overlay >
