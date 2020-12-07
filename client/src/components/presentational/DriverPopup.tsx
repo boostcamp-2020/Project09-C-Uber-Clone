@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 
 import { Flex, Icon } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import { getPickUpPos } from '../../apis/tripAPI';
 import { setTrip, setRider } from '../../slices/tripSlice';
 
 import IgnoreButton from '../presentational/IgnoreButton';
@@ -15,8 +14,7 @@ import SubmitButton from '../presentational/SubmitButton';
 import { DRIVER_IGNORED, DRIVER_MATCHING_SUCCESS } from '../../constants/driverStatus';
 import { ALREADY_MATCHED, MATCHING_SUCCESS, MATCHING_CANCEL } from '../../constants/matchingResult';
 
-import { NOTIFY_DRIVER_RESPONSE, driverResponded } from '../../queries/driverResponded';
-
+import { NOTIFY_DRIVER_RESPONSE } from '../../queries/driverResponded';
 
 const Modal = styled.div`
   position: absolute;
@@ -88,7 +86,6 @@ const COUNT_TIME = 7000;
 
 function DriverPopup({ trip, setDriverStatus }:
   { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}}, setDriverStatus:any}) {
-  const client = useApolloClient();
   const dispatch = useDispatch();
 
   const [notifyDriverResponse] = useMutation(NOTIFY_DRIVER_RESPONSE, { variables: { response: 'confirm', riderId: trip.rider.id, tripId: trip.id } });
@@ -112,7 +109,6 @@ function DriverPopup({ trip, setDriverStatus }:
     if (data.sendResponse === MATCHING_SUCCESS) {
       dispatch(setTrip({ id: trip.id }));
       dispatch(setRider({ id: trip.rider.id }));
-      await getPickUpPos(client, dispatch, { id: trip.id });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     }
     showAlert(data.sendResponse.result);
