@@ -26,14 +26,13 @@ export const callRequest = async (client: ApolloClient<Object>, history:any, rid
       variables: { riderPublishInfo: riderPublishInfo },
       fetchPolicy: 'no-cache',
     });
-    window.alert('경로 전송');
     //TODO: sessionStorage 대신 redux로 관리
     if (driverCall.tripId) {
       sessionStorage.setItem('tripId', driverCall.tripId);
       history.push('/rider/waiting');
     }
   } catch (error) {
-    window.alert('실패');
+    window.alert('호출에 실패했습니다');
     console.log(error);
   }
 };

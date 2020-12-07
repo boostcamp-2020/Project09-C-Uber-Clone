@@ -38,5 +38,11 @@ export default {
       throw e.message;
     }
   },
-
+  updateDriverPosition: async(payload) => {
+    try {
+      return await Driver.updatePosition(payload);
+    } catch (e) {
+      throw e.message;
+    }
+  },
 };
