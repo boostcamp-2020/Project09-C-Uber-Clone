@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
 import { notifyRiderState } from '../../apis/riderAPI';
+import { getTripInfo } from '../../apis/tripAPI';
 
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
@@ -17,6 +18,7 @@ const INIT_POS = {
 
 export default function RiderPickUpForm() {
   const client = useApolloClient();
+  const dispatch = useDispatch();
   const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
   const { originPosition, destPosition }: any = useSelector(selectMapReducer);
@@ -58,6 +60,10 @@ export default function RiderPickUpForm() {
     notifyRiderState(client, riderState);
   }, [riderPos]);
 
+  useEffect(() => {
+    getTripInfo(client, dispatch, trip.id);
+  }, []);
+
   if (error) {
     return <p>error</p>;
   }
@@ -65,7 +71,6 @@ export default function RiderPickUpForm() {
     return <p>드라이버 위치정보를 불러오는 중입니다</p>;
   }
 
-  //TODO: pickup 위치 및 드라이버 정보 tripId로 조회
   return (
     <>
       <PickUpMap
