@@ -1,6 +1,6 @@
 import { ApolloClient } from '@apollo/client';
 
-import { getStatus, pickUpPos, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
+import { GET_TRIP_STATUS, pickUpPos, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
 import { setOriginPosition, setDestPosition } from '../slices/mapSlice';
 
 import { OPEN } from '../constants/tripStatus';
@@ -9,7 +9,7 @@ import { DRIVER_POPUP, DRIVER_IGNORED } from '../constants/driverStatus';
 export const getTripStatus = async (client: ApolloClient<Object>, tripInfo:{id:string}, setDriverStatus:any) => {
   try {
     const { data: { tripStatus } } = await client.query({
-      query: getStatus,
+      query: GET_TRIP_STATUS,
       variables: tripInfo,
       fetchPolicy: 'no-cache',
     });
