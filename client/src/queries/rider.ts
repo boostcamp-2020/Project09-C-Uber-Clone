@@ -7,8 +7,8 @@ export const notifyRiderStateQuery = gql`
 `;
 
 export const matchedDriverState = gql`
-	subscription {
-		matchedDriverState { 
+	subscription matchedDriverState($tripId: ID!) {
+		matchedDriverState(tripId: $tripId) {
 	    tripId
 	    isDrop
 	    driverPosition {
