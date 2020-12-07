@@ -19,3 +19,11 @@ export const pickUpPos = gql`query pickUpPos($id:ID!){
     }
   }
 }`;
+
+export const setTripStateQuery = gql`
+  mutation setTripStatus($tripId: String!, $newTripStatus: String!) {
+    setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
+      result
+    }
+  }
+`;

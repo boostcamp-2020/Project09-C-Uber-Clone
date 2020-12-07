@@ -32,4 +32,7 @@ export default {
     }
     return null;
   },
+  setStatus: async (tripId, newTripStatus) => {
+    return await Trip.updateOne({ _id: tripId }, { status: newTripStatus });
+  },
 };

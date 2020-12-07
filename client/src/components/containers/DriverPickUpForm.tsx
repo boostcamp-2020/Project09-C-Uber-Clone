@@ -18,6 +18,7 @@ const INIT_POS = {
 export default function DriverPickUpForm() {
   const client = useApolloClient();
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const [count, setCount] = useState(0);
   const { originPosition, destPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
@@ -39,19 +40,22 @@ export default function DriverPickUpForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
   const getDriverPosition = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      navigator.geolocation.getCurrentPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
     getDriverPosition();
-  }, []);
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+  }, [count]);
 
   useEffect(() => {
     const driverState = {
@@ -68,7 +72,7 @@ export default function DriverPickUpForm() {
   if (loading) {
     return <p>라이더 위치정보를 불러오는 중입니다</p>;
   }
-  //TODO: pickup 위치 및 라이더 정보 tripId로 조회
+
   return (
     <>
       <PickUpMap
