@@ -1,6 +1,6 @@
 import { ApolloClient } from '@apollo/client';
 
-import { GET_TRIP_STATUS, pickUpPos, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
+import { GET_TRIP_STATUS, GET_PICK_UP_POSITION, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
 import { setOriginPosition, setDestPosition } from '../slices/mapSlice';
 
 import { OPEN } from '../constants/tripStatus';
@@ -25,7 +25,7 @@ export const getTripStatus = async (client: ApolloClient<Object>, tripInfo:{id:s
 export const getPickUpPos = async (client: ApolloClient<Object>, dispatch:any, tripInfo:{id:string}) => {
   try {
     const { data: { trip } } = await client.query({
-      query: pickUpPos,
+      query: GET_PICK_UP_POSITION,
       variables: tripInfo,
       fetchPolicy: 'no-cache',
     });
