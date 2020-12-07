@@ -23,13 +23,12 @@ export const callRequest = async (client: ApolloClient<Object>, history:any, dis
       variables: payload,
       fetchPolicy: 'no-cache',
     });
-    window.alert('경로 전송');
     if (driverCall) {
       dispatch(setTrip({ id: driverCall }));
       history.push('/rider/waiting');
     }
   } catch (error) {
-    window.alert('실패');
+    window.alert('호출에 실패했습니다');
     console.log(error);
   }
 };

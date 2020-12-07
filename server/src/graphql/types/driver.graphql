@@ -16,7 +16,6 @@ type Mutation {
     profileImage: String
   ): Driver
   
-
   sendResponse(
     response: String!, 
     riderId: ID!,
@@ -28,6 +27,10 @@ type Mutation {
     driverPosition: DriverPositionInput
     isDrop: Boolean
   ): driverStateNotify
+
+  updateDriverPosition(
+    lat:Float, lng:Float
+  ): Result
 }
 
 type Subscription {
@@ -77,3 +80,6 @@ type driverListenResult{
   driverIds: [String]
 }
 
+type Result {
+  result: String
+}
