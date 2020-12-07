@@ -3,7 +3,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
 import { USER_ROLE } from '../queries/verify';
@@ -15,18 +15,15 @@ import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
 import RiderWaitingPage from '../pages/RiderWaitingPage';
 
+
 interface Paths {
   path: string;
 }
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
-  const { data } = useQuery(USER_ROLE);
+  const dispatch = useDispatch();
+  const { data } = useQuery(USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
 
-  useEffect(() => {
-    if (data) {
-      setLoginRole(data.verifyUser.role);
-    }
-  }, [data]);
   return (
     <Route
       path={path}
