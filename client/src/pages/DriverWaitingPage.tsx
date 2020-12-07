@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSubscription, useQuery, useApolloClient } from '@apollo/client';
+import { useSubscription, useQuery, useMutation } from '@apollo/client';
 
 import { GET_TRIP_STATUS } from '../queries/trip';
-
+import { ADD_DRIVER_POSITION } from '../queries/driver';
 import { LISTEN_DRIVER_CALL } from '../queries/callRequest';
 
-import { updateDriverPosition } from '../apis/driverAPI';
+import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
+import { OPEN } from '../constants/tripStatus';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
-import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
-
-import { OPEN } from '../constants/tripStatus';
 
 const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
   //TODO: 이 페이지 전체를 container로 이동
-  const client = useApolloClient();
   const history = useHistory();
 
   const [riderCalls, setRiderCalls] = useState([]);
@@ -35,7 +32,8 @@ function DriverWaitingPage() {
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
 
   const { data: driverListen } = useSubscription(LISTEN_DRIVER_CALL);
-  const { loading, error, data: tripStatus } = useQuery(GET_TRIP_STATUS, { variables: trip });
+  const { data: tripStatus } = useQuery(GET_TRIP_STATUS, { variables: trip });
+  const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
     const success = (position: Position): any => {
@@ -97,7 +95,7 @@ function DriverWaitingPage() {
     getDriverPosition();
     setTimeout(() => {
       setCount(count + 1);
-      updateDriverPosition(client, driverPos);
+      updateDriverPosition();
     }, DRIVER_POSITION_UPDATE_TIME);
   }, [count]);
 
