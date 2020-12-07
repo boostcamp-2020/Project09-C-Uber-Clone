@@ -1,15 +1,13 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
 
-import { useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import { useSelector, useDispatch } from 'react-redux';
-
-import { verifyUser } from '../apis/verifyUserAPI';
-
+import { USER_ROLE } from '../queries/verify';
+import { setLoginRole } from '../slices/loginSlice';
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
 import DriverPickUpPage from '../pages/DriverPickUpPage';
@@ -22,19 +20,21 @@ interface Paths {
 }
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
-  const client = useApolloClient();
-  const dispatch = useDispatch();
-  const { loginReducer }: any = useSelector((state: any) => state);
+  const { data } = useQuery(USER_ROLE);
 
+  useEffect(() => {
+    if (data) {
+      setLoginRole(data.verifyUser.role);
+    }
+  }, [data]);
   return (
     <Route
       path={path}
       render={() => {
-        if (loginReducer.loginRole === '') {
-          verifyUser(client, dispatch);
+        if (!data) {
           return;
         }
-        if (loginReducer.loginRole === 'driver') {
+        if (data.verifyUser.role === 'driver') {
           return (
             <Switch>
               <Route path='/driver/main' component={DriverWaitingPage} />
@@ -43,7 +43,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             </Switch>
           );
         }
-        if (loginReducer.loginRole === 'rider') {
+        if (data.verifyUser.role === 'rider') {
           return (
             <Switch>
               <Route path='/rider/setcourse' component={SetCoursePage} />
@@ -53,7 +53,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             </Switch>
           );
         }
-        if (loginReducer.loginRole === 'unknown') {
+        if (data.verifyUser.role === 'unknown') {
           localStorage.removeItem('token');
           return (
             <Switch>
