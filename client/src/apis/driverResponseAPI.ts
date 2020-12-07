@@ -1,18 +1,18 @@
-import { driverResponse, driverResponded } from '../queries/driverResponded';
+import { NOTIFY_DRIVER_RESPONSE, driverResponded } from '../queries/driverResponded';
 import { getPickUpPos } from '../apis/tripAPI';
 
 import { MATCHING_CONFIRM } from '../constants/matchingResult';
 import { setDriver, setTrip } from '../slices/tripSlice';
 
 interface Payload {
-    response: string
-    riderId: string
-    tripId: string
+  response: string
+  riderId: string
+  tripId: string
 }
 
 export const sendDriverResponse = async (client: any, dispatch: any, payload:Payload) => {
   const { data: { sendResponse } } = await client.mutate({
-    mutation: driverResponse,
+    mutation: NOTIFY_DRIVER_RESPONSE,
     variables: payload,
     fetchPolicy: 'no-cache',
   });
