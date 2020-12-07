@@ -60,7 +60,7 @@ function RiderInfoBox() {
   const client = useApolloClient();
   const { trip } = useSelector(selectTripReducer);
 
-  const handleClicknoBoardCompelete = () => {
+  const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus(client, tripId, 'onBoard');
   };
@@ -71,7 +71,7 @@ function RiderInfoBox() {
         <RiderName>라이더 이름</RiderName>
         <PickUpInfo>픽업 위치</PickUpInfo>
         <Buttons>
-          <PickUpButton onClick={handleClicknoBoardCompelete}>탑승완료</PickUpButton>
+          <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
           <ChatButton>채팅하기</ChatButton>
         </Buttons>
       </Modal>
