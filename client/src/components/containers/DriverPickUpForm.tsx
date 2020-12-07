@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { getTripInfo } from '../../apis/tripAPI';
-import { driverStateNotify } from '../../apis/driverAPI';
 import { matchedRiderStateQuery } from '../../queries/driver';
 
 import PickUpMap from '../containers/PickUpMap';
@@ -60,12 +59,7 @@ export default function DriverPickUpForm() {
   }, [count]);
 
   useEffect(() => {
-    const driverState = {
-      tripId: trip.id,
-      driverPosition: driverPos,
-      isDrop: false,
-    };
-    driverStateNotify(client, driverState);
+    notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
 
   useEffect(() => {
