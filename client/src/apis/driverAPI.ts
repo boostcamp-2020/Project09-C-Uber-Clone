@@ -1,3 +1,4 @@
+import { updateDriverPosQuery } from '../queries/driver';
 
 import { ApolloClient } from '@apollo/client';
 
