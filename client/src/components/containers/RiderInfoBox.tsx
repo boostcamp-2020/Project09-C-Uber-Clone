@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { useApolloClient } from '@apollo/client';
+
+import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
+
+import { setTripStatus } from '../../apis/tripAPI';
 
 const Modal = styled.div`
   width: 100%;
@@ -50,13 +57,21 @@ const ChatButton = styled.button`
 `;
 
 function RiderInfoBox() {
+  const client = useApolloClient();
+  const { trip } = useSelector(selectTripReducer);
+
+  const handleClicknoBoardCompelete = () => {
+    const tripId = trip.id;
+    setTripStatus(client, tripId, 'onBoard');
+  };
+
   return (
     <>
       <Modal>
         <RiderName>라이더 이름</RiderName>
         <PickUpInfo>픽업 위치</PickUpInfo>
         <Buttons>
-          <PickUpButton>탑승완료</PickUpButton>
+          <PickUpButton onClick={handleClicknoBoardCompelete}>탑승완료</PickUpButton>
           <ChatButton>채팅하기</ChatButton>
         </Buttons>
       </Modal>
