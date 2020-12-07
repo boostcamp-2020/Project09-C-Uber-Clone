@@ -19,10 +19,15 @@ const INIT_POS = {
 export default function RiderPickUpForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
-  const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
-  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const [count, setCount] = useState(0);
+  const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
+
+  const { loading, error, data } = useSubscription(
+    matchedDriverState,
+    { variables: { tripId: trip.id } },
+  );
 
   const success = (position: Position): any => {
     const pos = {
@@ -37,7 +42,7 @@ export default function RiderPickUpForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
@@ -49,7 +54,10 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     getRiderPosition();
-  }, []);
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+  }, [count]);
 
   useEffect(() => {
     const riderState = {

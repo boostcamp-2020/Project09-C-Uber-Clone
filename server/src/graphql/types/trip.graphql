@@ -7,6 +7,8 @@ type Mutation {
   ) : Trip @isAuthorized
 
   cancelTrip(id: ID!): CancelResult
+
+  setTripStatus(tripId: ID!, newTripStatus: String!): Result
 }
 
 type Query {
@@ -30,6 +32,10 @@ type Trip {
   arrivalTime: String
   status: String!
   distance: Float
+}
+
+type Result {
+  result: String
 }
 
 type MatchedRider {
