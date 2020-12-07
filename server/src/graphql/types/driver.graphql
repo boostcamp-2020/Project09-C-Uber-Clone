@@ -1,3 +1,44 @@
+type Query {
+  driver(email: String!): Driver
+} 
+
+type Mutation {
+  loginDriver(email: String!, password: String!): LoginResult
+
+  createDriver(
+    email: String!,
+    name: String!,
+    password: String!,
+    phoneNumber: String!,
+    carType: String!,
+    plateNumber: String!,
+    description: String,
+    profileImage: String
+  ): Driver
+  
+  sendResponse(
+    response: String!, 
+    riderId: ID!,
+    tripId: ID!
+  ): String
+
+  driverStateNotify(
+    tripId: String
+    driverPosition: DriverPositionInput
+    isDrop: Boolean
+  ): driverStateNotify
+
+  updateDriverPosition(
+    lat:Float, lng:Float
+  ): Result
+}
+
+type Subscription {
+  driverListen: driverListenResult
+
+  matchedDriverState: driverStateNotify
+}
+
 type Driver {
   id: ID!
   email: String!
@@ -18,25 +59,14 @@ type LoginResult {
   token: String
 }
 
-type matchedTrip {
-  riderId: ID!
-  tripId: ID!
-  result: String!
-}
-
 input DriverPositionInput {
-  lat: Float
-  lng: Float
-}
-
-type DriverPosition {
   lat: Float
   lng: Float
 }
 
 type driverStateNotify {
   tripId: String
-  driverPosition: DriverPosition
+  driverPosition: Position
   isDrop: Boolean
 }
 
@@ -45,66 +75,11 @@ type Position {
   lng: Float
 }
 
+type driverListenResult{
+  trip: Trip!
+  driverIds: [String]
+}
+
 type Result {
   result: String
-}
-
-type driverRecievedInfo {
-  riderId: String
-  riderEmail: String
-  riderName: String
-  riderPos: Position
-  pickUpPos: Position
-  pickUpAddress: String
-  destinationPos: Position
-  destinationAddress: String
-  tripStatus: String
-  tripId: String
-}
-
-type callRequested {
-  riderPublishInfo: driverRecievedInfo
-}
-
-type Query {
-  driver(email: String!): Driver
-} 
-
-type Mutation {
-  createDriver(
-    email: String!,
-    name: String!,
-    password: String!,
-    phoneNumber: String!,
-    carType: String!,
-    plateNumber: String!,
-    description: String,
-    profileImage: String
-  ): Driver
-  
-  sendResponse(
-    response: String!, 
-    riderId: ID!,
-    tripId: ID!
-  ): matchedTrip
-
-  loginDriver(
-    email: String!,
-    password: String!
-  ): LoginResult
-
-  driverStateNotify(
-    tripId: String
-    driverPosition: DriverPositionInput
-    isDrop: Boolean
-  ): driverStateNotify
-
-  updateDriverPosition(
-    lat:Float, lng:Float
-  ): Result
-}
-
-type Subscription {
-  driverListen: callRequested
-  matchedDriverState: driverStateNotify
 }

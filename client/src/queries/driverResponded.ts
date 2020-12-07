@@ -12,10 +12,6 @@ export const driverResponded = gql`
 
 export const driverResponse = gql`
     mutation responseMutation($response:String!,$riderId:ID!,$tripId:ID!){
-        sendResponse(response:$response,riderId:$riderId,tripId:$tripId){
-            riderId
-            tripId
-            result
-        }
+        sendResponse(response:$response,riderId:$riderId,tripId:$tripId)
     }
 `;

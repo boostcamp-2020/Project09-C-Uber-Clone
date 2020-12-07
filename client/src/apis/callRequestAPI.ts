@@ -1,34 +1,30 @@
 import { sendDriverCall } from '../queries/callRequest';
 
 import { ApolloClient } from '@apollo/client';
+import { setTrip } from '../slices/tripSlice';
 
-interface Position {
-  lat: number
-  lng: number
+interface TripPlace {
+  address: string
+  latitude: number
+  longitude: number
 }
 
 interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: Position
-  pickUpPos: Position
-  pickUpAddress: string
-  destinationPos: Position
-  destinationAddress: string
-  tripStatus: string
+  origin: TripPlace
+  destination: TripPlace
+  startTime: string
+  distance?:number
 }
 
-export const callRequest = async (client: ApolloClient<Object>, history:any, riderPublishInfo: riderPublishInfo) => {
+export const callRequest = async (client: ApolloClient<Object>, history:any, dispatch: any, payload: riderPublishInfo) => {
   try {
     const { data: { driverCall } } = await client.mutate({
       mutation: sendDriverCall,
-      variables: { riderPublishInfo: riderPublishInfo },
+      variables: payload,
       fetchPolicy: 'no-cache',
     });
-    //TODO: sessionStorage 대신 redux로 관리
-    if (driverCall.tripId) {
-      sessionStorage.setItem('tripId', driverCall.tripId);
+    if (driverCall) {
+      dispatch(setTrip({ id: driverCall }));
       history.push('/rider/waiting');
     }
   } catch (error) {

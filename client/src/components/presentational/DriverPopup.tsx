@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Flex, Icon } from 'antd-mobile';
 
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 import { sendDriverResponse } from '../../apis/driverResponseAPI';
 import { getPickUpPos } from '../../apis/tripAPI';
+import { setTrip, setRider } from '../../slices/tripSlice';
 
 import IgnoreButton from '../presentational/IgnoreButton';
 import SubmitButton from '../presentational/SubmitButton';
@@ -69,7 +70,6 @@ const Alert = styled.div`
   justify-content: center;
   z-index: 11;
 `;
-
 const LoadingIcon = styled.div`
   text-align: center;
 `;
@@ -82,9 +82,8 @@ const Counter = styled.div`
 `;
 
 const COUNT_TIME = 7000;
-
-function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinationAddress }:
-  { riderId:string, tripId:string, setDriverStatus:any, pickUpAddress: string, destinationAddress: string}) {
+function DriverPopup({ trip, setDriverStatus }:
+  { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}}, setDriverStatus:any}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [status, setStatus] = useState('');
@@ -102,12 +101,12 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
   };
 
   const handleClickSubmitButton = async() => {
-    const payload = { response: 'confirm', riderId, tripId };
+    const payload = { response: 'confirm', riderId: trip.rider.id, tripId: trip.id };
     const data = await sendDriverResponse(client, dispatch, payload);
-    if (data.result === MATCHING_SUCCESS) {
-      sessionStorage.setItem('riderId', riderId);
-      sessionStorage.setItem('tripId', tripId);
-      await getPickUpPos(client, { id: tripId });
+    if (data === MATCHING_SUCCESS) {
+      dispatch(setTrip({ id: trip.id }));
+      dispatch(setRider({ id: trip.rider.id }));
+      await getPickUpPos(client, dispatch, { id: trip.id });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     } else {
       showAlert(data.result);
@@ -136,10 +135,10 @@ function DriverPopup({ riderId, tripId, setDriverStatus, pickUpAddress, destinat
       <Modal>
         <Flex>
           <Flex.Item>
-            <PlaceHeader>픽업 위치 : {pickUpAddress}</PlaceHeader>
+            <PlaceHeader>픽업 위치 : {trip.origin.address}</PlaceHeader>
           </Flex.Item>
           <Flex.Item>
-            <PlaceHeader>도착지 위치 : {destinationAddress}</PlaceHeader>
+            <PlaceHeader>도착지 위치 : {trip.destination.address}</PlaceHeader>
           </Flex.Item>
         </Flex>
         <Expectation>

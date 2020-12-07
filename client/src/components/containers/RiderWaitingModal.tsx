@@ -8,6 +8,9 @@ import PickUpCancelButton from '../presentational/PickUpCancelButton';
 import { requestCancelCall } from '../../apis/callCancelAPI';
 import { useApolloClient } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectTripReducer } from '../../slices/tripSlice';
 
 const Overlay = styled.div`
   position: fixed;
@@ -39,10 +42,13 @@ const Message = styled.div`
 function RiderWaitingForm() {
   const client = useApolloClient();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { trip } = useSelector(selectTripReducer);
+
   const handleClickCancel = () => {
-    //TODO: sessionStorage 대신 redux로 관리
-    const tripId = sessionStorage.getItem('tripId');
-    requestCancelCall(client, history, { tripId });
+    const tripId = trip.id;
+    requestCancelCall(client, history, dispatch, { tripId });
   };
   return (
     <>

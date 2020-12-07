@@ -1,36 +1,32 @@
 import { gql } from '@apollo/client';
 
-export const driverListen = gql`
+export const driverListenSubscription = gql`
 subscription {
   driverListen {
-    riderPublishInfo {
-      riderId
-      riderEmail
-      riderName
-      riderPos{ 
-        lat
-        lng 
+    trip{
+      id
+      rider{
+        id
+        email
+        name
       }
-      pickUpPos{ 
-        lat
-        lng 
+      origin{
+        address
+        latitude
+        longitude
       }
-      pickUpAddress
-      destinationPos { 
-        lat
-        lng 
+      destination{
+        address
+        latitude
+        longitude
       }
-      destinationAddress
-      tripStatus
-      tripId
+      startTime
+      status
     }
   }
 }`;
 
 export const sendDriverCall = gql`
-  mutation driverCall($riderPublishInfo: riderPublishInfoInput){
-    driverCall(riderPublishInfo:$riderPublishInfo){
-      riderId
-      tripId
-    }
+mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!) {
+  driverCall(origin: $origin, destination: $destination, startTime: $startTime)
 }`;

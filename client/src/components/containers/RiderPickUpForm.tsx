@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useSelector } from 'react-redux';
 import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { matchedDriverState } from '../../queries/rider';
@@ -7,6 +7,8 @@ import { notifyRiderState } from '../../apis/riderAPI';
 
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
+import { selectMapReducer } from '../../slices/mapSlice';
+import { selectTripReducer } from '../../slices/tripSlice';
 
 const INIT_POS = {
   lat: 37.8058,
@@ -17,7 +19,8 @@ export default function RiderPickUpForm() {
   const client = useApolloClient();
   const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
-  const [pickUpPos, setPickUpPos] = useState({ lat: parseFloat(sessionStorage.getItem('lat')), lng: parseFloat(sessionStorage.getItem('lng')) });
+  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const { trip }: any = useSelector(selectTripReducer);
 
   const success = (position: Position): any => {
     const pos = {
@@ -48,7 +51,7 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     const riderState = {
-      tripId: sessionStorage.getItem('tripId'),
+      tripId: trip.id,
       latitude: riderPos.lat,
       longitude: riderPos.lng,
     };
@@ -71,8 +74,8 @@ export default function RiderPickUpForm() {
         riderLng={riderPos.lng}
         driverLat={data.matchedDriverState.driverPosition.lat}
         driverLng={data.matchedDriverState.driverPosition.lng}
-        pickUpLat={pickUpPos.lat}
-        pickUpLng={pickUpPos.lng}
+        pickUpLat={originPosition.lat}
+        pickUpLng={originPosition.lng}
       />
       <DriverInfoBox />
     </>

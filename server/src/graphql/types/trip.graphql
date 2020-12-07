@@ -1,26 +1,20 @@
-type MatchedRider {
-  id: ID!
-  email: String!
-  name: String!
+type Mutation {
+  openTrip(
+    origin: TripPlaceInput!,
+    destination: TripPlaceInput!,
+    startTime: String!,
+    distance: Float
+  ) : Trip @isAuthorized
+
+  cancelTrip(id: ID!): CancelResult
 }
 
-type MatchedDriver {
-  id: ID!
-  email: String!
-  name: String!
-  carType: String!
-  plateNumber: String!
-  description: String
-  profileImage: String
+type Query {
+  trip(id: ID!):Trip
+  tripStatus(id: ID!): String!
 }
 
 input TripPlaceInput {
-  address: String!
-  latitude: Float!
-  longitude: Float!
-}
-
-type TripPlace {
   address: String!
   latitude: Float!
   longitude: Float!
@@ -38,21 +32,29 @@ type Trip {
   distance: Float
 }
 
+type MatchedRider {
+  id: ID!
+  email: String!
+  name: String!
+}
+
+type MatchedDriver {
+  id: ID!
+  email: String!
+  name: String!
+  carType: String!
+  plateNumber: String!
+  description: String
+  profileImage: String
+}
+
+type TripPlace {
+  address: String!
+  latitude: Float!
+  longitude: Float!
+}
+
 type CancelResult{
-    id: ID!
-    result: String!
-}
-
-type Mutation {
-  openTrip(
-    origin: TripPlaceInput!,
-    destination: TripPlaceInput!,
-    startTime: String!,
-    distance: Float) : Trip @isAuthorized
-  cancelTrip(id: ID!): CancelResult
-}
-
-type Query {
-  trip(id: ID!):Trip
-  tripStatus(id: ID!): String!
+  id: ID!
+  result: String!
 }

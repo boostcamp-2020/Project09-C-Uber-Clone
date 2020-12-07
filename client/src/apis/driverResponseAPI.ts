@@ -2,6 +2,7 @@ import { driverResponse, driverResponded } from '../queries/driverResponded';
 import { getPickUpPos } from '../apis/tripAPI';
 
 import { MATCHING_CONFIRM } from '../constants/matchingResult';
+import { setDriver, setTrip } from '../slices/tripSlice';
 
 interface Payload {
     response: string
@@ -18,7 +19,7 @@ export const sendDriverResponse = async (client: any, dispatch: any, payload:Pay
   return sendResponse;
 };
 
-export const subscribeDriverResponse = (client:any, history:any) => {
+export const subscribeDriverResponse = (client:any, history:any, dispatch:any) => {
   return client
     .subscribe({
       query: driverResponded,
@@ -27,10 +28,9 @@ export const subscribeDriverResponse = (client:any, history:any) => {
       async({ data: { driverResponded } }:{data:any}) => {
         const { response, driverId, tripId } = driverResponded;
         if (response === MATCHING_CONFIRM) {
-          //TODO: sessionStorage 대신 리덕스로 관리
-          sessionStorage.setItem('tripId', tripId);
-          sessionStorage.setItem('driverId', driverId);
-          await getPickUpPos(client, { id: tripId });
+          dispatch(setTrip({ id: tripId }));
+          dispatch(setDriver({ id: driverId }));
+          await getPickUpPos(client, dispatch, { id: tripId });
           history.push('/rider/pickup');
         }
       },

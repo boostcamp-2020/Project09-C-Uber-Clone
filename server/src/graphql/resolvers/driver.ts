@@ -50,12 +50,12 @@ export default {
     },
     async sendResponse(_:any, args:DriverResponse, context:any) {
       const driverId = context.req.user.data._id;
-      const checkResult = await Trip.checkStatus(args);
-      if (checkResult.result === 'success') {
+      const result = await Trip.checkStatus(args);
+      if (result === 'success') {
         context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
         await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
       }
-      return checkResult;
+      return result;
     },
     driverStateNotify(_:any, args, context:any) {
       context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
@@ -76,8 +76,8 @@ export default {
         return context.pubsub.asyncIterator([CALL_REQUESTED]);
       },
       (payload, variables, context) => {
-        if (payload.driverListen.riderPublishInfo.driverIds) {
-          return payload.driverListen.riderPublishInfo.driverIds.includes(context.data.currentUser.data._id.toString());
+        if (payload.driverListen.driverIds) {
+          return payload.driverListen.driverIds.includes(context.data.currentUser.data._id.toString());
         }
         return false;
       },
