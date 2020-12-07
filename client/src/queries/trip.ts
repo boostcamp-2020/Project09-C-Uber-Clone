@@ -19,3 +19,17 @@ export const pickUpPos = gql`query pickUpPos($id:ID!){
     }
   }
 }`;
+
+export const route = gql`query route($id:ID!){
+  trip(id:$id){
+    origin{
+      latitude
+      longitude
+    }
+    destination{
+      latitude
+      longitude
+    }
+  }
+}`;
+
