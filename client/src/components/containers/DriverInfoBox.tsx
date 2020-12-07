@@ -53,7 +53,7 @@ const CancelButton = styled.button`
     border-radius: 15px;
 `;
 
-function RiderInfoBox() {
+function DriverInfoBox() {
   return (
     <>
       <Modal>
@@ -75,4 +75,4 @@ function RiderInfoBox() {
   );
 }
 
-export default RiderInfoBox;
+export default DriverInfoBox;

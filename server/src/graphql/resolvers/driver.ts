@@ -84,10 +84,13 @@ export default {
       ),
     },
     matchedDriverState: {
-      //TODO: filter 적용
-      subscribe: (_:any, __:object, context:any) => {
+      subscribe: withFilter((_:any, __:object, context:any) => {
         return context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]);
       },
+      (payload, variables) => {
+        return payload.matchedDriverState.tripId === variables.tripId;
+      },
+      ),
     },
   },
 };

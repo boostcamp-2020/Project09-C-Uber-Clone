@@ -20,6 +20,7 @@ export default function DriverPickUpForm() {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const [count, setCount] = useState(0);
   const { originPosition, destPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
@@ -41,19 +42,22 @@ export default function DriverPickUpForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
   const getDriverPosition = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      navigator.geolocation.getCurrentPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
     getDriverPosition();
-  }, []);
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+  }, [count]);
 
   useEffect(() => {
     const driverState = {

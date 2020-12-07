@@ -1,6 +1,6 @@
 import { ApolloClient } from '@apollo/client';
 
-import { getStatus, pickUpPos, getOriginPositionAndDestinationPostion } from '../queries/trip';
+import { getStatus, pickUpPos, setTripStateQuery, getOriginPositionAndDestinationPostion } from '../queries/trip';
 import { setOriginPosition, setDestPosition } from '../slices/mapSlice';
 
 import { OPEN } from '../constants/tripStatus';
@@ -43,5 +43,18 @@ export const getTripInfo = async (client: ApolloClient<Object>, dispatch:any, tr
     dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
     dispatch(setDestPosition({ lat: trip.destination.latitude, lng: trip.destination.longitude }));
   } catch (error) {
+  }
+};
+
+export const setTripStatus = async (client: ApolloClient<Object>, tripId: string, newTripStatus: string) => {
+  try {
+    await client.mutate({
+      mutation: setTripStateQuery,
+      variables: { tripId, newTripStatus },
+      fetchPolicy: 'no-cache',
+    });
+
+  } catch (error) {
+    console.log(error);
   }
 };

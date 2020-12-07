@@ -33,3 +33,10 @@ export const getOriginPositionAndDestinationPostion = gql`query getOriginPositio
   }
 }`;
 
+export const setTripStateQuery = gql`
+  mutation setTripStatus($tripId: ID!, $newTripStatus: String!) {
+    setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
+      result
+    }
+  }
+`;
