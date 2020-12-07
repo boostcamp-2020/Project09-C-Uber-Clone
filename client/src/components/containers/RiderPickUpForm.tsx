@@ -17,10 +17,14 @@ const INIT_POS = {
 
 export default function RiderPickUpForm() {
   const client = useApolloClient();
-  const { loading, error, data } = useSubscription(matchedDriverState);
   const [riderPos, setRiderPos] = useState(INIT_POS);
   const { originPosition, destPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
+
+  const { loading, error, data } = useSubscription(
+    matchedDriverState,
+    { variables: { tripId: trip.id } },
+  );
 
   const success = (position: Position): any => {
     const pos = {
