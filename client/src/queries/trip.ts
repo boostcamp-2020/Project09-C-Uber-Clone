@@ -20,7 +20,7 @@ export const pickUpPos = gql`query pickUpPos($id:ID!){
   }
 }`;
 
-export const route = gql`query route($id:ID!){
+export const getOriginPositionAndDestinationPostion = gql`query getOriginPositionAndDestinationPostion($id:ID!){
   trip(id:$id){
     origin{
       latitude

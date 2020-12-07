@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useApolloClient, useSubscription, useQuery } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 
 import { getTripInfo } from '../../apis/tripAPI';
 import { driverStateNotify } from '../../apis/driverAPI';
