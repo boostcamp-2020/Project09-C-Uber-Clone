@@ -20,7 +20,7 @@ const Form = styled.form`
 `;
 
 function RiderSignUpForm() {
-  const [signUpRider, { data }] = useMutation(SIGNUP_RIDER);
+  const [signUpRider] = useMutation(SIGNUP_RIDER);
   const history = useHistory();
 
   const [name, setName] = useState('');
@@ -36,11 +36,11 @@ function RiderSignUpForm() {
 
   const handleSignUpButton = async () => {
     const riderInfo = { name, phoneNumber, email, password };
-    await signUpRider({ variables: riderInfo });
-    if (data) {
+    try {
+      await signUpRider({ variables: riderInfo });
       window.alert('회원가입 성공');
       history.push('/login');
-    } else {
+    } catch (error) {
       window.alert('회원가입 실패');
     }
   };
