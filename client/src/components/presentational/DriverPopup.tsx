@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useApolloClient } from '@apollo/client';
-import { useDispatch, useSelector } from 'react-redux';
+import { useApolloClient, useMutation } from '@apollo/client';
+import { useDispatch } from 'react-redux';
 
 import { Flex, Icon } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import { sendDriverResponse } from '../../apis/driverResponseAPI';
 import { getPickUpPos } from '../../apis/tripAPI';
 import { setTrip, setRider } from '../../slices/tripSlice';
 
@@ -15,6 +14,9 @@ import SubmitButton from '../presentational/SubmitButton';
 
 import { DRIVER_IGNORED, DRIVER_MATCHING_SUCCESS } from '../../constants/driverStatus';
 import { ALREADY_MATCHED, MATCHING_SUCCESS, MATCHING_CANCEL } from '../../constants/matchingResult';
+
+import { NOTIFY_DRIVER_RESPONSE, driverResponded } from '../../queries/driverResponded';
+
 
 const Modal = styled.div`
   position: absolute;
@@ -70,6 +72,7 @@ const Alert = styled.div`
   justify-content: center;
   z-index: 11;
 `;
+
 const LoadingIcon = styled.div`
   text-align: center;
 `;
@@ -82,10 +85,14 @@ const Counter = styled.div`
 `;
 
 const COUNT_TIME = 7000;
+
 function DriverPopup({ trip, setDriverStatus }:
   { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}}, setDriverStatus:any}) {
   const client = useApolloClient();
   const dispatch = useDispatch();
+
+  const [notifyDriverResponse] = useMutation(NOTIFY_DRIVER_RESPONSE, { variables: { response: 'confirm', riderId: trip.rider.id, tripId: trip.id } });
+
   const [status, setStatus] = useState('');
   const [count, setCount] = useState(COUNT_TIME / 1000);
 
@@ -101,16 +108,14 @@ function DriverPopup({ trip, setDriverStatus }:
   };
 
   const handleClickSubmitButton = async() => {
-    const payload = { response: 'confirm', riderId: trip.rider.id, tripId: trip.id };
-    const data = await sendDriverResponse(client, dispatch, payload);
-    if (data === MATCHING_SUCCESS) {
+    const { data } = await notifyDriverResponse();
+    if (data.sendResponse === MATCHING_SUCCESS) {
       dispatch(setTrip({ id: trip.id }));
       dispatch(setRider({ id: trip.rider.id }));
       await getPickUpPos(client, dispatch, { id: trip.id });
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
-    } else {
-      showAlert(data.result);
     }
+    showAlert(data.sendResponse.result);
   };
 
   const disCount = () => {
@@ -130,7 +135,6 @@ function DriverPopup({ trip, setDriverStatus }:
   }, []);
 
   return (
-
     <ModalOverlay >
       <Modal>
         <Flex>
@@ -160,7 +164,6 @@ function DriverPopup({ trip, setDriverStatus }:
       {status === ALREADY_MATCHED && <Alert><div>이미 매칭 완료된 요청</div></Alert>}
       {status === MATCHING_CANCEL && <Alert ><div>취소된 요청</div></Alert>}
     </ModalOverlay>
-
   );
 }
 
