@@ -29,7 +29,7 @@ export const updateDriverPosition = async (client: ApolloClient<Object>, driverP
   try {
     await client.mutate({
       mutation: updateDriverPosQuery,
-      variables: { driverPosition },
+      variables: driverPosition,
       fetchPolicy: 'no-cache',
     });
   } catch (error) {

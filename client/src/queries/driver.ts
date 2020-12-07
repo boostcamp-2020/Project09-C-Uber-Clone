@@ -31,10 +31,9 @@ export const matchedRiderStateQuery = gql`
 `;
 
 export const updateDriverPosQuery = gql`
-  mutation updateDriverPosition($driverPosition: DriverPositionInput) {
-    updateDriverPosition(driverPosition:$driverPosition) {
-      lat
-      lng
+  mutation updateDriverPosition($lat: Float, $lng: Float) {
+    updateDriverPosition(lat: $lat, lng: $lng) {
+      result
     }
   }
 `;
