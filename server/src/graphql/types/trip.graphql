@@ -6,12 +6,12 @@ type Mutation {
     distance: Float
   ) : Trip @isAuthorized
 
-  cancelTrip(id: ID!): CancelResult
+  cancelTrip(id: ID!): CancelResult @isAuthorized
 }
 
 type Query {
-  trip(id: ID!):Trip
-  tripStatus(id: ID!): String!
+  trip(id: ID!):Trip @isAuthorized
+  tripStatus(id: ID!): String! @isAuthorized
 }
 
 input TripPlaceInput {
