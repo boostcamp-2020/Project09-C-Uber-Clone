@@ -61,6 +61,7 @@ export default function RiderPickUpForm() {
   }, [riderPos]);
 
   useEffect(() => {
+    localStorage.setItem('tripId', trip.id);
     getTripInfo(client, dispatch, trip.id);
   }, []);
 

@@ -65,6 +65,7 @@ export default function DriverPickUpForm() {
   }, [driverPos]);
 
   useEffect(() => {
+    localStorage.setItem('tripId', trip.id);
     getTripInfo(client, dispatch, trip.id);
   }, []);
 
