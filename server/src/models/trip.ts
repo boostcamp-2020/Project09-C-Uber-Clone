@@ -29,7 +29,7 @@ interface TripInterface {
   destination: Place;
   startTime: Date;
   arrivalTime?: Date;
-  status: 'open' | 'matched' | 'close' | 'cancel';
+  status: 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
   distance?: number;
   driver?: Driver;
   rider: Rider;
