@@ -45,6 +45,10 @@ type Position {
   lng: Float
 }
 
+type Result {
+  result: String
+}
+
 type driverRecievedInfo {
   riderId: String
   riderEmail: String
@@ -96,8 +100,8 @@ type Mutation {
   ): driverStateNotify
 
   updateDriverPosition(
-    driverPosition: DriverPositionInput
-  ): DriverPosition
+    lat:Float, lng:Float
+  ): Result
 }
 
 type Subscription {

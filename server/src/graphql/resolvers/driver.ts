@@ -62,9 +62,12 @@ export default {
       return args;
     },
     async updateDriverPosition(_:any, args: any, { req }:any) {
-      const driverPosition = JSON.parse(JSON.stringify(args)).driverPosition;
-      await Driver.updateDriverPosition({ driverId: req.user.data._id, ...driverPosition });
-      return driverPosition;
+      try {
+        await Driver.updateDriverPosition({ driverId: req.user.data._id, ...args });
+        return { result: 'success' };
+      } catch (error) {
+        return { result: 'fail' };
+      }
     },
   },
   Subscription: {
