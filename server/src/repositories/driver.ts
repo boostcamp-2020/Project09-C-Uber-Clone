@@ -4,8 +4,8 @@ export default {
   create: async (payload) => {
     return await Driver.create(payload);
   },
-  updatePosition: async({ driverId, latitude, longitude }) => {
-    return await Driver.update({ _id: driverId }, { latitude, longitude });
+  updatePosition: async({ driverId, lat, lng }) => {
+    return await Driver.updateOne({ _id: driverId }, { latitude: lat, longitude: lng });
   },
   findAll: async () => {
     return await Driver.find({});

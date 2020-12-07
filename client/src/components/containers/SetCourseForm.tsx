@@ -86,9 +86,8 @@ function SetCourseForm() {
   const [originInputError, setOriginInputError] = useState(false);
   const [destInputError, setDestInputError] = useState(false);
 
-  const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClickCancel = (setPlace: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
-    dispatch(setPosition({ lat: 0, lng: 0 }));
     dispatch(setMarker(''));
   };
 
@@ -202,7 +201,7 @@ function SetCourseForm() {
         placeholder='출발지'
         onLoad={onOrignAutocompleteLoad}
         onPlaceChanged={onOriginAutocompletePlaceChanged}
-        onCancelClicked={handleClickCancel(setOriginPlace, setOriginPosition, setOriginMarker)}
+        onCancelClicked={handleClickCancel(setOriginPlace, setOriginMarker)}
         value={originInput}
         onChange={handleOnChangeOrigin}
         error={originInputError}
@@ -213,7 +212,7 @@ function SetCourseForm() {
         placeholder='도착지'
         onLoad={destAutocompleteLoad}
         onPlaceChanged={onDestAutocompletePlaceChanged}
-        onCancelClicked={handleClickCancel(setDestPlace, setDestPosition, setDestMarker)}
+        onCancelClicked={handleClickCancel(setDestPlace, setDestMarker)}
         value={destInput}
         onChange={handleOnChangeDest}
         error={destInputError}
