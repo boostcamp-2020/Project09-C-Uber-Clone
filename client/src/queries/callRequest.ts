@@ -26,7 +26,7 @@ subscription {
   }
 }`;
 
-export const sendDriverCall = gql`
+export const NOTIFY_CALL = gql`
 mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!) {
   driverCall(origin: $origin, destination: $destination, startTime: $startTime)
 }`;
