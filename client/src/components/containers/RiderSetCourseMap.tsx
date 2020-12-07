@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { GoogleMap, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
+import { GoogleMap, Marker, DirectionsRenderer, DirectionsService, DistanceMatrixService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -142,6 +142,11 @@ function RiderSetCourseMap() {
     setIsDestVisible(true);
   }, [destMarker]);
 
+  const distanceMatrixCallback = (res: any) => {
+    //TODO : 거리, 시간 계산
+    console.log('res.rows : ', res.rows);
+  };
+
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -152,6 +157,14 @@ function RiderSetCourseMap() {
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
     >
+      <DistanceMatrixService
+        callback={distanceMatrixCallback}
+        options={{
+          origins: [{ lat: 55.93, lng: -3.118 }, 'Greenwich, England'],
+          destinations: ['Stockholm, Sweden', { lat: 50.087, lng: 14.421 }],
+          travelMode: google.maps.TravelMode.DRIVING,
+        }}
+      />
       <Picker src={picker} ref={pickerEl} />
       <Marker
         key={1}
@@ -171,6 +184,10 @@ function RiderSetCourseMap() {
             destination: destPosition,
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
+            drivingOptions: {
+              departureTime: new Date(Date.now() + 1000),
+              trafficModel: google.maps.TrafficModel.OPTIMISTIC,
+            },
           }}
           callback={directionCallback}
         />
