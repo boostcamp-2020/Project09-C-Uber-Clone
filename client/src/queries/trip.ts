@@ -33,6 +33,40 @@ export const GET_ORIGIN_POSITION_AND_DESTINATION_POSITION = gql`query getOriginP
   }
 }`;
 
+export const GET_TRIP = gql`query getTrip($id:ID!){
+  trip(id:$id){
+    _id
+    rider{
+      _id
+      name
+      email
+    }
+    driver{
+      _id
+      email
+      name
+      carType
+      plateNumber
+      description
+      profileImage
+    }
+    origin{
+      address
+      latitude
+      longitude
+    }
+    destination{
+      address
+      latitude
+      longitude
+    }
+    startTime
+    arrivalTime
+    status
+    distance
+  }
+}`;
+
 export const ADD_TRIP_STATUS = gql`
   mutation setTripStatus($tripId: ID!, $newTripStatus: String!) {
     setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
