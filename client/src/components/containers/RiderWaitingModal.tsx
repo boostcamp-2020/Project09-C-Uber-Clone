@@ -67,7 +67,6 @@ function RiderWaitingForm() {
   const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
 
   useEffect(() => {
-    console.log(callToggle);
     const timerId = setTimeout(retryNotify, 10000);
     return () => {
       clearTimeout(timerId);
