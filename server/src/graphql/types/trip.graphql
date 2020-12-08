@@ -70,12 +70,11 @@ type Chatting {
   id: ID!
   text: String!
   time: String!
-  email: String!
+  ownerId: String!
   isOwner: Boolean!
 }
 
 input ChattingInput {
   text: String!
   time: String!
-  email: String!
 }
