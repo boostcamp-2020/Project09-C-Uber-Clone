@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useMutation, useQuery } from '@apollo/client';
 
 import styled from 'styled-components';
+
+import { selectTripReducer } from '../../slices/tripSlice';
+
+import { GET_TRIP } from '../../queries/trip';
 
 const Modal = styled.div`
   width: 100%;
@@ -54,16 +60,26 @@ const CancelButton = styled.button`
 `;
 
 function DriverInfoBox() {
+  const { trip } = useSelector(selectTripReducer);
+  const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
+  const [driver, setDriver] = useState({ name: '', carType: '', plateNumber: '' });
+
+  useEffect(() => {
+    if (tripData) {
+      setDriver(tripData.trip.driver);
+    }
+  }, [tripData]);
+
   return (
     <>
       <Modal>
         <DriverInfo>
           <DriverName>
-          드라이버 이름
+            {driver.name}
           </DriverName>
           <CarInfo>
-            <div>차번호</div>
-            <div>차종류</div>
+            <div>{driver.plateNumber}</div>
+            <div>{driver.carType}</div>
           </CarInfo>
         </DriverInfo>
         <Buttons>

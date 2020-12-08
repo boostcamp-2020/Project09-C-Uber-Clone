@@ -72,10 +72,6 @@ export default function DriverPickUpForm() {
     notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
 
-  useEffect(() => {
-    localStorage.setItem('tripId', trip.id);
-  }, []);
-
   if (error) {
     return <p>error</p>;
   }
@@ -94,7 +90,7 @@ export default function DriverPickUpForm() {
         pickUpLat={originPosition.lat}
         pickUpLng={originPosition.lng}
       />
-      <RiderInfoBox />
+      <RiderInfoBox onBoard={false}/>
     </>
   );
 }

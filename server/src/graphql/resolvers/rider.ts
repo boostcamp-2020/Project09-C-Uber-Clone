@@ -20,20 +20,6 @@ interface Position {
   lng: number
 }
 
-interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: Position
-  driverIds: string[]
-  pickUpPos: Position
-  pickUpAddress: string
-  destinationPos: Position
-  destinationAddress: string
-  tripStatus: string
-  tripId: string
-}
-
 interface TripPlace {
   address: string
   latitude: number
@@ -46,7 +32,6 @@ interface DriverCallArgs {
   startTime: Date
   distance?: number
 }
-
 
 export default {
   Query: {
@@ -70,7 +55,7 @@ export default {
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return trip?._id;
     },
-    async notifyRiderState(parent: any, args: any, context: any) {
+    notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
       return true;
     },
