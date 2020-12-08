@@ -109,6 +109,7 @@ function SetCourseForm() {
       origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
       destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
       startTime: (new Date()).toString(),
+      distance: 0.03,
     };
     notifyCall({ variables });
   };
