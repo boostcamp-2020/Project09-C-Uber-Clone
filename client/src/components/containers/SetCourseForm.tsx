@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
-import SubmitButton from '../presentational/SubmitButton';
+import CourseSubmitModal from '../presentational/CourseSubmitModal';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -81,7 +81,12 @@ function SetCourseForm() {
 
   const [notifyCall, { data }] = useMutation(NOTIFY_RIDER_CALL);
 
-  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const {
+    originPlace,
+    destPlace,
+    originPosition,
+    destPosition,
+  }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
@@ -89,6 +94,8 @@ function SetCourseForm() {
   const [destInput, setDestInput] = useState('');
   const [originInputError, setOriginInputError] = useState(false);
   const [destInputError, setDestInputError] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [estimatedDistance, setEstimatedDistance] = useState('');
 
   const handleClickCancel = (setPlace: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
@@ -209,7 +216,10 @@ function SetCourseForm() {
       <Header>
         <PageTitle>라이더 <br/> 경로설정</PageTitle>
       </Header>
-      <RiderSetCourseMap />
+      <RiderSetCourseMap
+        setEstimatedDistance={setEstimatedDistance}
+        setEstimatedTime={setEstimatedTime}
+      />
       <FormTitle>경로 선택</FormTitle>
       <PlaceSearchBox
         placeholder='출발지'
@@ -232,10 +242,11 @@ function SetCourseForm() {
         error={destInputError}
       />
       <WhiteSpace />
-      <SubmitButton
-        content={'결정'}
+      <CourseSubmitModal
+        time={estimatedTime}
+        distance={estimatedDistance}
         onClick={handelCourseSubmitButton}
-        disabled={false}
+        disabled={!originPlace || !destPlace}
       />
     </>
   );
