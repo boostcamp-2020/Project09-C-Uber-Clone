@@ -48,7 +48,7 @@ enum TravelMode {
   WALKING = 'WALKING',
 }
 
-function RiderSetCourseMap() {
+function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEstimatedDistance: any, setEstimatedTime: any}) {
   const {
     originPosition,
     destPosition,
@@ -152,9 +152,11 @@ function RiderSetCourseMap() {
     getCurrentRiderPos();
   }, []);
 
-  const distanceMatrixCallback = (res: any) => {
-    //TODO : 거리, 시간 계산
-    console.log('res.rows : ', res.rows);
+  const distanceMatrixCallback = ({ rows }: any) => {
+    if (rows[0].elements[0].status === 'OK') {
+      setEstimatedDistance(rows[0].elements[0].distance.text);
+      setEstimatedTime(rows[0].elements[0].duration.text);
+    }
   };
 
   return (
@@ -170,9 +172,13 @@ function RiderSetCourseMap() {
       <DistanceMatrixService
         callback={distanceMatrixCallback}
         options={{
-          origins: [{ lat: 55.93, lng: -3.118 }, 'Greenwich, England'],
-          destinations: ['Stockholm, Sweden', { lat: 50.087, lng: 14.421 }],
+          origins: [originPosition],
+          destinations: [destPosition],
           travelMode: google.maps.TravelMode.DRIVING,
+          drivingOptions: {
+            departureTime: new Date(Date.now() + 1000),
+            trafficModel: google.maps.TrafficModel.OPTIMISTIC,
+          },
         }}
       />
       <Picker src={picker} ref={pickerEl} />
@@ -190,16 +196,12 @@ function RiderSetCourseMap() {
       />
       {originPlace !== '' && destPlace !== '' &&
         <DirectionsService
+          callback={directionCallback}
           options={{
             destination: destPosition,
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
-            drivingOptions: {
-              departureTime: new Date(Date.now() + 1000),
-              trafficModel: google.maps.TrafficModel.OPTIMISTIC,
-            },
           }}
-          callback={directionCallback}
         />
       }
       {directionResponse &&
