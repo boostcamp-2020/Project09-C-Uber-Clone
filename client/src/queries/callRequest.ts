@@ -22,11 +22,13 @@ subscription {
       }
       startTime
       status
+      estimatedTime
+      estimatedDistance
     }
   }
 }`;
 
 export const NOTIFY_RIDER_CALL = gql`
-mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!) {
-  driverCall(origin: $origin, destination: $destination, startTime: $startTime)
+mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!, $estimatedTime: String!, $estimatedDistance: String!) {
+  driverCall(origin: $origin, destination: $destination, startTime: $startTime, estimatedTime: $estimatedTime, estimatedDistance: $estimatedDistance)
 }`;

@@ -85,7 +85,7 @@ const Counter = styled.div`
 const COUNT_TIME = 7000;
 
 function DriverPopup({ trip, setDriverStatus }:
-  { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}}, setDriverStatus:any}) {
+  { trip:{id:string, origin:{address:string}, destination:{address:string}, rider:{id:string}, estimatedTime:string, estimatedDistance:string}, setDriverStatus:any}) {
   const dispatch = useDispatch();
 
   const [notifyDriverResponse] = useMutation(NOTIFY_DRIVER_RESPONSE, { variables: { response: 'confirm', riderId: trip.rider.id, tripId: trip.id } });
@@ -142,7 +142,8 @@ function DriverPopup({ trip, setDriverStatus }:
           </Flex.Item>
         </Flex>
         <Expectation>
-          <ExpectationHeader>예상 금액 및 예상 시간</ExpectationHeader>
+          <ExpectationHeader>예상 운행 시간 : {trip.estimatedTime}</ExpectationHeader>
+          <ExpectationHeader>총 운행 거리 : {trip.estimatedDistance}</ExpectationHeader>
         </Expectation>
         <LoadingIcon>
           <Icon type='loading' size='lg'/>

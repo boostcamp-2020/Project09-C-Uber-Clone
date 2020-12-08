@@ -72,7 +72,8 @@ interface NotifyCallVariables {
   origin: TripPlace
   destination: TripPlace
   startTime: string
-  distance?:number
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 function SetCourseForm() {
@@ -115,7 +116,10 @@ function SetCourseForm() {
       origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
       destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
       startTime: (new Date()).toString(),
+      estimatedTime,
+      estimatedDistance,
     };
+    console.log('variables : ', variables);
     notifyCall({ variables });
   };
 
