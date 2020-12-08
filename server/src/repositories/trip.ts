@@ -40,7 +40,7 @@ export default {
     return trip?.chattings;
   },
   addChatting: async (tripId: string, chatting: {text: string, time: Date, userId: string}) => {
-    const trip = await Trip.findOneAndUpdate({ _id: tripId }, { $push: { chattings: chatting } });
+    const trip = await Trip.findOneAndUpdate({ _id: tripId }, { $push: { chattings: chatting } }, { new: true });
     if (trip?.chattings) {
       return trip?.chattings[trip?.chattings?.length - 1];
     }
