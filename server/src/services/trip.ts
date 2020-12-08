@@ -88,7 +88,7 @@ export default {
   getChattings: async (tripId: string) => {
     return await Trip.getChattings(tripId);
   },
-  addChatting: async (tripId: string, chatting: {text: string, time: Date, userId: string}) => {
+  addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
     return await Trip.addChatting(tripId, chatting);
   },
 };
