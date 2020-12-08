@@ -59,8 +59,7 @@ export default {
     },
     async addChatting(_:any, args: ChattingInput) {
       const { tripId, chatting } = args;
-      const data = await Trip.addChatting(tripId, chatting);
-      return data;
+      return await Trip.addChatting(tripId, chatting);
     },
   },
 };

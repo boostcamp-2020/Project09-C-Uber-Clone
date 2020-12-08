@@ -41,6 +41,8 @@ export default {
   },
   addChatting: async (tripId: string, chatting: {text: string, time: Date, userId: string}) => {
     const trip = await Trip.findOneAndUpdate({ _id: tripId }, { $push: { chattings: chatting } });
-    return trip?.chattings;
+    if (trip?.chattings) {
+      return trip?.chattings[trip?.chattings?.length - 1];
+    }
   },
 };
