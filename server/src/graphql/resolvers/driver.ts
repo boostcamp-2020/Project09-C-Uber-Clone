@@ -88,7 +88,7 @@ export default {
         return context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]);
       },
       (payload, variables) => {
-        return payload.matchedDriverState.tripId === variables.tripId;
+        return payload.matchedDriverState.tripId.toString() === variables.tripId.toString();
       },
       ),
     },
