@@ -16,9 +16,9 @@ export default {
   findById: async ({ id }:{id: string}) => {
     return await Driver.findById(id);
   },
-  findAllByDistance: async({ lat, lng }:{lat:number, lng:number}) => {
-    const latitude = { $gte: lat - 0.03, $lte: lat + 0.03 };
-    const longitude = { $gte: lng - 0.03, $lte: lng + 0.03 };
+  findAllByDistance: async({ lat, lng, distance }:{lat:number, lng:number, distance: number}) => {
+    const latitude = { $gte: lat - distance, $lte: lat + distance };
+    const longitude = { $gte: lng - distance, $lte: lng + distance };
     return await Driver.find({ latitude, longitude }, '_id');
   },
 };
