@@ -1,4 +1,4 @@
-import trip from '../../models/trip';
+import { Document } from 'mongoose';
 import { Trip } from '../../services';
 
 interface PlaceInterface {
@@ -25,6 +25,18 @@ interface SetTripStateArgs {
   newTripStatus: string;
 }
 
+interface ChattingInput {
+  tripId: string;
+  chattingInput: { text: string, time: Date};
+}
+
+interface ChattingInterface {
+  _id: string;
+  text: string;
+  time: Date;
+  ownerId: string;
+}
+
 export default {
   Query: {
     async trip(_:any, args:ID) {
@@ -32,6 +44,25 @@ export default {
     },
     async tripStatus(_:any, args:ID) {
       return await Trip.getStatus(args);
+    },
+    async chattings(_:any, args: {id: string}, context: any) {
+      const tripId = args.id;
+      const { _id } = context.getUser().data;
+      const chattings = await Trip.getChattings(tripId) as ChattingInterface[];
+      if (chattings) {
+        return chattings.map((chatting) => {
+          const isOwner = chatting.ownerId === _id.toString();
+          return {
+            id: chatting._id,
+            text: chatting.text,
+            ownerId: chatting.ownerId,
+            time: chatting.time,
+            isOwner,
+          };
+        });
+      } else {
+        return [];
+      }
     },
   },
   Mutation: {
@@ -48,6 +79,23 @@ export default {
         return { result: 'success' };
       } catch {
         return { result: 'fail' };
+      }
+    },
+    async addChatting(_:any, args: ChattingInput, context: any) {
+      const { tripId, chattingInput } = args;
+      const user = context.getUser().data;
+      const chatting = { ...chattingInput, ownerId: user._id };
+      const newChatting = await Trip.addChatting(tripId, chatting) as ChattingInterface;
+      if (newChatting) {
+        return {
+          id: newChatting._id,
+          text: newChatting.text,
+          time: newChatting.time,
+          ownerId: newChatting.ownerId,
+          isOwner: true,
+        };
+      } else {
+        return null;
       }
     },
   },

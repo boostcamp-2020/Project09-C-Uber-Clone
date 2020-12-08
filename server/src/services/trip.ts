@@ -95,4 +95,10 @@ export default {
       throw e;
     }
   },
+  getChattings: async (tripId: string) => {
+    return await Trip.getChattings(tripId);
+  },
+  addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
+    return await Trip.addChatting(tripId, chatting);
+  },
 };

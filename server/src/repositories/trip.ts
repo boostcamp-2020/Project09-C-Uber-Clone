@@ -36,4 +36,14 @@ export default {
   setStatus: async (tripId, newTripStatus) => {
     return await Trip.updateOne({ _id: tripId }, { status: newTripStatus });
   },
+  getChattings: async (tripId: string) => {
+    const trip = await Trip.findOne({ _id: tripId }, 'chattings');
+    return trip?.chattings;
+  },
+  addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
+    const trip = await Trip.findOneAndUpdate({ _id: tripId }, { $push: { chattings: chatting } }, { new: true });
+    if (trip?.chattings) {
+      return trip?.chattings[trip?.chattings?.length - 1];
+    }
+  },
 };
