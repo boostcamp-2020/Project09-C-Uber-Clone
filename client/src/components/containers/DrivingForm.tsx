@@ -10,8 +10,10 @@ import RiderInfoBox from '../containers/RiderInfoBox';
 import TripInfoBox from '../presentational/TripInfoBox';
 import { selectTripReducer } from '../../slices/tripSlice';
 import { selectMapReducer } from '../../slices/mapSlice';
+import { useHistory } from 'react-router-dom';
 
 export default function DrivingForm({ isRider }:{isRider:boolean}) {
+  const history = useHistory();
   const [currentPos, setCurrentPos] = useState({ lat: undefined, lng: undefined });
   const [destPos, setDestPos] = useState({ lat: undefined, lng: undefined });
   const { trip }: any = useSelector(selectTripReducer);
@@ -60,6 +62,13 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
     }
   }, [tripData]);
 
+  useEffect(() => {
+    if (data && data.matchedDriverState.isDrop) {
+      //TODO: 평가 페이지로 이동
+      history.push('/');
+    }
+  }, [data]);
+
   return (
     <>
       {currentPos.lat &&
@@ -68,7 +77,7 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
         car={currentPos}
         destination={destPos}
       />}
-      {isRider ? <TripInfoBox /> : <RiderInfoBox />}
+      {isRider ? <TripInfoBox /> : <RiderInfoBox onBoard={true}/>}
     </>
   );
 }

@@ -25,7 +25,7 @@ const RiderName = styled.div`
   font-weight: bold;
 `;
 
-const PickUpInfo = styled.div`
+const PlaceInfo = styled.div`
   margin: 24px 0;
   padding: 8px 0;
   width: 100%;
@@ -58,7 +58,16 @@ const ChatButton = styled.button`
     border-radius: 15px;
 `;
 
-function RiderInfoBox() {
+const DropButton = styled.button`
+    width: 100%;
+    height: 50px;
+    background-color: #56A902;
+    color: #ffffff;
+    border:none;
+    border-radius: 15px;
+`;
+
+function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
   const history = useHistory();
 
   const { trip } = useSelector(selectTripReducer);
@@ -68,6 +77,10 @@ function RiderInfoBox() {
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
+  };
+
+  const handleOnClickDrop = () => {
+    //TODO: 라이더 하차 버튼 이벤트
   };
 
   useEffect(() => {
@@ -81,11 +94,16 @@ function RiderInfoBox() {
     <>
       <Modal>
         <RiderName>라이더 이름</RiderName>
-        <PickUpInfo>픽업 위치</PickUpInfo>
-        <Buttons>
-          <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
-          <ChatButton>채팅하기</ChatButton>
-        </Buttons>
+        <PlaceInfo>픽업 위치 or 도착 위치</PlaceInfo>
+        {onBoard ?
+          <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
+          :
+          <Buttons>
+            <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
+            <ChatButton>채팅하기</ChatButton>
+          </Buttons>
+        }
+
       </Modal>
     </>
   );
