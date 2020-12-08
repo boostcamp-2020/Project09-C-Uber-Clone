@@ -44,7 +44,7 @@ function DriverSignUpFrom() {
       window.alert('회원가입 성공');
       history.push('/login');
     } catch (error) {
-      window.alert('회웝가입 실패');
+      window.alert(`회원가입 실패\n원인${error}`);
     }
   };
 
