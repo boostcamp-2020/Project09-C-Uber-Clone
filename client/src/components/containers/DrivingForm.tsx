@@ -10,7 +10,7 @@ import TripInfoBox from '../presentational/TripInfoBox';
 import { selectTripReducer } from '../../slices/tripSlice';
 import { selectMapReducer } from '../../slices/mapSlice';
 
-export default function DriverPickUpForm({ isRider }:{isRider:boolean}) {
+export default function DrivingForm({ isRider }:{isRider:boolean}) {
   const [currentPos, setCurrentPos] = useState({ lat: undefined, lng: undefined });
   const { trip }: any = useSelector(selectTripReducer);
   const { destPosition }: any = useSelector(selectMapReducer);
@@ -37,22 +37,25 @@ export default function DriverPickUpForm({ isRider }:{isRider:boolean}) {
     maximumAge: 0,
   };
 
-  const getDriverPosition = () => {
+  const getCurrentPos = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      navigator.geolocation.getCurrentPosition(success, navError, options);
+      return navigator.geolocation.watchPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
-    getDriverPosition();
+    const locationWatch = getCurrentPos();
+    return () =>
+      navigator.geolocation.clearWatch(locationWatch);
   }, []);
 
   return (
     <>
-      <DrivingMap
+      {currentPos.lat && <DrivingMap
         car={currentPos}
         destination={destPosition}
-      />
+      />}
       {isRider ? <TripInfoBox /> : <RiderInfoBox />}
     </>
   );

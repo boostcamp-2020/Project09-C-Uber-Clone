@@ -55,19 +55,20 @@ export default function DrivingMap({ car, destination }: {car: {lat:number, lng:
         }}
         callback={directionCallback}
       />
-
-      <DirectionsRenderer
-        options={{
-          directions: directionResponse,
-          markerOptions: {
-            visible: false,
-          },
-          polylineOptions: {
-            strokeColor: '#000000',
-          },
-        }}
-      />
-
+      {directionResponse &&
+        <DirectionsRenderer
+          options={{
+            directions: directionResponse,
+            markerOptions: {
+              visible: false,
+            },
+            polylineOptions: {
+              strokeColor: '#000000',
+            },
+          }}
+        />
+      }
     </GoogleMap>
   );
 }
+
