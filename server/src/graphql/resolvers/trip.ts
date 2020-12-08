@@ -75,8 +75,8 @@ export default {
     },
     async setTripStatus(_: any, args: SetTripStateArgs, context: any) {
       try {
-        await Trip.setStatus(args);
-        return { result: 'success' };
+        const trip = await Trip.setStatus(args);
+        return { result: 'success', trip };
       } catch {
         return { result: 'fail' };
       }

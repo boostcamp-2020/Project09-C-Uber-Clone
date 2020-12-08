@@ -34,7 +34,8 @@ export default {
     return null;
   },
   setStatus: async (tripId, newTripStatus) => {
-    return await Trip.updateOne({ _id: tripId }, { status: newTripStatus });
+    const trip = await Trip.findOneAndUpdate({ _id: tripId }, { status: newTripStatus }, { new: true });
+    return trip;
   },
   getChattings: async (tripId: string) => {
     const trip = await Trip.findOne({ _id: tripId }, 'chattings');
