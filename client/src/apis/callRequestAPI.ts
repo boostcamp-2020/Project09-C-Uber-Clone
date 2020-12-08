@@ -1,4 +1,4 @@
-import { sendDriverCall } from '../queries/callRequest';
+import { NOTIFY_RIDER_CALL } from '../queries/callRequest';
 
 import { ApolloClient } from '@apollo/client';
 import { setTrip } from '../slices/tripSlice';
@@ -19,7 +19,7 @@ interface riderPublishInfo {
 export const callRequest = async (client: ApolloClient<Object>, history:any, dispatch: any, payload: riderPublishInfo) => {
   try {
     const { data: { driverCall } } = await client.mutate({
-      mutation: sendDriverCall,
+      mutation: NOTIFY_RIDER_CALL,
       variables: payload,
       fetchPolicy: 'no-cache',
     });

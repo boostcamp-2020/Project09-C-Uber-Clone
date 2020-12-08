@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const driverResponded = gql`
+export const LISTEN_DRIVER_RESPONSE = gql`
   subscription {
     driverResponded { 
       tripId

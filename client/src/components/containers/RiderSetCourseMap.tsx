@@ -40,11 +40,6 @@ const NEW_MARKER_POS = {
   lng: 0,
 };
 
-const INIT_POS = {
-  lat: 37.55,
-  lng: 126.97,
-};
-
 enum TravelMode {
   BICYCLING = 'BICYCLING',
   DRIVING = 'DRIVING',
@@ -67,7 +62,7 @@ function RiderSetCourseMap() {
   const [map, setMap] = useState(null);
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
-  const [center, setCenter] = useState(INIT_POS);
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [directionResponse, setDirectionResponse] = useState(null);
 
   const pickerEl = useRef(null);
@@ -90,6 +85,17 @@ function RiderSetCourseMap() {
     dispatch(setOriginPosition(NEW_MARKER_POS));
     dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('check'));
+  };
+  const getCurrentRiderPos = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(pos);
+      });
+    }
   };
 
   const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
@@ -142,6 +148,10 @@ function RiderSetCourseMap() {
     setIsDestVisible(true);
   }, [destMarker]);
 
+  useEffect(() => {
+    getCurrentRiderPos();
+  }, []);
+
   const distanceMatrixCallback = (res: any) => {
     //TODO : 거리, 시간 계산
     console.log('res.rows : ', res.rows);
@@ -153,7 +163,7 @@ function RiderSetCourseMap() {
       zoom={14}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      center={originPosition}
+      center={center}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
     >

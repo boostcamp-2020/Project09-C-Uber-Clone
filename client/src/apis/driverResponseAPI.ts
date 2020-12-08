@@ -1,4 +1,4 @@
-import { NOTIFY_DRIVER_RESPONSE, driverResponded } from '../queries/driverResponded';
+import { NOTIFY_DRIVER_RESPONSE, LISTEN_DRIVER_RESPONSE } from '../queries/driverResponded';
 import { getPickUpPos } from '../apis/tripAPI';
 
 import { MATCHING_CONFIRM } from '../constants/matchingResult';
@@ -22,7 +22,7 @@ export const sendDriverResponse = async (client: any, dispatch: any, payload:Pay
 export const subscribeDriverResponse = (client:any, history:any, dispatch:any) => {
   return client
     .subscribe({
-      query: driverResponded,
+      query: LISTEN_DRIVER_RESPONSE,
     })
     .subscribe(
       async({ data: { driverResponded } }:{data:any}) => {
