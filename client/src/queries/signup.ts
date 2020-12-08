@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const signUpDriver = gql`
+export const SIGNUP_DRIVER = gql`
   mutation signupQuery(
     $email:String!,
     $name:String!,
@@ -26,8 +26,8 @@ export const signUpDriver = gql`
   }
 `;
 
-export const signUpRider = gql`
-  mutation signupQuery(    
+export const SIGNUP_RIDER = gql`
+  mutation signupMutation(    
     $email:String!,
     $name:String!,
     $password:String!,

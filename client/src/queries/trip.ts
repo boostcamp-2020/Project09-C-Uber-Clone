@@ -7,11 +7,11 @@ export const CANCEL_TRIP = gql`mutation cancelCall($id:ID!){
   }
 }`;
 
-export const getStatus = gql`query getStatus($id:ID!){
+export const GET_TRIP_STATUS = gql`query getStatus($id:ID!){
   tripStatus(id:$id)
 }`;
 
-export const pickUpPos = gql`query pickUpPos($id:ID!){
+export const GET_PICK_UP_POSITION = gql`query pickUpPos($id:ID!){
   trip(id:$id){
     origin{
       latitude
@@ -20,7 +20,7 @@ export const pickUpPos = gql`query pickUpPos($id:ID!){
   }
 }`;
 
-export const getOriginPositionAndDestinationPostion = gql`query getOriginPositionAndDestinationPostion($id:ID!){
+export const GET_ORIGIN_POSITION_AND_DESTINATION_POSITION = gql`query getOriginPositionAndDestinationPostion($id:ID!){
   trip(id:$id){
     origin{
       latitude
@@ -33,7 +33,7 @@ export const getOriginPositionAndDestinationPostion = gql`query getOriginPositio
   }
 }`;
 
-export const setTripStateQuery = gql`
+export const ADD_TRIP_STATUS = gql`
   mutation setTripStatus($tripId: ID!, $newTripStatus: String!) {
     setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
       result

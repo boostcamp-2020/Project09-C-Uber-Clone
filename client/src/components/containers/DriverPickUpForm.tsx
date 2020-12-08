@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 
-import { getTripInfo } from '../../apis/tripAPI';
-import { driverStateNotify } from '../../apis/driverAPI';
-import { matchedRiderStateQuery } from '../../queries/driver';
+import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
+import { LISTEN_MATCHED_RIDER_STATE, NOTIFY_DRIVER_STATE } from '../../queries/driver';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
 import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
@@ -17,15 +17,24 @@ const INIT_POS = {
 };
 
 export default function DriverPickUpForm() {
-  const client = useApolloClient();
   const dispatch = useDispatch();
   const [driverPos, setDriverPos] = useState(INIT_POS);
   const [count, setCount] = useState(0);
-  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
+  useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
+    variables: { id: trip.id },
+    onCompleted: ({ trip }) => {
+      dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
+      dispatch(setDestPosition({ lat: trip.destination.latitude, lng: trip.destination.longitude }));
+    },
+  });
+
+  const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
+
   const { loading, error, data } = useSubscription(
-    matchedRiderStateQuery,
+    LISTEN_MATCHED_RIDER_STATE,
     { variables: { tripId: trip.id } },
   );
 
@@ -60,17 +69,11 @@ export default function DriverPickUpForm() {
   }, [count]);
 
   useEffect(() => {
-    const driverState = {
-      tripId: trip.id,
-      driverPosition: driverPos,
-      isDrop: false,
-    };
-    driverStateNotify(client, driverState);
+    notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
 
   useEffect(() => {
     localStorage.setItem('tripId', trip.id);
-    getTripInfo(client, dispatch, trip.id);
   }, []);
 
   if (error) {
