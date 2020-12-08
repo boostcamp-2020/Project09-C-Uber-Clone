@@ -1,4 +1,3 @@
-import trip from '../../models/trip';
 import { Trip } from '../../services';
 
 interface PlaceInterface {
