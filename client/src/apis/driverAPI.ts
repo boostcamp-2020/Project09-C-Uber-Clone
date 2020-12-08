@@ -1,4 +1,4 @@
-import { driverStateNotifyQuery, updateDriverPosQuery } from '../queries/driver';
+import { driverStateNotifyQuery, ADD_DRIVER_POSITION } from '../queries/driver';
 
 import { ApolloClient } from '@apollo/client';
 
@@ -28,7 +28,7 @@ export const driverStateNotify = async (client: ApolloClient<Object>, driverStat
 export const updateDriverPosition = async (client: ApolloClient<Object>, driverPosition: driverPosition) => {
   try {
     await client.mutate({
-      mutation: updateDriverPosQuery,
+      mutation: ADD_DRIVER_POSITION,
       variables: driverPosition,
       fetchPolicy: 'no-cache',
     });

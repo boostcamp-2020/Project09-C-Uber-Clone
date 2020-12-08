@@ -1,58 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useSubscription, useQuery, useMutation } from '@apollo/client';
 
-import { driverListenSubscription } from '../queries/callRequest';
-import { getTripStatus } from '../apis/tripAPI';
-import { updateDriverPosition } from '../apis/driverAPI';
+import { GET_TRIP_STATUS } from '../queries/trip';
+import { ADD_DRIVER_POSITION } from '../queries/driver';
+import { LISTEN_DRIVER_CALL } from '../queries/callRequest';
+
+import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
+import { OPEN } from '../constants/tripStatus';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
-import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
 
 const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
   //TODO: 이 페이지 전체를 container로 이동
-  const client = useApolloClient();
   const history = useHistory();
-  const { data } = useSubscription(driverListenSubscription);
+
   const [riderCalls, setRiderCalls] = useState([]);
-  const [trip, setTrip] = useState({ id: undefined, rider: undefined, origin: undefined, destination: undefined, startTime: undefined, status: undefined }); //TODO: type 다시 지정
+  const [trip, setTrip] = useState({
+    id: undefined,
+    rider: undefined,
+    origin: undefined,
+    destination: undefined,
+    startTime: undefined,
+    status: undefined },
+  ); //TODO: type 다시 지정
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
 
-  const success = (position: Position): any => {
-    const pos = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-    if (JSON.stringify(driverPos) !== JSON.stringify(pos)) {
-      setDriverPos(pos);
-    }
-  };
-
-  const navError = (): any => {
-    console.log('Error: The Geolocation service failed.');
-  };
-
-  const options = {
-    enableHighAccuracy: false,
-    maximumAge: 0,
-  };
+  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
+  const { data: tripStatusData } = useQuery(GET_TRIP_STATUS, { variables: trip });
+  const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
+    const success = (position: Position): any => {
+      const pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      if (JSON.stringify(driverPos) !== JSON.stringify(pos)) {
+        setDriverPos(pos);
+      }
+    };
+
+    const navError = (): any => {
+      console.log('Error: The Geolocation service failed.');
+    };
+
+    const options = {
+      enableHighAccuracy: false,
+      maximumAge: 0,
+    };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
-    if (data && driverStatus !== DRIVER_MATCHING_SUCCESS) {
-      setRiderCalls([...riderCalls, data.driverListen.trip]);
+    if (driverListenData && driverStatus !== DRIVER_MATCHING_SUCCESS) {
+      setRiderCalls([...riderCalls, driverListenData.driverListen.trip]);
     }
-  }, [data]);
+  }, [driverListenData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
@@ -61,10 +73,12 @@ function DriverWaitingPage() {
   }, [riderCalls]);
 
   useEffect(() => {
-    if (trip.id) {
-      getTripStatus(client, trip, setDriverStatus);
+    if (!!tripStatusData && tripStatusData.tripStatus === OPEN) {
+      setDriverStatus(DRIVER_POPUP);
+      return;
     }
-  }, [trip]);
+    setDriverStatus(DRIVER_IGNORED);
+  }, [tripStatusData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_IGNORED) {
@@ -81,13 +95,9 @@ function DriverWaitingPage() {
     getDriverPosition();
     setTimeout(() => {
       setCount(count + 1);
-      updateDriverPosition(client, driverPos);
+      updateDriverPosition();
     }, DRIVER_POSITION_UPDATE_TIME);
   }, [count]);
-
-  useEffect(() => {
-    getDriverPosition();
-  }, []);
 
   return (
     <>
