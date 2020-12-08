@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
 import { VERIFY_USER_ROLE } from '../queries/verify';
@@ -22,16 +22,18 @@ interface Paths {
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
   const dispatch = useDispatch();
-  const { data } = useQuery(VERIFY_USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
+  const { loginReducer }: any = useSelector((state: any) => state);
+
+  useQuery(VERIFY_USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
 
   return (
     <Route
       path={path}
       render={() => {
-        if (!data) {
+        if (loginReducer.loginRole === '') {
           return;
         }
-        if (data.verifyUser.role === 'driver') {
+        if (loginReducer.loginRole === 'driver') {
           return (
             <Switch>
               <Route path='/driver/main' component={DriverWaitingPage} />
@@ -40,7 +42,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             </Switch>
           );
         }
-        if (data.verifyUser.role === 'rider') {
+        if (loginReducer.loginRole === 'rider') {
           return (
             <Switch>
               <Route path='/rider/setcourse' component={SetCoursePage} />
@@ -50,7 +52,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
             </Switch>
           );
         }
-        if (data.verifyUser.role === 'unknown') {
+        if (loginReducer.loginRole === 'unknown') {
           localStorage.removeItem('token');
           return (
             <Switch>

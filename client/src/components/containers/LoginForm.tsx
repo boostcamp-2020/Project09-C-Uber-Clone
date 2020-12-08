@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { useMutation } from '@apollo/client';
 
-import { WhiteSpace, Checkbox, List, Switch } from 'antd-mobile';
+import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
