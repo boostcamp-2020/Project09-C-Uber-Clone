@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 
 import { GoogleMap, OverlayView, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 
@@ -19,7 +19,7 @@ const containerStyle = {
   height: '75vh',
 };
 
-export default function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destination: {lat:number, lng:number}}) {
+function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destination: {lat:number, lng:number}}) {
   const [directionResponse, setDirectionResponse] = useState(null);
 
   const directionCallback = useCallback((response: any, status: any) => {
@@ -72,3 +72,4 @@ export default function DrivingMap({ car, destination }: {car: {lat:number, lng:
   );
 }
 
+export default memo(DrivingMap);
