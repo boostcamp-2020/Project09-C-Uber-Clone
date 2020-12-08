@@ -23,6 +23,12 @@ interface Rider {
   name: string;
 }
 
+interface ChattingInterface {
+  text: string;
+  time: Date;
+  userId: string;
+}
+
 interface TripInterface {
   _id: string
   origin: Place;
@@ -33,6 +39,7 @@ interface TripInterface {
   distance?: number;
   driver?: Driver;
   rider: Rider;
+  chattings?: ChattingInterface[];
 }
 
 const tripSchema = new Schema({
@@ -70,6 +77,11 @@ const tripSchema = new Schema({
     description: String,
     profileImage: String,
   },
+  chattings: [{
+    text: { type: String, required: true },
+    time: { type: Date, required: true },
+    userId: { type: String, required: true },
+  }],
 });
 
 export default model<TripInterface & Document>('Trip', tripSchema);
