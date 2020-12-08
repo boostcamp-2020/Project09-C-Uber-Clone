@@ -1,5 +1,5 @@
 import { setTrip } from '../slices/tripSlice';
-import { CANCEL_CALL } from '../queries/trip';
+import { CANCEL_TRIP } from '../queries/trip';
 
 interface Payload {
     tripId: string
@@ -7,7 +7,7 @@ interface Payload {
 
 export const requestCancelCall = async (client: any, history: any, dispatch:any, payload:Payload) => {
   const { data: { cancelTrip } } = await client.mutate({
-    mutation: CANCEL_CALL,
+    mutation: CANCEL_TRIP,
     variables: { id: payload.tripId },
     fetchPolicy: 'no-cache',
   });
