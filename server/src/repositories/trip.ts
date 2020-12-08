@@ -35,4 +35,7 @@ export default {
   setStatus: async (tripId, newTripStatus) => {
     return await Trip.updateOne({ _id: tripId }, { status: newTripStatus });
   },
+  getChattings: async (tripId: string) => {
+    return await Trip.findOne({ _id: tripId }, 'chattings');
+  },
 };
