@@ -5,15 +5,15 @@ type Mutation {
     startTime: String!,
     distance: Float
   ) : Trip @isAuthorized
-
   cancelTrip(id: ID!): CancelResult @isAuthorized
-
-  setTripStatus(tripId: ID!, newTripStatus: String!): Result
+  setTripStatus(tripId: ID!, newTripStatus: String!): Result @isAuthorized
+  addChatting(tripId: ID!, chatting: ChattingInput!): Trip @isAuthorized
 }
 
 type Query {
   trip(id: ID!):Trip @isAuthorized
   tripStatus(id: ID!): String! @isAuthorized
+  chattings(id: ID!): [Chatting] @isAuthorized
 }
 
 input TripPlaceInput {
@@ -32,6 +32,7 @@ type Trip {
   arrivalTime: String
   status: String!
   distance: Float
+  chattings: [Chatting]
 }
 
 type Result {
@@ -63,4 +64,17 @@ type TripPlace {
 type CancelResult{
   id: ID!
   result: String!
+}
+
+type Chatting {
+  id: ID!
+  text: String!
+  time: String!
+  userId: ID!
+}
+
+input ChattingInput {
+  text: String!
+  time: String!
+  userId: ID!
 }
