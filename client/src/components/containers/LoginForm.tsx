@@ -61,7 +61,7 @@ function LoginForm() {
         if (success) {
           localStorage.setItem('token', token);
           dispatch(setLoginRole(role));
-          history.push('/setcourse');
+          history.push('/rider/setcourse');
         } else {
           window.alert(message);
         }
@@ -76,7 +76,7 @@ function LoginForm() {
         if (success) {
           localStorage.setItem('token', token);
           dispatch(setLoginRole(role));
-          history.push('/setcourse');
+          history.push('/driver/main');
         } else {
           window.alert(message);
         }
