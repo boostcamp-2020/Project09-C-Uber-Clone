@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 
 import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
 
-import { ADD_TRIP_STATUS } from '../../queries/trip';
+import { ADD_TRIP_STATUS, GET_TRIP } from '../../queries/trip';
 import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
 import { useHistory } from 'react-router-dom';
 
@@ -74,6 +74,9 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
   const [setTripStatus, { data }] = useMutation(ADD_TRIP_STATUS);
   const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
 
+  const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
+
+
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
@@ -93,8 +96,8 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
   return (
     <>
       <Modal>
-        <RiderName>라이더 이름</RiderName>
-        <PlaceInfo>픽업 위치 or 도착 위치</PlaceInfo>
+        <RiderName>{tripData?.trip.rider.name}</RiderName>
+        <PlaceInfo>{onBoard ? tripData?.trip.destination.address : tripData?.trip.origin.address}</PlaceInfo>
         {onBoard ?
           <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
           :

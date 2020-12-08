@@ -1,10 +1,12 @@
+import { useQuery } from '@apollo/client';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { selectMapReducer } from '../../slices/mapSlice';
 import { selectTripReducer } from '../../slices/tripSlice';
+
+import { GET_TRIP } from '../../queries/trip';
 
 const Modal = styled.div`
   width: 100%;
@@ -47,7 +49,7 @@ const Place = styled.div`
 
 function TripInfoBox() {
   const { trip }:any = useSelector(selectTripReducer);
-  const { originPlace, destPlace }: any = useSelector(selectMapReducer);
+  const { data } = useQuery(GET_TRIP, { variables: { id: trip.id } });
 
   return (
     <>
@@ -59,8 +61,8 @@ function TripInfoBox() {
           </Time>
           <Route />
           <Place>
-            <div>{originPlace}</div>
-            <div>{destPlace}</div>
+            <div>{data?.trip.origin.address}</div>
+            <div>{data?.trip.destination.address}</div>
           </Place>
         </TripInfo>
       </Modal>
