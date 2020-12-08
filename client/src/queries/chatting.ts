@@ -6,7 +6,8 @@ export const GET_CHATTINGS = gql`
       id
       text
       time
-      userId
+      ownerId
+      isOwner
     }
   }
 `;
@@ -17,7 +18,8 @@ export const ADD_CHATTING = gql`
       id
       text
       time
-      userId
+      ownerId
+      isOwner
     }
   }
 `;
