@@ -31,8 +31,8 @@ function DriverWaitingPage() {
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
 
-  const { data: driverListen } = useSubscription(LISTEN_DRIVER_CALL);
-  const { data: tripStatus } = useQuery(GET_TRIP_STATUS, { variables: trip });
+  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
+  const { data: tripStatusData } = useQuery(GET_TRIP_STATUS, { variables: trip });
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
@@ -61,10 +61,10 @@ function DriverWaitingPage() {
   };
 
   useEffect(() => {
-    if (driverListen && driverStatus !== DRIVER_MATCHING_SUCCESS) {
-      setRiderCalls([...riderCalls, driverListen.driverListen.trip]);
+    if (driverListenData && driverStatus !== DRIVER_MATCHING_SUCCESS) {
+      setRiderCalls([...riderCalls, driverListenData.driverListen.trip]);
     }
-  }, [driverListen]);
+  }, [driverListenData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
@@ -73,12 +73,12 @@ function DriverWaitingPage() {
   }, [riderCalls]);
 
   useEffect(() => {
-    if (!!tripStatus && tripStatus.tripStatus === OPEN) {
+    if (!!tripStatusData && tripStatusData.tripStatus === OPEN) {
       setDriverStatus(DRIVER_POPUP);
       return;
     }
     setDriverStatus(DRIVER_IGNORED);
-  }, [tripStatus]);
+  }, [tripStatusData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_IGNORED) {

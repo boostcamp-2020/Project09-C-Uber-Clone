@@ -111,7 +111,7 @@ function DriverPopup({ trip, setDriverStatus }:
       dispatch(setRider({ id: trip.rider.id }));
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     }
-    showAlert(data.sendResponse.result);
+    showAlert(data.sendResponse);
   };
 
   const disCount = () => {
