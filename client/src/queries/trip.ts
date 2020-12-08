@@ -35,14 +35,14 @@ export const GET_ORIGIN_POSITION_AND_DESTINATION_POSITION = gql`query getOriginP
 
 export const GET_TRIP = gql`query getTrip($id:ID!){
   trip(id:$id){
-    _id
+    id
     rider{
-      _id
+      id
       name
       email
     }
     driver{
-      _id
+      id
       email
       name
       carType

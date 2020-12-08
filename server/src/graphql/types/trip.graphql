@@ -23,7 +23,7 @@ input TripPlaceInput {
 }
 
 type Trip {
-  _id: ID!
+  id: ID!
   rider: MatchedRider!
   driver: MatchedDriver
   origin: TripPlace!
@@ -39,13 +39,13 @@ type Result {
 }
 
 type MatchedRider {
-  _id: ID!
+  id: ID!
   email: String!
   name: String!
 }
 
 type MatchedDriver {
-  _id: ID!
+  id: ID!
   email: String!
   name: String!
   carType: String!
