@@ -26,7 +26,7 @@ interface Rider {
 interface ChattingInterface {
   text: string;
   time: Date;
-  userId: string;
+  email: string;
 }
 
 interface TripInterface {
@@ -80,7 +80,7 @@ const tripSchema = new Schema({
   chattings: [{
     text: { type: String, required: true },
     time: { type: Date, required: true },
-    userId: { type: String, required: true },
+    email: { type: String, required: true },
   }],
 });
 
