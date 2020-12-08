@@ -18,7 +18,6 @@ import RiderWaitingPage from '../pages/RiderWaitingPage';
 import DriverDrivingPage from '../pages/DriverDrivingPage';
 import RiderDrivingPage from '../pages/RiderDrivingPage';
 
-
 interface Paths {
   path: string;
 }
@@ -27,18 +26,17 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
   const dispatch = useDispatch();
   const { loginReducer }: any = useSelector((state: any) => state);
 
-  useQuery(VERIFY_USER_ROLE, { onCompleted: data => {
-    dispatch(setLoginRole(data.verifyUser.role));
-    dispatch(setTrip({ id: localStorage.getItem('tripId') }));
+  useQuery(VERIFY_USER_ROLE, { onCompleted: (userData) => {
+    if (loginReducer.loginRole === '') {
+      dispatch(setTrip({ id: localStorage.getItem('tripId') }));
+      !!userData ? dispatch(setLoginRole(userData.verifyUser.role)) : dispatch(setLoginRole('unknown'));
+    }
   } });
 
   return (
     <Route
       path={path}
       render={() => {
-        if (loginReducer.loginRole === '') {
-          return;
-        }
         if (loginReducer.loginRole === 'driver') {
           return (
             <Switch>

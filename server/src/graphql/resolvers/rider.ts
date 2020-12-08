@@ -49,7 +49,7 @@ export default {
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
       const riderEmail = req.user.data.email;
       const trip = await Trip.openTrip({ ...args, riderEmail });
-      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude });
+      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, distance: args.distance });
       driverIds = driverIds.map(v => v._id.toString());
 
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });

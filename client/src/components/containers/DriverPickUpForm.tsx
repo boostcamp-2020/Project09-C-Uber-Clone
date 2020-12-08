@@ -63,9 +63,12 @@ export default function DriverPickUpForm() {
 
   useEffect(() => {
     getDriverPosition();
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setCount(count + 1);
     }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [count]);
 
   useEffect(() => {
