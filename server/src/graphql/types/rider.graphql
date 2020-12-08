@@ -53,9 +53,4 @@ type DriverResponse{
   response: String!
 }
 
-type Position {
-  latitude: Float!
-  longitude: Float!
-}
-
 
