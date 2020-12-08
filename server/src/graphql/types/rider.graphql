@@ -16,7 +16,8 @@ type Mutation {
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
-    distance: Float
+    estimatedTime: String!,
+    estimatedDistance: String!
   ): String @isAuthorized
   
   notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): Boolean @isAuthorized

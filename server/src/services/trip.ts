@@ -11,7 +11,8 @@ interface OpenArgs {
   origin: PlaceInterface;
   destination: PlaceInterface;
   startTime: Date;
-  distance?: number;
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 interface SetTripStateArgs {
@@ -70,9 +71,9 @@ export default {
     }
   },
   openTrip: async (args: OpenArgs) => {
-    const { riderEmail, origin, destination, startTime, distance } = args;
+    const { riderEmail, origin, destination, startTime, estimatedTime, estimatedDistance } = args;
     try {
-      return await Trip.open(riderEmail, origin, destination, startTime, distance);
+      return await Trip.open(riderEmail, origin, destination, startTime, estimatedTime, estimatedDistance);
     } catch (e) {
       throw e;
     }

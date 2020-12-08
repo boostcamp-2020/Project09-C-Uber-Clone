@@ -31,7 +31,8 @@ type Trip {
   startTime: String!
   arrivalTime: String
   status: String!
-  distance: Float
+  estimatedTime: String!
+  estimatedDistance: String!
 }
 
 type Result {
