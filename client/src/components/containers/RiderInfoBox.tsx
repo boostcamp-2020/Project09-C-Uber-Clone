@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useMutation } from '@apollo/client';
@@ -8,6 +8,9 @@ import { selectTripReducer } from '../../slices/tripSlice';
 import styled from 'styled-components';
 
 import { ADD_TRIP_STATUS } from '../../queries/trip';
+import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
+import { useHistory } from 'react-router-dom';
+
 const Modal = styled.div`
   width: 100%;
   height: 25vh;
@@ -56,13 +59,23 @@ const ChatButton = styled.button`
 `;
 
 function RiderInfoBox() {
+  const history = useHistory();
+
   const { trip } = useSelector(selectTripReducer);
   const [setTripStatus, { data }] = useMutation(ADD_TRIP_STATUS);
+  const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
 
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
   };
+
+  useEffect(() => {
+    if (data && data.setTripStatus.result === 'success') {
+      notifyDriverState({ variables: { tripId: trip.id, onBoard: true } });
+      history.push('/driver/driving');
+    }
+  }, [data]);
 
   return (
     <>
