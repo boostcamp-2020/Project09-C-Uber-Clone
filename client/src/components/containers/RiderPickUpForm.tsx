@@ -10,6 +10,7 @@ import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { selectTripReducer } from '../../slices/tripSlice';
+import { useHistory } from 'react-router-dom';
 
 const INIT_POS = {
   lat: 37.8058,
@@ -17,8 +18,10 @@ const INIT_POS = {
 };
 
 export default function RiderPickUpForm() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const [riderPos, setRiderPos] = useState(INIT_POS);
+  const [driverPos, setDriverPos] = useState(INIT_POS);
   const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
@@ -57,7 +60,7 @@ export default function RiderPickUpForm() {
 
   const getRiderPosition = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      navigator.geolocation.getCurrentPosition(success, navError, options);
     }
   };
 
@@ -73,8 +76,13 @@ export default function RiderPickUpForm() {
   }, [riderPos]);
 
   useEffect(() => {
-    localStorage.setItem('tripId', trip.id);
-  }, []);
+    if (data && data.matchedDriverState.driverPosition) {
+      setDriverPos(data.matchedDriverState.driverPosition);
+    }
+    if (data && data.matchedDriverState.onBoard) {
+      history.push('/rider/driving');
+    }
+  }, [data]);
 
   if (error) {
     return <p>error</p>;
@@ -89,8 +97,8 @@ export default function RiderPickUpForm() {
         isRider={true}
         riderLat={riderPos.lat}
         riderLng={riderPos.lng}
-        driverLat={data.matchedDriverState.driverPosition.lat}
-        driverLng={data.matchedDriverState.driverPosition.lng}
+        driverLat={driverPos.lat}
+        driverLng={driverPos.lng}
         pickUpLat={originPosition.lat}
         pickUpLng={originPosition.lng}
       />

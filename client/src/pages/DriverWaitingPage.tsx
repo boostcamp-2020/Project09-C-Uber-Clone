@@ -88,6 +88,7 @@ function DriverWaitingPage() {
     }
     if (driverStatus === DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([]);
+      localStorage.setItem('tripId', trip.id);
       history.push('/driver/pickup');
     }
   }, [driverStatus]);

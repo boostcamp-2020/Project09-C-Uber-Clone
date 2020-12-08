@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 
 import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
 
-import { ADD_TRIP_STATUS } from '../../queries/trip';
+import { ADD_TRIP_STATUS, GET_TRIP } from '../../queries/trip';
+import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
+import { useHistory } from 'react-router-dom';
+
 const Modal = styled.div`
   width: 100%;
   height: 25vh;
@@ -22,7 +25,7 @@ const RiderName = styled.div`
   font-weight: bold;
 `;
 
-const PickUpInfo = styled.div`
+const PlaceInfo = styled.div`
   margin: 24px 0;
   padding: 8px 0;
   width: 100%;
@@ -55,24 +58,55 @@ const ChatButton = styled.button`
     border-radius: 15px;
 `;
 
-function RiderInfoBox() {
+const DropButton = styled.button`
+    width: 100%;
+    height: 50px;
+    background-color: #56A902;
+    color: #ffffff;
+    border:none;
+    border-radius: 15px;
+`;
+
+function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
+  const history = useHistory();
+
   const { trip } = useSelector(selectTripReducer);
   const [setTripStatus, { data }] = useMutation(ADD_TRIP_STATUS);
+  const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
+
+  const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
+
 
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
   };
 
+  const handleOnClickDrop = () => {
+    //TODO: 라이더 하차 버튼 이벤트
+  };
+
+  useEffect(() => {
+    if (data && data.setTripStatus.result === 'success') {
+      notifyDriverState({ variables: { tripId: trip.id, onBoard: true } });
+      history.push('/driver/driving');
+    }
+  }, [data]);
+
   return (
     <>
       <Modal>
-        <RiderName>라이더 이름</RiderName>
-        <PickUpInfo>픽업 위치</PickUpInfo>
-        <Buttons>
-          <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
-          <ChatButton>채팅하기</ChatButton>
-        </Buttons>
+        <RiderName>{tripData?.trip.rider.name}</RiderName>
+        <PlaceInfo>{onBoard ? tripData?.trip.destination.address : tripData?.trip.origin.address}</PlaceInfo>
+        {onBoard ?
+          <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
+          :
+          <Buttons>
+            <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
+            <ChatButton>채팅하기</ChatButton>
+          </Buttons>
+        }
+
       </Modal>
     </>
   );
