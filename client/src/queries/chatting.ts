@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_CHATTINGS = gql`
-  query chattings($tripId: ID!) {
-    chattings(tripId: $tripId) {
+  query chattings($id: ID!) {
+    chattings(id: $id) {
       id
       text
       time
