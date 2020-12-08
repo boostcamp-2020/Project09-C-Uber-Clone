@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Div = styled.div`
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
 `;
 
 const PinIcon = () => {

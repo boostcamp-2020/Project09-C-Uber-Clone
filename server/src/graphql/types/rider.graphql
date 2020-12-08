@@ -16,6 +16,7 @@ type Mutation {
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
+    distance: Float,
     estimatedTime: String!,
     estimatedDistance: String!
   ): String @isAuthorized
@@ -52,11 +53,6 @@ type DriverResponse{
   driverId: ID!
   tripId: ID!
   response: String!
-}
-
-type Position {
-  latitude: Float!
-  longitude: Float!
 }
 
 

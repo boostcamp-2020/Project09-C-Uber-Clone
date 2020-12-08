@@ -63,18 +63,17 @@ export default function DriverPickUpForm() {
 
   useEffect(() => {
     getDriverPosition();
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setCount(count + 1);
     }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [count]);
 
   useEffect(() => {
     notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
-
-  useEffect(() => {
-    localStorage.setItem('tripId', trip.id);
-  }, []);
 
   if (error) {
     return <p>error</p>;
@@ -94,7 +93,7 @@ export default function DriverPickUpForm() {
         pickUpLat={originPosition.lat}
         pickUpLng={originPosition.lng}
       />
-      <RiderInfoBox />
+      <RiderInfoBox onBoard={false}/>
     </>
   );
 }

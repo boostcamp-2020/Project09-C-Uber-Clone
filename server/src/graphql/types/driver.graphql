@@ -25,6 +25,7 @@ type Mutation {
   driverStateNotify(
     tripId: String
     driverPosition: DriverPositionInput
+    onBoard: Boolean
     isDrop: Boolean
   ): driverStateNotify @isAuthorized
 
@@ -65,14 +66,15 @@ input DriverPositionInput {
 }
 
 type driverStateNotify {
-  tripId: String
+  tripId: ID!
   driverPosition: Position
+  onBoard: Boolean
   isDrop: Boolean
 }
 
 type Position {
-  lat: Float
-  lng: Float
+  lat: Float!
+  lng: Float!
 }
 
 type driverListenResult{

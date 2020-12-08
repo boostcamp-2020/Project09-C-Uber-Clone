@@ -23,7 +23,16 @@ interface SetTripStateArgs {
 export default {
   get: async({ id }) => {
     try {
-      return await Trip.findById(id);
+      const trip = await Trip.findById(id);
+      const rider = trip?.rider;
+      const driver = trip?.driver;
+      const origin = trip?.origin;
+      const destination = trip?.destination;
+      const startTime = trip?.startTime;
+      const arrivalTime = trip?.arrivalTime;
+      const status = trip?.status;
+      const distance = trip?.distance;
+      return { id: trip?._id, rider: { id: rider?._id, ...rider }, driver: { id: driver?._id, ...driver }, origin, destination, startTime, arrivalTime, status, distance };
     } catch (e) {
       throw e.message;
     }
