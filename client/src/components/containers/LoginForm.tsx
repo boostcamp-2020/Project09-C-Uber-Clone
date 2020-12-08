@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { useMutation } from '@apollo/client';
 
-import { WhiteSpace, Checkbox, List, Switch } from 'antd-mobile';
+import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
@@ -58,9 +58,6 @@ function LoginForm() {
     {
       onCompleted: ({ loginRider }) => {
         const { message, role, success, token } = loginRider;
-        console.log('loginRider : ', loginRider);
-        console.log('token : ', token);
-        console.log('success : ', success);
         if (success) {
           localStorage.setItem('token', token);
           dispatch(setLoginRole(role));
