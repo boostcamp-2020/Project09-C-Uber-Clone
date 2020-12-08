@@ -58,6 +58,9 @@ function LoginForm() {
     {
       onCompleted: ({ loginRider }) => {
         const { message, role, success, token } = loginRider;
+        console.log('loginRider : ', loginRider);
+        console.log('token : ', token);
+        console.log('success : ', success);
         if (success) {
           localStorage.setItem('token', token);
           dispatch(setLoginRole(role));
