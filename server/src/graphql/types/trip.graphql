@@ -3,7 +3,6 @@ type Mutation {
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
-    distance: Float
   ) : Trip @isAuthorized
   cancelTrip(id: ID!): CancelResult @isAuthorized
   setTripStatus(tripId: ID!, newTripStatus: String!): Result @isAuthorized
@@ -31,7 +30,6 @@ type Trip {
   startTime: String!
   arrivalTime: String
   status: String!
-  distance: Float
   chattings: [Chatting]
   estimatedTime: String!
   estimatedDistance: String!

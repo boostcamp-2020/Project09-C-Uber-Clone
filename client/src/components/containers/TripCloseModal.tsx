@@ -13,11 +13,11 @@ const Page = styled.div`
 `;
 
 const Paper = styled.div`
-  display: flex
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  widtht: 80%;
+  width: 80%;
   height : 70%;
   box-shadow: 5px 5px 5px wheat;
 `;

@@ -63,7 +63,6 @@ export const GET_TRIP = gql`query getTrip($id:ID!){
     startTime
     arrivalTime
     status
-    distance
   }
 }`;
 

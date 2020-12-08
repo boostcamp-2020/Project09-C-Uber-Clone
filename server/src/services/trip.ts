@@ -31,8 +31,7 @@ export default {
       const startTime = trip?.startTime;
       const arrivalTime = trip?.arrivalTime;
       const status = trip?.status;
-      const distance = trip?.distance;
-      return { id: trip?._id, rider: { id: rider?._id, ...rider }, driver: { id: driver?._id, ...driver }, origin, destination, startTime, arrivalTime, status, distance };
+      return { id: trip?._id, rider: { id: rider?._id, ...rider }, driver: { id: driver?._id, ...driver }, origin, destination, startTime, arrivalTime, status };
     } catch (e) {
       throw e.message;
     }
