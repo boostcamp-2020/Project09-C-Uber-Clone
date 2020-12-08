@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
 import styled from 'styled-components';
@@ -76,7 +76,6 @@ interface NotifyCallVariables {
 }
 
 function SetCourseForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
 
