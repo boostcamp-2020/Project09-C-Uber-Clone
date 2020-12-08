@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 
 import { LISTEN_MATCHED_DRIVER_STATE } from '../../queries/rider';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
 import DrivingMap from '../containers/DrivingMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
@@ -12,8 +13,11 @@ import { selectMapReducer } from '../../slices/mapSlice';
 
 export default function DrivingForm({ isRider }:{isRider:boolean}) {
   const [currentPos, setCurrentPos] = useState({ lat: undefined, lng: undefined });
+  const [destPos, setDestPos] = useState({ lat: undefined, lng: undefined });
   const { trip }: any = useSelector(selectTripReducer);
-  const { destPosition }: any = useSelector(selectMapReducer);
+
+  const { data: tripData } = useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION,
+    { variables: { id: trip.id } });
 
   const { loading, error, data } = useSubscription(
     LISTEN_MATCHED_DRIVER_STATE,
@@ -50,11 +54,19 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
       navigator.geolocation.clearWatch(locationWatch);
   }, []);
 
+  useEffect(() => {
+    if (tripData) {
+      setDestPos({ lat: tripData.trip.destination.latitude, lng: tripData.trip.destination.longitude });
+    }
+  }, [tripData]);
+
   return (
     <>
-      {currentPos.lat && <DrivingMap
+      {currentPos.lat &&
+      destPos.lat &&
+      <DrivingMap
         car={currentPos}
-        destination={destPosition}
+        destination={destPos}
       />}
       {isRider ? <TripInfoBox /> : <RiderInfoBox />}
     </>
