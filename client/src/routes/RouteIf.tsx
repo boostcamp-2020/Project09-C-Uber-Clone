@@ -6,7 +6,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
-import { USER_ROLE } from '../queries/verify';
+import { VERIFY_USER_ROLE } from '../queries/verify';
 import { setLoginRole } from '../slices/loginSlice';
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
@@ -22,7 +22,7 @@ interface Paths {
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
   const dispatch = useDispatch();
-  const { data } = useQuery(USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
+  const { data } = useQuery(VERIFY_USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
 
   return (
     <Route

@@ -10,7 +10,7 @@ import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
 
-import { NOTIFY_CALL } from '../../queries/callRequest';
+import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
 
 import {
@@ -80,7 +80,7 @@ function SetCourseForm() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [notifyCall, { data }] = useMutation(NOTIFY_CALL);
+  const [notifyCall, { data }] = useMutation(NOTIFY_RIDER_CALL);
 
   const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });

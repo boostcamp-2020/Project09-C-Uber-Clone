@@ -9,7 +9,7 @@ import CarLoadingImage from '../presentational/CarLoadingImage';
 import PickUpCancelButton from '../presentational/PickUpCancelButton';
 
 import { selectTripReducer, setTrip } from '../../slices/tripSlice';
-import { CANCEL_CALL } from '../../queries/trip';
+import { CANCEL_TRIP } from '../../queries/trip';
 
 const Overlay = styled.div`
   position: fixed;
@@ -42,7 +42,7 @@ function RiderWaitingForm() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [cancelCall, { data }] = useMutation(CANCEL_CALL);
+  const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
   const { trip } = useSelector(selectTripReducer);
 
   const handleClickCancel = () => {
