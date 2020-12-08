@@ -14,6 +14,11 @@ interface OpenArgs {
   distance?: number;
 }
 
+interface SetTripStateArgs {
+  tripId: string;
+  newTripStatus: string;
+}
+
 export default {
   get: async({ id }) => {
     try {
@@ -68,6 +73,14 @@ export default {
     const { riderEmail, origin, destination, startTime, distance } = args;
     try {
       return await Trip.open(riderEmail, origin, destination, startTime, distance);
+    } catch (e) {
+      throw e;
+    }
+  },
+  setStatus: async (args: SetTripStateArgs) => {
+    try {
+      const { tripId, newTripStatus } = args;
+      return await Trip.setStatus(tripId, newTripStatus);
     } catch (e) {
       throw e;
     }

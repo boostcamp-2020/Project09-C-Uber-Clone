@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { GoogleMap, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
+import { GoogleMap, Marker, DirectionsRenderer, DirectionsService, DistanceMatrixService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -40,11 +40,6 @@ const NEW_MARKER_POS = {
   lng: 0,
 };
 
-const INIT_POS = {
-  lat: 37.55,
-  lng: 126.97,
-};
-
 enum TravelMode {
   BICYCLING = 'BICYCLING',
   DRIVING = 'DRIVING',
@@ -67,7 +62,7 @@ function RiderSetCourseMap() {
   const [map, setMap] = useState(null);
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
-  const [center, setCenter] = useState(INIT_POS);
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [directionResponse, setDirectionResponse] = useState(null);
 
   const pickerEl = useRef(null);
@@ -90,6 +85,17 @@ function RiderSetCourseMap() {
     dispatch(setOriginPosition(NEW_MARKER_POS));
     dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('check'));
+  };
+  const getCurrentRiderPos = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(pos);
+      });
+    }
   };
 
   const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
@@ -142,16 +148,33 @@ function RiderSetCourseMap() {
     setIsDestVisible(true);
   }, [destMarker]);
 
+  useEffect(() => {
+    getCurrentRiderPos();
+  }, []);
+
+  const distanceMatrixCallback = (res: any) => {
+    //TODO : 거리, 시간 계산
+    console.log('res.rows : ', res.rows);
+  };
+
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
       zoom={14}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      center={originPosition}
+      center={center}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
     >
+      <DistanceMatrixService
+        callback={distanceMatrixCallback}
+        options={{
+          origins: [{ lat: 55.93, lng: -3.118 }, 'Greenwich, England'],
+          destinations: ['Stockholm, Sweden', { lat: 50.087, lng: 14.421 }],
+          travelMode: google.maps.TravelMode.DRIVING,
+        }}
+      />
       <Picker src={picker} ref={pickerEl} />
       <Marker
         key={1}
@@ -171,6 +194,10 @@ function RiderSetCourseMap() {
             destination: destPosition,
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
+            drivingOptions: {
+              departureTime: new Date(Date.now() + 1000),
+              trafficModel: google.maps.TrafficModel.OPTIMISTIC,
+            },
           }}
           callback={directionCallback}
         />

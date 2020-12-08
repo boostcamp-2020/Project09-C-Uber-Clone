@@ -6,12 +6,14 @@ type Mutation {
     distance: Float
   ) : Trip @isAuthorized
 
-  cancelTrip(id: ID!): CancelResult
+  cancelTrip(id: ID!): CancelResult @isAuthorized
+
+  setTripStatus(tripId: ID!, newTripStatus: String!): Result
 }
 
 type Query {
-  trip(id: ID!):Trip
-  tripStatus(id: ID!): String!
+  trip(id: ID!):Trip @isAuthorized
+  tripStatus(id: ID!): String! @isAuthorized
 }
 
 input TripPlaceInput {
@@ -30,6 +32,10 @@ type Trip {
   arrivalTime: String
   status: String!
   distance: Float
+}
+
+type Result {
+  result: String
 }
 
 type MatchedRider {

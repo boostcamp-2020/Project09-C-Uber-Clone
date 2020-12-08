@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useApolloClient } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+import { useApolloClient, useMutation } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
 import styled from 'styled-components';
 
-import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import SubmitButton from '../presentational/SubmitButton';
+
+import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
+import { reverseGoecoding } from '../../utils/geocoding';
 
 import {
   selectMapReducer,
@@ -20,9 +22,10 @@ import {
   setOriginMarker,
   setDestMarker,
 } from '../../slices/mapSlice';
-import { useHistory } from 'react-router-dom';
+import {
+  setTrip,
+} from '../../slices/tripSlice';
 
-import { reverseGoecoding } from '../../utils/geocoding';
 
 const Header = styled.div`
   height: 130px;
@@ -65,7 +68,7 @@ interface TripPlace {
   longitude: number
 }
 
-interface riderPublishInfo {
+interface NotifyCallVariables {
   origin: TripPlace
   destination: TripPlace
   startTime: string
@@ -77,8 +80,10 @@ function SetCourseForm() {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const [notifyCall, { data }] = useMutation(NOTIFY_RIDER_CALL);
+
   const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
-  const [riderPos, setRiderPos] = useState({ lat: 0, lng: 0 });
+  const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
@@ -100,12 +105,12 @@ function SetCourseForm() {
       setDestInputError(true);
       return;
     }
-    const riderPublishInfo: riderPublishInfo = {
+    const variables: NotifyCallVariables = {
       origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
       destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
       startTime: (new Date()).toString(),
     };
-    callRequest(client, history, dispatch, riderPublishInfo);
+    notifyCall({ variables });
   };
 
   const success = (position: Position): any => {
@@ -121,17 +126,18 @@ function SetCourseForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
   const getCurrentRiderPos = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      return navigator.geolocation.watchPosition(success, navError, options);
     }
   };
 
   const makeStartingPointHere = async() => {
+    dispatch(setOriginMarker(''));
     dispatch(setOriginPosition(riderPos));
     const address = await reverseGoecoding(riderPos);
     dispatch(setOriginPlace(address));
@@ -187,7 +193,16 @@ function SetCourseForm() {
   }, [destPlace]);
 
   useEffect(() => {
-    getCurrentRiderPos();
+    if (data) {
+      dispatch(setTrip({ id: data.driverCall }));
+      history.push('/rider/waiting');
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const locationWatch = getCurrentRiderPos();
+    return () =>
+      navigator.geolocation.clearWatch(locationWatch);
   }, []);
 
   return (

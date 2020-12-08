@@ -3,13 +3,11 @@ import React, { FunctionComponent } from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useQuery } from '@apollo/client';
 
-import { useApolloClient } from '@apollo/client';
-
-import { useSelector, useDispatch } from 'react-redux';
-
-import { verifyUser } from '../apis/verifyUserAPI';
-
+import { VERIFY_USER_ROLE } from '../queries/verify';
+import { setLoginRole } from '../slices/loginSlice';
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
 import DriverPickUpPage from '../pages/DriverPickUpPage';
@@ -17,21 +15,22 @@ import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
 import RiderWaitingPage from '../pages/RiderWaitingPage';
 
+
 interface Paths {
   path: string;
 }
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
-  const client = useApolloClient();
   const dispatch = useDispatch();
   const { loginReducer }: any = useSelector((state: any) => state);
+
+  useQuery(VERIFY_USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
 
   return (
     <Route
       path={path}
       render={() => {
         if (loginReducer.loginRole === '') {
-          verifyUser(client, dispatch);
           return;
         }
         if (loginReducer.loginRole === 'driver') {

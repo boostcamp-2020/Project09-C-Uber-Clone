@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const driverListenSubscription = gql`
+export const LISTEN_DRIVER_CALL = gql`
 subscription {
   driverListen {
     trip{
@@ -26,7 +26,7 @@ subscription {
   }
 }`;
 
-export const sendDriverCall = gql`
+export const NOTIFY_RIDER_CALL = gql`
 mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!) {
   driverCall(origin: $origin, destination: $destination, startTime: $startTime)
 }`;

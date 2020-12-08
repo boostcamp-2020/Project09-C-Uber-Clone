@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useSelector, useDispatch } from 'react-redux';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 
-import { driverStateNotify } from '../../apis/driverAPI';
-import { matchedRiderStateQuery } from '../../queries/driver';
+import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
+import { LISTEN_MATCHED_RIDER_STATE, NOTIFY_DRIVER_STATE } from '../../queries/driver';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
 import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
@@ -16,13 +17,24 @@ const INIT_POS = {
 };
 
 export default function DriverPickUpForm() {
-  const client = useApolloClient();
+  const dispatch = useDispatch();
   const [driverPos, setDriverPos] = useState(INIT_POS);
-  const { originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const [count, setCount] = useState(0);
+  const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
+  useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
+    variables: { id: trip.id },
+    onCompleted: ({ trip }) => {
+      dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
+      dispatch(setDestPosition({ lat: trip.destination.latitude, lng: trip.destination.longitude }));
+    },
+  });
+
+  const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
+
   const { loading, error, data } = useSubscription(
-    matchedRiderStateQuery,
+    LISTEN_MATCHED_RIDER_STATE,
     { variables: { tripId: trip.id } },
   );
 
@@ -39,28 +51,30 @@ export default function DriverPickUpForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
   const getDriverPosition = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      navigator.geolocation.getCurrentPosition(success, navError, options);
     }
   };
 
   useEffect(() => {
     getDriverPosition();
-  }, []);
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 1000);
+  }, [count]);
 
   useEffect(() => {
-    const driverState = {
-      tripId: trip.id,
-      driverPosition: driverPos,
-      isDrop: false,
-    };
-    driverStateNotify(client, driverState);
+    notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
+
+  useEffect(() => {
+    localStorage.setItem('tripId', trip.id);
+  }, []);
 
   if (error) {
     return <p>error</p>;
@@ -68,7 +82,7 @@ export default function DriverPickUpForm() {
   if (loading) {
     return <p>라이더 위치정보를 불러오는 중입니다</p>;
   }
-  //TODO: pickup 위치 및 라이더 정보 tripId로 조회
+
   return (
     <>
       <PickUpMap

@@ -5,12 +5,12 @@ import styled from 'styled-components';
 
 import { WhiteSpace } from 'antd-mobile';
 
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import SubmitButton from '../presentational/SubmitButton';
 import Input from '../presentational/Input';
 
-import { requestRiderSignUp } from '../../apis/signUpAPI';
+import { SIGNUP_RIDER } from '../../queries/signup';
 
 import { checkValidation } from '../../utils/validate';
 
@@ -20,7 +20,7 @@ const Form = styled.form`
 `;
 
 function RiderSignUpForm() {
-  const client = useApolloClient();
+  const [signUpRider] = useMutation(SIGNUP_RIDER);
   const history = useHistory();
 
   const [name, setName] = useState('');
@@ -34,9 +34,15 @@ function RiderSignUpForm() {
     setState(value);
   };
 
-  const handleSignUpButton = () => {
+  const handleSignUpButton = async () => {
     const riderInfo = { name, phoneNumber, email, password };
-    requestRiderSignUp(client, history, riderInfo);
+    try {
+      await signUpRider({ variables: riderInfo });
+      window.alert('회원가입 성공');
+      history.push('/login');
+    } catch (error) {
+      window.alert(`회원가입 실패\n원인${error}`);
+    }
   };
 
   const propertyToCheck = { name, phoneNumber, email, password, rePassword };

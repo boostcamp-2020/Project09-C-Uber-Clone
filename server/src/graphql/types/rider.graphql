@@ -1,5 +1,5 @@
 type Query {
-  rider(email: String!): Rider
+  rider(email: String!): Rider @isAuthorized
 }
 
 type Mutation {
@@ -17,7 +17,7 @@ type Mutation {
     destination: TripPlaceInput!,
     startTime: String!,
     distance: Float
-  ): String
+  ): String @isAuthorized
   
   notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): Boolean @isAuthorized
 }

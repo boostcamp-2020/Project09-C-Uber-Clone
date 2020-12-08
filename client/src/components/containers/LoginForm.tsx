@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
-import { WhiteSpace, Checkbox, List, Switch } from 'antd-mobile';
+import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import { requestLogin } from '../../apis/loginAPI';
+import { LOGIN_RIDER, LOGIN_DRIVER } from '../../queries/login';
+import { setLoginRole } from '../../slices/loginSlice';
 
 import { checkValidation } from '../../utils/validate';
 
@@ -50,9 +51,38 @@ const SignupButton = styled.button`
 `;
 
 function LoginForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
+  const [loginRider, { data: riderData, error: riderError }] = useMutation(
+    LOGIN_RIDER,
+    {
+      onCompleted: ({ loginRider }) => {
+        const { message, role, success, token } = loginRider;
+        if (success) {
+          localStorage.setItem('token', token);
+          dispatch(setLoginRole(role));
+          history.push('/rider/setcourse');
+        } else {
+          window.alert(message);
+        }
+      },
+    },
+  );
+  const [loginDriver, { data: driverData, error: driverError }] = useMutation(
+    LOGIN_DRIVER,
+    {
+      onCompleted: ({ loginDriver }) => {
+        const { message, role, success, token } = loginDriver;
+        if (success) {
+          localStorage.setItem('token', token);
+          dispatch(setLoginRole(role));
+          history.push('/driver/main');
+        } else {
+          window.alert(message);
+        }
+      },
+    },
+  );
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
@@ -64,8 +94,10 @@ function LoginForm() {
     setState(value);
   };
 
-  const handleLoginButtonClick = () => {
-    requestLogin(client, history, riderCheck, email, password, dispatch);
+  const handleLoginButtonClick = async () => {
+    riderCheck
+      ? await loginRider({ variables: { email, password } })
+      : await loginDriver({ variables: { email, password } });
   };
 
   const checkToggle = (e: any) => {
@@ -88,6 +120,7 @@ function LoginForm() {
 
   return (
     <Div>
+      {riderError && <p>try again</p>}
       <Header>UBER</Header>
       <CheckContent>
         <Checkbox
