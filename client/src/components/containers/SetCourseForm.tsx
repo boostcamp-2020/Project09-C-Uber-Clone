@@ -119,7 +119,6 @@ function SetCourseForm() {
       estimatedTime,
       estimatedDistance,
     };
-    console.log('variables : ', variables);
     notifyCall({ variables });
   };
 
