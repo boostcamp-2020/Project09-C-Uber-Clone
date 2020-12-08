@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { useSelector } from 'react-redux';
 import { useQuery, useSubscription } from '@apollo/client';
 
 import { LISTEN_MATCHED_DRIVER_STATE } from '../../queries/rider';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 
+import { selectTripReducer } from '../../slices/tripSlice';
+import { selectMapReducer } from '../../slices/mapSlice';
+
 import DrivingMap from '../containers/DrivingMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
 import TripInfoBox from '../presentational/TripInfoBox';
-import { selectTripReducer } from '../../slices/tripSlice';
-import { selectMapReducer } from '../../slices/mapSlice';
-import { useHistory } from 'react-router-dom';
 
 export default function DrivingForm({ isRider }:{isRider:boolean}) {
   const history = useHistory();
@@ -64,8 +66,7 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
 
   useEffect(() => {
     if (data && data.matchedDriverState.isDrop) {
-      //TODO: 평가 페이지로 이동
-      history.push('/');
+      history.push('/rider/tripend');
     }
   }, [data]);
 

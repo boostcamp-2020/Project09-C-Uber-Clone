@@ -76,14 +76,15 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
 
   const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
 
-
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
   };
 
   const handleOnClickDrop = () => {
-    //TODO: 라이더 하차 버튼 이벤트
+    const tripId = trip.id;
+    setTripStatus({ variables: { tripId, newTripStatus: 'close' } });
+    history.push('/driver/tripend');
   };
 
   useEffect(() => {
