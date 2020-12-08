@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
 
-import { setTripStatus } from '../../apis/tripAPI';
-
+import { ADD_TRIP_STATUS } from '../../queries/trip';
 const Modal = styled.div`
   width: 100%;
   height: 25vh;
@@ -57,12 +56,12 @@ const ChatButton = styled.button`
 `;
 
 function RiderInfoBox() {
-  const client = useApolloClient();
   const { trip } = useSelector(selectTripReducer);
+  const [setTripStatus, { data }] = useMutation(ADD_TRIP_STATUS);
 
   const handleOnClickBoardCompelete = () => {
     const tripId = trip.id;
-    setTripStatus(client, tripId, 'onBoard');
+    setTripStatus({ variables: { tripId: tripId, newTripStatus: 'onBoard' } });
   };
 
   return (
