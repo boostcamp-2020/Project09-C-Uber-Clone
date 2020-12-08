@@ -27,6 +27,6 @@ subscription {
 }`;
 
 export const NOTIFY_RIDER_CALL = gql`
-mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!) {
-  driverCall(origin: $origin, destination: $destination, startTime: $startTime)
+mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!, $distance: Float!) {
+  driverCall(origin: $origin, destination: $destination, startTime: $startTime, distance: $distance)
 }`;
