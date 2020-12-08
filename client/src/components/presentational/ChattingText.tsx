@@ -31,7 +31,7 @@ interface TextViewProps {
   time: string;
 }
 
-const TextView: FunctionComponent<TextViewProps> = ({ text, me, time }) => {
+const ChattingText: FunctionComponent<TextViewProps> = ({ text, me, time }) => {
   return (
     <Div me={me}>
       <Text me={me}>{text}</Text>
@@ -40,4 +40,4 @@ const TextView: FunctionComponent<TextViewProps> = ({ text, me, time }) => {
   );
 };
 
-export default TextView;
+export default ChattingText;
