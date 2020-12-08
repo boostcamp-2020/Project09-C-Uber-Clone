@@ -38,4 +38,7 @@ export default {
   getChattings: async (tripId: string) => {
     return await Trip.findOne({ _id: tripId }, 'chattings');
   },
+  addChatting: async (tripId: string, chatting: {text: string, time: Date, userId: string}) => {
+    return await Trip.findOneAndUpdate({ _id: tripId }, chatting, { new: true });
+  },
 };
