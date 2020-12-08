@@ -30,7 +30,7 @@ export const LISTEN_MATCHED_RIDER_STATE = gql`
   }
 `;
 
-export const updateDriverPosQuery = gql`
+export const ADD_DRIVER_POSITION = gql`
   mutation updateDriverPosition($lat: Float, $lng: Float) {
     updateDriverPosition(lat: $lat, lng: $lng) {
       result

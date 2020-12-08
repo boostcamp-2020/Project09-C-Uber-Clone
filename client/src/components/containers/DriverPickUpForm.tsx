@@ -25,9 +25,9 @@ export default function DriverPickUpForm() {
 
   useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, {
     variables: { id: trip.id },
-    onCompleted: tripInfo => {
-      dispatch(setOriginPosition({ lat: tripInfo.trip.origin.latitude, lng: tripInfo.trip.origin.longitude }));
-      dispatch(setDestPosition({ lat: tripInfo.trip.destination.latitude, lng: tripInfo.trip.destination.longitude }));
+    onCompleted: ({ trip }) => {
+      dispatch(setOriginPosition({ lat: trip.origin.latitude, lng: trip.origin.longitude }));
+      dispatch(setDestPosition({ lat: trip.destination.latitude, lng: trip.destination.longitude }));
     },
   });
 

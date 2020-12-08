@@ -7,11 +7,11 @@ export const cancelCall = gql`mutation cancelCall($id:ID!){
   }
 }`;
 
-export const getStatus = gql`query getStatus($id:ID!){
+export const GET_TRIP_STATUS = gql`query getStatus($id:ID!){
   tripStatus(id:$id)
 }`;
 
-export const pickUpPos = gql`query pickUpPos($id:ID!){
+export const GET_PICK_UP_POSITION = gql`query pickUpPos($id:ID!){
   trip(id:$id){
     origin{
       latitude
