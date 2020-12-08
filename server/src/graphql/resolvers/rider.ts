@@ -31,6 +31,8 @@ interface DriverCallArgs {
   destination: TripPlace
   startTime: Date
   distance?: number
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 export default {

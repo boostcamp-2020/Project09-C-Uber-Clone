@@ -25,7 +25,10 @@ function DriverWaitingPage() {
     origin: undefined,
     destination: undefined,
     startTime: undefined,
-    status: undefined },
+    status: undefined,
+    estimatedTime: undefined,
+    estimatedDistance: undefined,
+  },
   ); //TODO: type 다시 지정
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
   const [count, setCount] = useState(0);
