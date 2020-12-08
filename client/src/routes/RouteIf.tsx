@@ -17,6 +17,7 @@ import RiderPickUpPage from '../pages/RiderPickUpPage';
 import RiderWaitingPage from '../pages/RiderWaitingPage';
 import DriverDrivingPage from '../pages/DriverDrivingPage';
 import RiderDrivingPage from '../pages/RiderDrivingPage';
+import TripClosePage from '../pages/TripClosePage';
 
 interface Paths {
   path: string;
@@ -43,6 +44,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
               <Route path='/driver/main' component={DriverWaitingPage} />
               <Route path='/driver/pickup' component={DriverPickUpPage} />
               <Route path='/driver/driving' component={DriverDrivingPage} />
+              <Route path='/driver/tripend' component={TripClosePage} />
               <Redirect path="*" to="/driver/main" />
             </Switch>
           );
@@ -54,6 +56,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
               <Route path='/rider/waiting' component={RiderWaitingPage}/>
               <Route path='/rider/pickup' component={RiderPickUpPage} />
               <Route path='/rider/driving' component={RiderDrivingPage} />
+              <Route path='/rider/tripend' component={TripClosePage} />
               <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );
