@@ -32,7 +32,6 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
     dispatch(setTrip({ id: localStorage.getItem('tripId') }));
   } });
 
-  console.log(loginReducer);
   return (
     <Route
       path={path}
