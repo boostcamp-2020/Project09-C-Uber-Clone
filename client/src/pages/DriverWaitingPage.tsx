@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSubscription, useQuery, useMutation } from '@apollo/client';
+import { useSubscription, useLazyQuery, useMutation } from '@apollo/client';
 
 import { GET_TRIP_STATUS } from '../queries/trip';
 import { ADD_DRIVER_POSITION } from '../queries/driver';
@@ -25,14 +25,17 @@ function DriverWaitingPage() {
     origin: undefined,
     destination: undefined,
     startTime: undefined,
-    status: undefined },
+    status: undefined,
+    estimatedTime: undefined,
+    estimatedDistance: undefined,
+  },
   ); //TODO: type 다시 지정
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
 
   const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
-  const { data: tripStatusData } = useQuery(GET_TRIP_STATUS, { variables: trip });
+  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS);
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
@@ -69,6 +72,7 @@ function DriverWaitingPage() {
   useEffect(() => {
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
       setTrip(riderCalls[0]);
+      getTripStatus({ variables: { id: riderCalls[0].id } });
     }
   }, [riderCalls]);
 
@@ -87,6 +91,7 @@ function DriverWaitingPage() {
     }
     if (driverStatus === DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([]);
+      localStorage.setItem('tripId', trip.id);
       history.push('/driver/pickup');
     }
   }, [driverStatus]);

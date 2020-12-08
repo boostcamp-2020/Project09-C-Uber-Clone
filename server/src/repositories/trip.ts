@@ -24,11 +24,12 @@ export default {
     origin: PlaceInterface,
     destination: PlaceInterface,
     startTime: Date,
-    distance?: number) => {
+    estimatedTime: string,
+    estimatedDistance: string) => {
     const fields = '_id email name';
     const rider = await Rider.findOne({ email: riderEmail }, fields).exec();
     if (rider) {
-      return await Trip.create({ rider, origin, destination, startTime, distance, status: 'open' });
+      return await Trip.create({ rider, origin, destination, startTime, estimatedTime, estimatedDistance, status: 'open' });
     }
     return null;
   },

@@ -20,20 +20,6 @@ interface Position {
   lng: number
 }
 
-interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: Position
-  driverIds: string[]
-  pickUpPos: Position
-  pickUpAddress: string
-  destinationPos: Position
-  destinationAddress: string
-  tripStatus: string
-  tripId: string
-}
-
 interface TripPlace {
   address: string
   latitude: number
@@ -45,8 +31,9 @@ interface DriverCallArgs {
   destination: TripPlace
   startTime: Date
   distance?: number
+  estimatedTime: string
+  estimatedDistance: string
 }
-
 
 export default {
   Query: {
@@ -64,13 +51,13 @@ export default {
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
       const riderEmail = req.user.data.email;
       const trip = await Trip.openTrip({ ...args, riderEmail });
-      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude });
+      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, distance: args.distance });
       driverIds = driverIds.map(v => v._id.toString());
 
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return trip?._id;
     },
-    async notifyRiderState(parent: any, args: any, context: any) {
+    notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
       return true;
     },

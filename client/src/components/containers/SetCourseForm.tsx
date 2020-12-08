@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { WhiteSpace } from 'antd-mobile';
 import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
-import SubmitButton from '../presentational/SubmitButton';
+import CourseSubmitModal from '../presentational/CourseSubmitModal';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -72,17 +72,23 @@ interface NotifyCallVariables {
   origin: TripPlace
   destination: TripPlace
   startTime: string
-  distance?:number
+  distance?: number
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 function SetCourseForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
 
   const [notifyCall, { data }] = useMutation(NOTIFY_RIDER_CALL);
 
-  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const {
+    originPlace,
+    destPlace,
+    originPosition,
+    destPosition,
+  }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
@@ -90,6 +96,8 @@ function SetCourseForm() {
   const [destInput, setDestInput] = useState('');
   const [originInputError, setOriginInputError] = useState(false);
   const [destInputError, setDestInputError] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [estimatedDistance, setEstimatedDistance] = useState('');
 
   const handleClickCancel = (setPlace: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
@@ -109,6 +117,9 @@ function SetCourseForm() {
       origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
       destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
       startTime: (new Date()).toString(),
+      distance: 0.03,
+      estimatedTime,
+      estimatedDistance,
     };
     notifyCall({ variables });
   };
@@ -210,7 +221,10 @@ function SetCourseForm() {
       <Header>
         <PageTitle>라이더 <br/> 경로설정</PageTitle>
       </Header>
-      <RiderSetCourseMap />
+      <RiderSetCourseMap
+        setEstimatedDistance={setEstimatedDistance}
+        setEstimatedTime={setEstimatedTime}
+      />
       <FormTitle>경로 선택</FormTitle>
       <PlaceSearchBox
         placeholder='출발지'
@@ -233,10 +247,11 @@ function SetCourseForm() {
         error={destInputError}
       />
       <WhiteSpace />
-      <SubmitButton
-        content={'결정'}
+      <CourseSubmitModal
+        time={estimatedTime}
+        distance={estimatedDistance}
         onClick={handelCourseSubmitButton}
-        disabled={false}
+        disabled={!originPlace || !destPlace}
       />
     </>
   );

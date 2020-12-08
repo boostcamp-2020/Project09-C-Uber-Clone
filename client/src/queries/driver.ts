@@ -4,13 +4,16 @@ export const NOTIFY_DRIVER_STATE = gql`
 mutation driverStateNotify(
   $tripId:String,
   $driverPosition:DriverPositionInput,
+  $onBoard:Boolean,
   $isDrop:Boolean){
     driverStateNotify(
       tripId:$tripId,
       driverPosition:$driverPosition,
+      onBoard:$onBoard
       isDrop:$isDrop
     ){
       tripId
+      onBoard
       isDrop
       driverPosition {
         lat

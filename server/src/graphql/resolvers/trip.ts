@@ -16,7 +16,8 @@ interface OpenTripArgs {
   origin: PlaceInterface;
   destination: PlaceInterface;
   startTime: Date;
-  distance?: number;
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 interface SetTripStateArgs {

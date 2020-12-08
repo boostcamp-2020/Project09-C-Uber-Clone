@@ -36,7 +36,8 @@ interface TripInterface {
   startTime: Date;
   arrivalTime?: Date;
   status: 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
-  distance?: number;
+  estimatedTime: string,
+  estimatedDistance: string,
   driver?: Driver;
   rider: Rider;
   chattings?: ChattingInterface[];
@@ -59,7 +60,8 @@ const tripSchema = new Schema({
   startTime: { type: Date, required: true },
   arrivalTime: Date,
   status: { type: String, required: true },
-  distance: Number,
+  estimatedTime: String,
+  estimatedDistance: String,
   rider: {
     type: {
       _id: String,

@@ -8,13 +8,15 @@ import { useQuery } from '@apollo/client';
 
 import { VERIFY_USER_ROLE } from '../queries/verify';
 import { setLoginRole } from '../slices/loginSlice';
+import { setTrip } from '../slices/tripSlice';
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
 import DriverPickUpPage from '../pages/DriverPickUpPage';
 import LoginPage from '../pages/LoginPage';
 import RiderPickUpPage from '../pages/RiderPickUpPage';
 import RiderWaitingPage from '../pages/RiderWaitingPage';
-
+import DriverDrivingPage from '../pages/DriverDrivingPage';
+import RiderDrivingPage from '../pages/RiderDrivingPage';
 
 interface Paths {
   path: string;
@@ -24,20 +26,23 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
   const dispatch = useDispatch();
   const { loginReducer }: any = useSelector((state: any) => state);
 
-  useQuery(VERIFY_USER_ROLE, { onCompleted: data => dispatch(setLoginRole(data.verifyUser.role)) });
+  useQuery(VERIFY_USER_ROLE, { onCompleted: (userData) => {
+    if (loginReducer.loginRole === '') {
+      dispatch(setTrip({ id: localStorage.getItem('tripId') }));
+      !!userData ? dispatch(setLoginRole(userData.verifyUser.role)) : dispatch(setLoginRole('unknown'));
+    }
+  } });
 
   return (
     <Route
       path={path}
       render={() => {
-        if (loginReducer.loginRole === '') {
-          return;
-        }
         if (loginReducer.loginRole === 'driver') {
           return (
             <Switch>
               <Route path='/driver/main' component={DriverWaitingPage} />
               <Route path='/driver/pickup' component={DriverPickUpPage} />
+              <Route path='/driver/driving' component={DriverDrivingPage} />
               <Redirect path="*" to="/driver/main" />
             </Switch>
           );
@@ -46,8 +51,9 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
           return (
             <Switch>
               <Route path='/rider/setcourse' component={SetCoursePage} />
-              <Route path='/rider/pickup' component={RiderPickUpPage} />
               <Route path='/rider/waiting' component={RiderWaitingPage}/>
+              <Route path='/rider/pickup' component={RiderPickUpPage} />
+              <Route path='/rider/driving' component={RiderDrivingPage} />
               <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );

@@ -33,6 +33,8 @@ type Trip {
   status: String!
   distance: Float
   chattings: [Chatting]
+  estimatedTime: String!
+  estimatedDistance: String!
 }
 
 type Result {

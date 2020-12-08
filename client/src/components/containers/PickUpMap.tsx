@@ -5,6 +5,7 @@ import { GoogleMap, OverlayView } from '@react-google-maps/api';
 import CarIcon from '../presentational/CarIcon';
 import CurrentLocationIcon from '../presentational/CurrentLocationIcon';
 import PinIcon from '../presentational/PinIcon';
+import PersonIcon from '../presentational/PersonIcon';
 
 const containerStyle = {
   width: '100%',
@@ -68,7 +69,7 @@ export default function PickUpMap({ isRider, riderLat, riderLng, driverLat, driv
         position={riderPos}
         mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
       >
-        <CurrentLocationIcon />
+        {isRider ? <CurrentLocationIcon /> : <PersonIcon />}
       </OverlayView>
     </GoogleMap>
   );
