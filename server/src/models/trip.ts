@@ -24,7 +24,6 @@ interface Rider {
 }
 
 interface ChattingInterface {
-  _id: string;
   text: string;
   time: Date;
   userId: string;
