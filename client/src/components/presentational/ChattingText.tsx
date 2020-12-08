@@ -15,7 +15,7 @@ const Text = styled.div<{me: boolean}>`
   border-radius: 8px;
   background-color: ${({ me }) => me ? '#56A902' : '#F7F7F9'};
   color: ${({ me }) => me ? 'white' : 'black'};
-  
+  word-break: break-all;
 `;
 
 const Time = styled.div`
