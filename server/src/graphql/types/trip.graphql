@@ -37,6 +37,7 @@ type Trip {
 
 type Result {
   result: String
+  trip: Trip
 }
 
 type MatchedRider {

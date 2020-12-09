@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { Trip } from '../../services';
+import { MATCHED_DRIVER_STATE } from '../subscriptions';
 
 interface PlaceInterface {
   address: string;
@@ -75,8 +76,11 @@ export default {
     },
     async setTripStatus(_: any, args: SetTripStateArgs, context: any) {
       try {
-        await Trip.setStatus(args);
-        return { result: 'success' };
+        const trip = await Trip.setStatus(args);
+        if (trip && trip.status === 'close') {
+          context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: { tripId: trip._id, isDrop: true } });
+        }
+        return { result: 'success', trip };
       } catch {
         return { result: 'fail' };
       }
