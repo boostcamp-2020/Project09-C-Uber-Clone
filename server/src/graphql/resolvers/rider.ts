@@ -30,7 +30,6 @@ interface DriverCallArgs {
   origin: TripPlace
   destination: TripPlace
   startTime: Date
-  distance?: number
   estimatedTime: string
   estimatedDistance: string
 }
@@ -51,11 +50,20 @@ export default {
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
       const riderEmail = req.user.data.email;
       const trip = await Trip.openTrip({ ...args, riderEmail });
-      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, distance: args.distance });
+      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, callRadius: 0.03 });
       driverIds = driverIds.map(v => v._id.toString());
+      console.log('trip: ', trip);
 
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return trip?._id;
+    },
+    async driverRecall(parent:any, args: {id:string}, { req, pubsub }:any) {
+      const trip = await Trip.get(args);
+      let driverIds = await Driver.getDriverList({ lat: trip?.origin?.latitude, lng: trip?.origin?.longitude, callRadius: 0.05 });
+      driverIds = driverIds.map(v => v._id.toString());
+      console.log('recall trip:', trip);
+      pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
+      return 'success';
     },
     notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
