@@ -73,14 +73,6 @@ function RiderWaitingForm() {
 
   useEffect(() => {
     if (callToggle === 1) {
-      // const {latitude, longitude, address} = tripData.trip.destination
-      // const variables: NotifyCallVariables = {
-      //   origin: { latitude: tripData.trip.origin.latitude, address: tripData.trip.origin.address, longitude: tripData.trip.origin.longitude },
-      //   destination: { latitude: tripData.trip.destination.latitude, longitude: tripData.trip.destination.longitude, address: tripData.trip.destination.address },
-      //   startTime: tripData.trip.startTime,
-      //   estimatedTime: tripData.trip.estimatedTime,
-      //   estimatedDistance: tripData.trip.estimatedDistance,
-      // };
       notifyCall({ variables: { id: trip.id } });
     } else if (callToggle > 1) {
       const tripId = trip.id;

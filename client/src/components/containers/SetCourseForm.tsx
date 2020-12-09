@@ -122,6 +122,10 @@ function SetCourseForm() {
       estimatedDistance,
     };
     notifyCall({ variables });
+    dispatch(setOriginPlace(''));
+    dispatch(setOriginMarker(''));
+    dispatch(setDestPlace(''));
+    dispatch(setDestMarker(''));
   };
 
   const success = (position: Position): any => {
