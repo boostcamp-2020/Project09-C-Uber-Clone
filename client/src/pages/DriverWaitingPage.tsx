@@ -35,7 +35,7 @@ function DriverWaitingPage() {
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
 
   const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
-  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS);
+  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'no-cache' });
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
@@ -70,6 +70,7 @@ function DriverWaitingPage() {
   }, [driverListenData]);
 
   useEffect(() => {
+    console.log(riderCalls);
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
       setTrip(riderCalls[0]);
       getTripStatus({ variables: { id: riderCalls[0].id } });
