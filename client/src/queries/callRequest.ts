@@ -29,6 +29,11 @@ subscription {
 }`;
 
 export const NOTIFY_RIDER_CALL = gql`
-mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!, $distance: Float!, $estimatedTime: String!, $estimatedDistance: String!) {
-  driverCall(origin: $origin, destination: $destination, startTime: $startTime, distance: $distance, estimatedTime: $estimatedTime, estimatedDistance: $estimatedDistance)
+mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!, $estimatedTime: String!, $estimatedDistance: String!) {
+  driverCall(origin: $origin, destination: $destination, startTime: $startTime, estimatedTime: $estimatedTime, estimatedDistance: $estimatedDistance)
+}`;
+
+export const RE_NOTIFY_RIDER_CALL = gql`
+mutation driveRecall($id: ID!) {
+  driverRecall(id: $id)
 }`;
