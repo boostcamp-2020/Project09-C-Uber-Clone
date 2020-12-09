@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,8 +9,8 @@ import CarLoadingImage from '../presentational/CarLoadingImage';
 import PickUpCancelButton from '../presentational/PickUpCancelButton';
 
 import { selectTripReducer, setTrip } from '../../slices/tripSlice';
-import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
-import { CANCEL_TRIP } from '../../queries/trip';
+import { RE_NOTIFY_RIDER_CALL } from '../../queries/callRequest';
+import { CANCEL_TRIP, GET_TRIP_BEFORE_MATCHING } from '../../queries/trip';
 
 import { selectMapReducer } from '../../slices/mapSlice';
 
@@ -51,22 +51,41 @@ interface NotifyCallVariables {
   origin: TripPlace
   destination: TripPlace
   startTime: string
-  distance?:number
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 function RiderWaitingForm() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [callToggle, setCallToggle] = useState('On');
+  const [callToggle, setCallToggle] = useState(0);
 
-  const [notifyCall, { data: notifyData }] = useMutation(NOTIFY_RIDER_CALL);
-  const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
   const { trip } = useSelector(selectTripReducer);
 
-  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
+  const { data: tripData } = useQuery(GET_TRIP_BEFORE_MATCHING, { variables: { id: trip.id } });
+  const [notifyCall] = useMutation(RE_NOTIFY_RIDER_CALL);
+  const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
 
   useEffect(() => {
+    console.log(tripData);
+  }, [tripData]);
+
+  useEffect(() => {
+    if (callToggle === 1) {
+      // const {latitude, longitude, address} = tripData.trip.destination
+      // const variables: NotifyCallVariables = {
+      //   origin: { latitude: tripData.trip.origin.latitude, address: tripData.trip.origin.address, longitude: tripData.trip.origin.longitude },
+      //   destination: { latitude: tripData.trip.destination.latitude, longitude: tripData.trip.destination.longitude, address: tripData.trip.destination.address },
+      //   startTime: tripData.trip.startTime,
+      //   estimatedTime: tripData.trip.estimatedTime,
+      //   estimatedDistance: tripData.trip.estimatedDistance,
+      // };
+      notifyCall({ variables: { id: trip.id } });
+    } else if (callToggle > 1) {
+      const tripId = trip.id;
+      cancelCall({ variables: { id: tripId } });
+    }
     const timerId = setTimeout(retryNotify, 10000);
     return () => {
       clearTimeout(timerId);
@@ -74,19 +93,11 @@ function RiderWaitingForm() {
   }, [callToggle]);
 
   const retryNotify = () => {
-    if (callToggle === 'On') {
-      const variables: NotifyCallVariables = {
-        origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
-        destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
-        startTime: (new Date()).toString(),
-        distance: 0.05,
-      };
-      notifyCall({ variables });
-      setCallToggle('Off');
+    if (callToggle === 0) {
+      setCallToggle(callToggle + 1);
       window.alert('범위를 넓혀 재시도합니다.');
     } else {
-      const tripId = trip.id;
-      cancelCall({ variables: { id: tripId } });
+      setCallToggle(callToggle + 1);
       window.alert('시간이 초과되어 호출을 취소합니다.');
     }
   };

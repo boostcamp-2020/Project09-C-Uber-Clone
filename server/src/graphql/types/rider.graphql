@@ -12,15 +12,18 @@ type Mutation {
     phoneNumber: String!
   ): Rider
 
-  driverCall(    
+  driverCall( 
     origin: TripPlaceInput!,
     destination: TripPlaceInput!,
     startTime: String!,
-    distance: Float,
     estimatedTime: String!,
     estimatedDistance: String!
   ): String @isAuthorized
   
+  driverRecall(
+    id:ID!
+  ): String @isAuthorized
+
   notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): Boolean @isAuthorized
 }
 

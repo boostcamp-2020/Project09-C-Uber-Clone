@@ -63,6 +63,34 @@ export const GET_TRIP = gql`query getTrip($id:ID!){
     startTime
     arrivalTime
     status
+    estimatedTime
+    estimatedDistance
+  }
+}`;
+
+export const GET_TRIP_BEFORE_MATCHING = gql`query getTrip($id:ID!){
+  trip(id:$id){
+    id
+    rider{
+      id
+      name
+      email
+    }
+    origin{
+      address
+      latitude
+      longitude
+    }
+    destination{
+      address
+      latitude
+      longitude
+    }
+    startTime
+    arrivalTime
+    status
+    estimatedTime
+    estimatedDistance
   }
 }`;
 
