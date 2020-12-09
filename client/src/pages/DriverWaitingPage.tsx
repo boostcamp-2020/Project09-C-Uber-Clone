@@ -70,7 +70,6 @@ function DriverWaitingPage() {
   }, [driverListenData]);
 
   useEffect(() => {
-    console.log(riderCalls);
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
       setTrip(riderCalls[0]);
       getTripStatus({ variables: { id: riderCalls[0].id } });
