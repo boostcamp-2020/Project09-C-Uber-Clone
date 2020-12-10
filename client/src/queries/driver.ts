@@ -29,6 +29,7 @@ export const LISTEN_MATCHED_RIDER_STATE = gql`
       tripId
       latitude
       longitude
+      isCancel
     }
   }
 `;

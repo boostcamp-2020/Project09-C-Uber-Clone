@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const NOTIFY_RIDER_STATE = gql`
-  mutation notifyRiderState($tripId: ID!, $latitude: Float!, $longitude: Float!) {
-    notifyRiderState(tripId: $tripId, latitude: $latitude, longitude: $longitude)
+  mutation notifyRiderState($tripId: ID!, $latitude: Float, $longitude: Float, $isCancel: Boolean) {
+    notifyRiderState(tripId: $tripId, latitude: $latitude, longitude: $longitude, isCancel: $isCancel)
   }
 `;
 
