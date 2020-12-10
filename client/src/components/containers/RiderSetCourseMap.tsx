@@ -123,6 +123,10 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     if (originMarker === '') {
       setIsOriginVisible(false);
       setDirectionResponse(null);
+      if (pickerEl.current) {
+        pickerEl.current.style.display = 'inline-block';
+      }
+      setSelectButtonDisplay('inline-block');
       return;
     }
     setCenter(originPosition);
@@ -133,6 +137,10 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     if (destMarker === '') {
       setIsDestVisible(false);
       setDirectionResponse(null);
+      if (pickerEl.current) {
+        pickerEl.current.style.display = 'inline-block';
+      }
+      setSelectButtonDisplay('inline-block');
       return;
     }
     setCenter(destPosition);
