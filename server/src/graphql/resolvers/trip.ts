@@ -38,6 +38,8 @@ interface ChattingInterface {
   ownerId: string;
 }
 
+type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
+
 export default {
   Query: {
     async trip(_:any, args:ID) {
@@ -64,6 +66,14 @@ export default {
       } else {
         return [];
       }
+    },
+    async myTrips(_: any, args: { statuses?: Status[] }, context: any) {
+      const user = context.req.user;
+      const { statuses } = args;
+      if (!statuses) {
+        return await Trip.getMyTrips(user.data._id, user.isDriver, ['open', 'matched', 'onBoard', 'close', 'cancel']);
+      }
+      return await Trip.getMyTrips(user.data._id, user.isDriver, statuses);
     },
   },
   Mutation: {
