@@ -52,8 +52,6 @@ export default {
       const trip = await Trip.openTrip({ ...args, riderEmail });
       let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, callRadius: 0.03 });
       driverIds = driverIds.map(v => v._id.toString());
-      console.log('trip: ', trip);
-
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return trip?._id;
     },
@@ -61,7 +59,6 @@ export default {
       const trip = await Trip.get(args);
       let driverIds = await Driver.getDriverList({ lat: trip?.origin?.latitude, lng: trip?.origin?.longitude, callRadius: 0.05 });
       driverIds = driverIds.map(v => v._id.toString());
-      console.log('recall trip:', trip);
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return 'success';
     },
