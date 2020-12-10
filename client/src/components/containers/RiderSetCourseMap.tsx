@@ -9,6 +9,8 @@ import styled from 'styled-components';
 
 import { reverseGoecoding } from '../../utils/geocoding';
 
+import PinIcon from '../presentational/PinIcon';
+
 import {
   selectMapReducer,
   setOriginPosition,
@@ -20,15 +22,11 @@ import {
 } from '../../slices/mapSlice';
 
 const Picker = styled.div`
-  width: 7px;
-  height: 7px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -100%);
   z-index: 1;
-  background-color: #FF1493;
-  border-radius: 50%;
 `;
 
 // Map 사이즈
@@ -194,7 +192,9 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
             },
           }}
         />
-        <Picker ref={pickerEl} />
+        <Picker ref={pickerEl}>
+          <PinIcon />
+        </Picker>
         <Marker
           key={1}
           position={originPosition}
