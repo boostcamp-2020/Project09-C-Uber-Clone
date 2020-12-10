@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, MouseEvent } from 'react';
 
 interface LogoutButtonProps {
   width?: string;
   height?: string;
   color?: string;
-  onClick?: any;
+  onClick?: (event?: MouseEvent<SVGSVGElement, globalThis.MouseEvent>) => void;
 }
 
 const LogoutButton: FunctionComponent<LogoutButtonProps> = ({ width = '32px', height = '32px', color = 'black', onClick }) => {
