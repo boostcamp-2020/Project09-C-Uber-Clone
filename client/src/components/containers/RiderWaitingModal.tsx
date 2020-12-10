@@ -73,7 +73,7 @@ function RiderWaitingForm() {
     if (callToggle === 0) {
       setCallToggle(callToggle + 1);
     } else {
-      alert('호출 취소', '호출 가능한 드라이버가 없습니다.', [
+      alert('호출 실패', '호출 가능한 드라이버가 없습니다.', [
         { text: 'Ok', onPress: () => setCallToggle(callToggle + 1) },
       ]);
     }
