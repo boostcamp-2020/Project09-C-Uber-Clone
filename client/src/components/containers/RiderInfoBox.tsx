@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 
 import { useMutation, useQuery } from '@apollo/client';
 
+import { reverseGoecoding } from '../../utils/geocoding';
 import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
 
-import { ADD_TRIP_STATUS, GET_TRIP } from '../../queries/trip';
+import { ADD_TRIP_STATUS, GET_TRIP, SET_ARRIVAL_DATA } from '../../queries/trip';
 import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
 import { useHistory } from 'react-router-dom';
 
@@ -67,12 +68,27 @@ const DropButton = styled.button`
     border-radius: 15px;
 `;
 
-function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
+function RiderInfoBox({ onBoard, currentPos }:{onBoard:boolean, currentPos:{ lat: number, lng: number }}) {
   const history = useHistory();
 
   const { trip } = useSelector(selectTripReducer);
   const [setTripStatus, { data }] = useMutation(ADD_TRIP_STATUS);
   const [notifyDriverState] = useMutation(NOTIFY_DRIVER_STATE);
+  const [setArrival, { data: arrivalData }] = useMutation(SET_ARRIVAL_DATA);
+
+  const updateArrivalData = async () => {
+    const now = new Date();
+    const address = await reverseGoecoding(currentPos);
+    setArrival({ variables: {
+      tripId: trip.id,
+      arrivalTime: now,
+      destination: {
+        address: address,
+        latitude: currentPos.lat,
+        longitude: currentPos.lng,
+      },
+    } });
+  };
 
   const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
 
@@ -84,7 +100,6 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
   const handleOnClickDrop = () => {
     const tripId = trip.id;
     setTripStatus({ variables: { tripId, newTripStatus: 'close' } });
-    history.push('/driver/tripend');
   };
 
   useEffect(() => {
@@ -92,7 +107,17 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
       notifyDriverState({ variables: { tripId: trip.id, onBoard: true } });
       history.push('/driver/driving');
     }
+    if (data && data.setTripStatus.result === 'close success') {
+      updateArrivalData();
+    }
   }, [data]);
+
+  useEffect(() => {
+    if (arrivalData) {
+      notifyDriverState({ variables: { tripId: trip.id, isDrop: true } });
+      history.push('/driver/tripend');
+    }
+  }, [arrivalData]);
 
   return (
     <>

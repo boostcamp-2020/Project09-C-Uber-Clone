@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery, useSubscription, useMutation } from '@apollo/client';
 
 import { LISTEN_MATCHED_DRIVER_STATE } from '../../queries/rider';
-import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, SET_ARRIVAL_DATA } from '../../queries/trip';
 
 import { selectTripReducer } from '../../slices/tripSlice';
-import { selectMapReducer } from '../../slices/mapSlice';
 
 import DrivingMap from '../containers/DrivingMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
@@ -22,7 +21,6 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
 
   const { data: tripData } = useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION,
     { variables: { id: trip.id } });
-
   const { loading, error, data } = useSubscription(
     LISTEN_MATCHED_DRIVER_STATE,
     { variables: { tripId: trip.id }, skip: !isRider },
@@ -78,7 +76,7 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
         car={currentPos}
         destination={destPos}
       />}
-      {isRider ? <TripInfoBox /> : <RiderInfoBox onBoard={true}/>}
+      {isRider ? <TripInfoBox /> : <RiderInfoBox onBoard={true} currentPos={currentPos}/>}
     </>
   );
 }

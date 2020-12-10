@@ -101,3 +101,15 @@ export const ADD_TRIP_STATUS = gql`
     }
   }
 `;
+
+export const SET_ARRIVAL_DATA = gql`
+  mutation setArrivals($tripId: ID!, $arrivalTime: String!, $destination: TripPlaceInput!) {
+  setArrivals(tripId: $tripId, destination: $destination, arrivalTime: $arrivalTime){
+    destination{
+      address
+      latitude
+      longitude
+    }
+  }
+}
+`;
