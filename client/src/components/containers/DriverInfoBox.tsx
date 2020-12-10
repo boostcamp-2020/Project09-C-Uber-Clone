@@ -60,15 +60,6 @@ const Buttons = styled.div`
     justify-content: center;
 `;
 
-const ChatButton = styled.button`
-    width: 54%;
-    height: 50px;
-    background-color: #56A902;
-    color: #ffffff;
-    border:none;
-    border-radius: 15px;
-`;
-
 const CancelButton = styled.button`
     width: 54%;
     height: 50px;
@@ -101,7 +92,6 @@ function DriverInfoBox() {
           </div>
         </CarInfo>
         <Buttons>
-          {/* <ChatButton>채팅하기</ChatButton> */}
           <CancelButton>호출 취소</CancelButton>
         </Buttons>
       </Modal>

@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
+import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-
-import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
 import ProfileIcon from '../presentational/ProfileIcon';
 
+import { selectTripReducer } from '../../slices/tripSlice';
+
 import { ADD_TRIP_STATUS, GET_TRIP } from '../../queries/trip';
 import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
-import { useHistory } from 'react-router-dom';
-import { Button } from 'antd-mobile';
+
 
 const Modal = styled.div`
   width: 100%;
@@ -62,14 +61,6 @@ const PickUpButton = styled.button`
     background-color: #56A902;
     color: #ffffff;
     border:none;
-    border-radius: 15px;
-`;
-
-const ChatButton = styled.button`
-    width: 45%;
-    height: 50px;
-    background-color: #ffffff;
-    border: 0.5px solid #e0e0e0;
     border-radius: 15px;
 `;
 
@@ -134,7 +125,6 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
             </div>
             <Buttons>
               <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
-              {/* <ChatButton>채팅하기</ChatButton> */}
             </Buttons>
           </>
         }
