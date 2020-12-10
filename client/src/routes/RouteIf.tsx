@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
 import { VERIFY_USER_ROLE } from '../queries/verify';
+import { GET_MY_TRIPS } from '../queries/trip';
 import { setLoginRole } from '../slices/loginSlice';
 import { setTrip } from '../slices/tripSlice';
 import SetCoursePage from '../pages/SetCoursePage';
@@ -29,10 +30,18 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
 
   useQuery(VERIFY_USER_ROLE, { onCompleted: (userData) => {
     if (loginReducer.loginRole === '') {
-      dispatch(setTrip({ id: localStorage.getItem('tripId') }));
       !!userData ? dispatch(setLoginRole(userData.verifyUser.role)) : dispatch(setLoginRole('unknown'));
     }
   } });
+
+  useQuery(GET_MY_TRIPS, {
+    variables: { statuses: ['open', 'matched', 'onBoard'] },
+    onCompleted: (data) => {
+      if (data.myTrips.length === 1) {
+        dispatch(setTrip({ id: data.myTrips[0].id }));
+      }
+    },
+  });
 
   return (
     <Route
