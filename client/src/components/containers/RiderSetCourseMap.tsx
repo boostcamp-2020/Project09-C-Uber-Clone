@@ -3,7 +3,7 @@ import { GoogleMap, Marker, DirectionsRenderer, DirectionsService, DistanceMatri
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import picker from '../../../assets/Google_Maps_pin.png';
+import { Button } from 'antd-mobile';
 
 import styled from 'styled-components';
 
@@ -19,19 +19,22 @@ import {
   setDestMarker,
 } from '../../slices/mapSlice';
 
-const Picker = styled.img`
+const Picker = styled.div`
+  width: 7px;
+  height: 7px;
   position: absolute;
-  top: 40%;
-  left: 47%;
-  width: 20px;
-  z-index: 100;
-  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  background-color: #FF1493;
+  border-radius: 50%;
 `;
 
 // Map 사이즈
 const containerStyle = {
   width: '100%',
-  height: '380px',
+  height: '500px',
 };
 
 // Marker 위치
@@ -39,6 +42,14 @@ const NEW_MARKER_POS = {
   lat: 0,
   lng: 0,
 };
+
+const SelectButton = styled.div`
+  position: absolute;
+  top: 460px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+`;
 
 enum TravelMode {
   BICYCLING = 'BICYCLING',
@@ -64,6 +75,7 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
   const [isDestVisible, setIsDestVisible] = useState(false);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [directionResponse, setDirectionResponse] = useState(null);
+  const [selectButtonDisplay, setSelectButtonDisplay] = useState('inline-block');
 
   const pickerEl = useRef(null);
 
@@ -86,6 +98,7 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('check'));
   };
+
   const getCurrentRiderPos = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -98,32 +111,10 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     }
   };
 
-  const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
-    NEW_MARKER_POS.lat = lat;
-    NEW_MARKER_POS.lng = lng;
-    const address = await reverseGoecoding({ lat, lng });
-
-    if (originMarker !== '') {
-      return checkDestMarker(address);
-    }
-    checkOriginMarker(address);
-  };
-
-  const onDragEnd = () => {
-    pickerEl.current.style.display = 'none';
-    if (!(isDestVisible && isOriginVisible)) {
-      addMarker(JSON.parse(JSON.stringify(map.center)));
-    }
-  };
-
-  const onDragStart = () => {
-    if (!(isDestVisible && isOriginVisible)) {
-      pickerEl.current.style.display = 'block';
-    }
-  };
-
   const directionCallback = useCallback((response: any, status: any) => {
     if (response !== null && status === 'OK') {
+      pickerEl.current.style.display = 'none';
+      setSelectButtonDisplay('none');
       setDirectionResponse(response);
     };
   }, []);
@@ -159,42 +150,56 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     }
   };
 
+  const selectPinPosition = async() => {
+    const lat = JSON.parse(JSON.stringify(map.center)).lat;
+    const lng = JSON.parse(JSON.stringify(map.center)).lng;
+
+    NEW_MARKER_POS.lat = lat;
+    NEW_MARKER_POS.lng = lng;
+
+    const address = await reverseGoecoding({ lat, lng });
+
+    if (originMarker !== '') {
+      return checkDestMarker(address);
+    }
+    checkOriginMarker(address);
+  };
+
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      zoom={14}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      center={center}
-      onDragEnd={onDragEnd}
-      onDragStart={onDragStart}
-    >
-      <DistanceMatrixService
-        callback={distanceMatrixCallback}
-        options={{
-          origins: [originPosition],
-          destinations: [destPosition],
-          travelMode: google.maps.TravelMode.DRIVING,
-          drivingOptions: {
-            departureTime: new Date(Date.now() + 1000),
-            trafficModel: google.maps.TrafficModel.OPTIMISTIC,
-          },
-        }}
-      />
-      <Picker src={picker} ref={pickerEl} />
-      <Marker
-        key={1}
-        position={originPosition}
-        label={'출발'}
-        visible={isOriginVisible}
-      />
-      <Marker
-        key={2}
-        position={destPosition}
-        label={'도착'}
-        visible={isDestVisible}
-      />
-      {originPlace !== '' && destPlace !== '' &&
+    <>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={14}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        center={center}
+      >
+        <DistanceMatrixService
+          callback={distanceMatrixCallback}
+          options={{
+            origins: [originPosition],
+            destinations: [destPosition],
+            travelMode: google.maps.TravelMode.DRIVING,
+            drivingOptions: {
+              departureTime: new Date(Date.now() + 1000),
+              trafficModel: google.maps.TrafficModel.OPTIMISTIC,
+            },
+          }}
+        />
+        <Picker ref={pickerEl} />
+        <Marker
+          key={1}
+          position={originPosition}
+          label={'출발'}
+          visible={isOriginVisible}
+        />
+        <Marker
+          key={2}
+          position={destPosition}
+          label={'도착'}
+          visible={isDestVisible}
+        />
+        {originPlace !== '' && destPlace !== '' &&
         <DirectionsService
           callback={directionCallback}
           options={{
@@ -203,8 +208,8 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
             travelMode: TravelMode.DRIVING,
           }}
         />
-      }
-      {directionResponse &&
+        }
+        {directionResponse &&
         <DirectionsRenderer
           options={{
             directions: directionResponse,
@@ -213,8 +218,22 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
             },
           }}
         />
-      }
-    </GoogleMap>
+        }
+      </GoogleMap>
+      <SelectButton>
+        <Button
+          type="primary"
+          inline
+          style={{
+            backgroundColor: '#FF1493',
+            display: `${selectButtonDisplay}`,
+          }}
+          onClick={selectPinPosition}
+        >
+          경로선택
+        </Button>
+      </SelectButton>
+    </>
   );
 }
 
