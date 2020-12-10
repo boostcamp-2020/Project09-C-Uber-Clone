@@ -150,14 +150,14 @@ function LoginForm() {
         placeholder='Enter your password'
         onChange={handleChangeInput(setPassword)}
       />
-      <WhiteSpace />
+      <WhiteSpace size='xl' />
       <SubmitButton
         content={'로그인'}
         onClick={handleLoginButtonClick}
         disabled={!isValidate}
       />
       <Link to='/signup/select'>
-        <SignupButton>Sign up here</SignupButton>
+        <SignupButton>회원가입하려면 클릭하세요</SignupButton>
       </Link>
     </Div>
   );
