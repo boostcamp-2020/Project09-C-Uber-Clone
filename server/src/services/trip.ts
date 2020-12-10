@@ -20,6 +20,8 @@ interface SetTripStateArgs {
   newTripStatus: string;
 }
 
+type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
+
 export default {
   get: async({ id }) => {
     try {
@@ -120,5 +122,8 @@ export default {
   },
   addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
     return await Trip.addChatting(tripId, chatting);
+  },
+  getMyTrips: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    return await Trip.getMyTrips(userId, isDriver, statuses);
   },
 };

@@ -6,6 +6,8 @@ interface PlaceInterface {
   longitude: number;
 }
 
+type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
+
 export default {
   findById: async(id) => {
     return await Trip.findById(id);
@@ -45,6 +47,13 @@ export default {
     const trip = await Trip.findOneAndUpdate({ _id: tripId }, { $push: { chattings: chatting } }, { new: true });
     if (trip?.chattings) {
       return trip?.chattings[trip?.chattings?.length - 1];
+    }
+  },
+  getMyTrips: async (userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    if (isDriver) {
+      return await Trip.find({ status: { $in: statuses }, 'driver._id': userId });
+    } else {
+      return await Trip.find({ status: { $in: statuses }, 'rider._id': userId });
     }
   },
 };
