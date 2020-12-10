@@ -14,6 +14,7 @@ type Query {
   trip(id: ID!):Trip @isAuthorized
   tripStatus(id: ID!): String! @isAuthorized
   chattings(id: ID!): [Chatting] @isAuthorized
+  myTrips(statuses: [String]): [Trip] @isAuthorized
 }
 
 input TripPlaceInput {

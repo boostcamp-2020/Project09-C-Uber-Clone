@@ -113,3 +113,30 @@ export const SET_ARRIVAL_DATA = gql`
   }
 }
 `;
+export const GET_MY_TRIPS = gql`
+  query myTrips($statuses: [String]) {
+    myTrips(statuses: $statuses) {
+      id
+      rider{
+        id
+        name
+        email
+      }
+      origin{
+        address
+        latitude
+        longitude
+      }
+      destination{
+        address
+        latitude
+        longitude
+      }
+      startTime
+      arrivalTime
+      status
+      estimatedTime
+      estimatedDistance
+    }
+  }
+`;

@@ -18,7 +18,7 @@ const CourseSubmitModal = ({ time, distance, onClick, disabled } : {time: any, d
       <Button
         onClick={showModal}
         disabled={disabled}
-        style={{ backgroundColor: '#56A902', color: '#FFFFFF' }}
+        style={{ backgroundColor: '#56A902', color: '#FFFFFF', marginTop: '15px' }}
       >경로 선택 완료</Button>
       <WhiteSpace />
       <Modal

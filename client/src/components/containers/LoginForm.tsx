@@ -22,6 +22,7 @@ const Div = styled.div`
 `;
 
 const Header = styled.div`
+  font-family: 'Ubuntu', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,7 +122,7 @@ function LoginForm() {
   return (
     <Div>
       {riderError && <p>try again</p>}
-      <Header>UBER</Header>
+      <Header>WOOBER</Header>
       <CheckContent>
         <Checkbox
           onChange={checkToggle}
@@ -150,14 +151,14 @@ function LoginForm() {
         placeholder='Enter your password'
         onChange={handleChangeInput(setPassword)}
       />
-      <WhiteSpace />
+      <WhiteSpace size='xl' />
       <SubmitButton
         content={'로그인'}
         onClick={handleLoginButtonClick}
         disabled={!isValidate}
       />
       <Link to='/signup/select'>
-        <SignupButton>Sign up here</SignupButton>
+        <SignupButton>회원가입하려면 클릭하세요</SignupButton>
       </Link>
     </Div>
   );

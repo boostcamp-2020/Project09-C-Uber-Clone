@@ -20,6 +20,8 @@ interface SetTripStateArgs {
   newTripStatus: string;
 }
 
+type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
+
 export default {
   get: async({ id }) => {
     try {
@@ -123,5 +125,8 @@ export default {
   },
   setArrivals: async (tripId: string, arrivalTime: Date, destination: {address: string, latitude: number, longitude: number}) => {
     return await Trip.setArrivals(tripId, arrivalTime, destination);
+  },
+  getMyTrips: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    return await Trip.getMyTrips(userId, isDriver, statuses);
   },
 };

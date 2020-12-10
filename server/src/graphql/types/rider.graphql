@@ -24,7 +24,7 @@ type Mutation {
     id:ID!
   ): String @isAuthorized
 
-  notifyRiderState(tripId: ID!, latitude: Float!, longitude: Float!): Boolean @isAuthorized
+  notifyRiderState(tripId: ID!, latitude: Float, longitude: Float, isCancel: Boolean): Boolean @isAuthorized
 }
 
 type Subscription {
@@ -48,8 +48,9 @@ input PositionInput {
 
 type RiderState {
   tripId: ID!
-  latitude: Float!
-  longitude: Float!
+  latitude: Float
+  longitude: Float
+  isCancel: Boolean
 }
 
 type DriverResponse{

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Modal } from 'antd-mobile';
+import styled from 'styled-components';
 import { useSubscription, useLazyQuery, useMutation } from '@apollo/client';
 
 import { GET_TRIP_STATUS } from '../queries/trip';
@@ -11,6 +13,13 @@ import { OPEN } from '../constants/tripStatus';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
+import LogoutButton from '../components/presentational/LogoutButton';
+
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
+`;
 
 const DRIVER_POSITION_UPDATE_TIME = 1000;
 
@@ -63,6 +72,21 @@ function DriverWaitingPage() {
     }
   };
 
+  const logoutButtonHandler = () => {
+    Modal.alert(
+      '로그아웃',
+      '',
+      [
+        { text: 'Cancel' },
+        { text: 'Ok', onPress: logout },
+      ]);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
+
   useEffect(() => {
     if (driverListenData && driverStatus !== DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([...riderCalls, driverListenData.driverListen.trip]);
@@ -91,7 +115,6 @@ function DriverWaitingPage() {
     }
     if (driverStatus === DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([]);
-      localStorage.setItem('tripId', trip.id);
       history.push('/driver/pickup');
     }
   }, [driverStatus]);
@@ -112,6 +135,15 @@ function DriverWaitingPage() {
         setDriverStatus={setDriverStatus}
       />}
       <DriverCurrentPositionMap driverPos={driverPos}/>
+      <LogoutPosition>
+        <LogoutButton
+          width='20px'
+          height='20px'
+          color='rgba(0, 0, 0, 0.54)'
+          background='white'
+          onClick={logoutButtonHandler}
+        />
+      </LogoutPosition>
     </>
   );
 }

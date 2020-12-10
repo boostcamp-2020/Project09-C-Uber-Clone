@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 
-import { WhiteSpace } from 'antd-mobile';
+import { WhiteSpace, Modal } from 'antd-mobile';
 import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import CourseSubmitModal from '../presentational/CourseSubmitModal';
+import LogoutButton from '../presentational/LogoutButton';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -26,40 +27,21 @@ import {
   setTrip,
 } from '../../slices/tripSlice';
 
-
-const Header = styled.div`
-  height: 130px;
-  padding:10px;
-  background: #56A902;
-`;
-
-const PageTitle = styled.div`
-  left: 30px;
-  top: 44px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 48px;
-  line-height: 56px;
-  color: #F8F8FF;
-`;
-
-const FormTitle = styled.div`
-  padding:8px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 27px;
-  letter-spacing: -0.02em;
-  color: #000000;
-`;
-
 const HereButton = styled.button`
-  background-color: transparent;
-  color: #56A902;
+  background-color: #56A902;
+  color: #FFF;
   border: none;
-  margin-top: 5px;
-  margin-left: 10px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  margin: 5px 3.5% 0 3.5%;
   cursor: pointer;
+`;
+
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  z-index: 100;
 `;
 
 interface TripPlace {
@@ -88,6 +70,7 @@ function SetCourseForm() {
     destPlace,
     originPosition,
     destPosition,
+    mapCenter,
   }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
@@ -197,6 +180,21 @@ function SetCourseForm() {
     setDestInput(event.target.value);
   };
 
+  const logoutButtonHandler = () => {
+    Modal.alert(
+      '로그아웃',
+      '',
+      [
+        { text: 'Cancel' },
+        { text: 'Ok', onPress: logout },
+      ]);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
+
   useEffect(() => {
     setOriginInput(originPlace);
     setOriginInputError(false);
@@ -222,14 +220,22 @@ function SetCourseForm() {
 
   return (
     <>
-      <Header>
-        <PageTitle>라이더 <br/> 경로설정</PageTitle>
-      </Header>
+      <LogoutPosition>
+        <LogoutButton
+          width='20px'
+          height='20px'
+          color='rgba(0, 0, 0, 0.54)'
+          background='white'
+          onClick={logoutButtonHandler}
+        />
+      </LogoutPosition>
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}
       />
-      <FormTitle>경로 선택</FormTitle>
+      <WhiteSpace />
+      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
+      <WhiteSpace />
       <PlaceSearchBox
         placeholder='출발지'
         onLoad={onOrignAutocompleteLoad}
@@ -239,7 +245,6 @@ function SetCourseForm() {
         onChange={handleOnChangeOrigin}
         error={originInputError}
       />
-      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
       <PlaceSearchBox
         placeholder='도착지'
