@@ -22,6 +22,7 @@ const Div = styled.div`
 `;
 
 const Header = styled.div`
+  font-family: 'Ubuntu', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,7 +122,7 @@ function LoginForm() {
   return (
     <Div>
       {riderError && <p>try again</p>}
-      <Header>UBER</Header>
+      <Header>WOOBER</Header>
       <CheckContent>
         <Checkbox
           onChange={checkToggle}
