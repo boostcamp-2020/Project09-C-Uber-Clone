@@ -32,8 +32,7 @@ const HereButton = styled.button`
   border: none;
   padding: 4px 12px;
   border-radius: 10px;
-  margin-top: 5px;
-  margin-left: 10px;
+  margin: 5px 3.5% 0 3.5%;
   cursor: pointer;
 `;
 

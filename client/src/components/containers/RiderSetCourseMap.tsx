@@ -34,7 +34,7 @@ const Picker = styled.div`
 // Map 사이즈
 const containerStyle = {
   width: '100%',
-  height: '500px',
+  height: '520px',
 };
 
 // Marker 위치
@@ -45,7 +45,7 @@ const NEW_MARKER_POS = {
 
 const SelectButton = styled.div`
   position: absolute;
-  top: 460px;
+  top: 490px;
   left: 50%;
   transform:translate(-50%, -50%);
   text-align: center;
