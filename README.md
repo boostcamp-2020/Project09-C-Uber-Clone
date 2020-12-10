@@ -4,6 +4,9 @@
 
 # Uber 서비스 클론
 ### 📚 [WIKI](https://github.com/boostcamp-2020/Project09-C-Uber-Clone/wiki)
+### 📝 [Issue List](https://docs.google.com/spreadsheets/d/1kpEvOOr6cCK0YKUocBkjjaVOwnI4LHFpKrRn-rYKC90/edit#gid=0)
+### 📌 [Road Map](https://docs.google.com/spreadsheets/d/1kpEvOOr6cCK0YKUocBkjjaVOwnI4LHFpKrRn-rYKC90/edit#gid=782776278)
+
 </div>
 
 
