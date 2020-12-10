@@ -12,9 +12,9 @@ import styled from 'styled-components';
 import { GET_TRIP } from '../queries/trip';
 
 const Page = styled.div`
-  position: absolute;
-  left: 30px;
-  top: 50px;
+  /* position: absolute; */
+  width: 100vw;
+  height: 100vh;
 `;
 
 const Paper = styled.div`
@@ -23,12 +23,10 @@ const Paper = styled.div`
   align-items: center;
   justify-content: center;
   width:90%;
-  height: 692px;
+  margin: 5% auto;
+  height: 95%;
   box-shadow: 5px 1px 10px 2px grey;
-  padding: 10%;
-  padding-top: 17%;
-  padding-bottom: 17%;
-  bottom: 30%;
+  padding: 17% 10%;
 `;
 
 const Button = styled.button`
