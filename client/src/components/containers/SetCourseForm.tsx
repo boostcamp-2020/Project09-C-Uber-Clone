@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 
-import { WhiteSpace } from 'antd-mobile';
+import { WhiteSpace, Modal } from 'antd-mobile';
 import styled from 'styled-components';
 
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import CourseSubmitModal from '../presentational/CourseSubmitModal';
+import LogoutButton from '../presentational/LogoutButton';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -34,6 +35,13 @@ const HereButton = styled.button`
   border-radius: 10px;
   margin: 5px 3.5% 0 3.5%;
   cursor: pointer;
+`;
+
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  z-index: 100;
 `;
 
 interface TripPlace {
@@ -172,6 +180,21 @@ function SetCourseForm() {
     setDestInput(event.target.value);
   };
 
+  const logoutButtonHandler = () => {
+    Modal.alert(
+      '로그아웃',
+      '',
+      [
+        { text: 'Cancel' },
+        { text: 'Ok', onPress: logout },
+      ]);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
+
   useEffect(() => {
     setOriginInput(originPlace);
     setOriginInputError(false);
@@ -197,6 +220,15 @@ function SetCourseForm() {
 
   return (
     <>
+      <LogoutPosition>
+        <LogoutButton
+          width='20px'
+          height='20px'
+          color='rgba(0, 0, 0, 0.54)'
+          background='white'
+          onClick={logoutButtonHandler}
+        />
+      </LogoutPosition>
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}

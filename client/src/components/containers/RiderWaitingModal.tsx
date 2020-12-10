@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
+import { Modal } from 'antd-mobile';
 
 import CarLoadingImage from '../presentational/CarLoadingImage';
 import PickUpCancelButton from '../presentational/PickUpCancelButton';
 
 import { selectTripReducer, setTrip } from '../../slices/tripSlice';
 import { RE_NOTIFY_RIDER_CALL } from '../../queries/callRequest';
-import { CANCEL_TRIP, GET_TRIP_BEFORE_MATCHING } from '../../queries/trip';
-
-import { selectMapReducer } from '../../slices/mapSlice';
+import { CANCEL_TRIP } from '../../queries/trip';
 
 const Overlay = styled.div`
   position: fixed;
@@ -47,36 +46,22 @@ interface TripPlace {
   longitude: number
 }
 
-interface NotifyCallVariables {
-  origin: TripPlace
-  destination: TripPlace
-  startTime: string
-  estimatedTime: string
-  estimatedDistance: string
-}
-
 function RiderWaitingForm() {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const [callToggle, setCallToggle] = useState(0);
-
+  const alert = Modal.alert;
   const { trip } = useSelector(selectTripReducer);
 
-  const { data: tripData } = useQuery(GET_TRIP_BEFORE_MATCHING, { variables: { id: trip.id } });
   const [notifyCall] = useMutation(RE_NOTIFY_RIDER_CALL);
   const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
-
-  useEffect(() => {
-    console.log(tripData);
-  }, [tripData]);
 
   useEffect(() => {
     if (callToggle === 1) {
       notifyCall({ variables: { id: trip.id } });
     } else if (callToggle > 1) {
-      const tripId = trip.id;
-      cancelCall({ variables: { id: tripId } });
+      cancelCall({ variables: { id: trip.id } });
     }
     const timerId = setTimeout(retryNotify, 10000);
     return () => {
@@ -87,10 +72,10 @@ function RiderWaitingForm() {
   const retryNotify = () => {
     if (callToggle === 0) {
       setCallToggle(callToggle + 1);
-      window.alert('범위를 넓혀 재시도합니다.');
     } else {
-      setCallToggle(callToggle + 1);
-      window.alert('시간이 초과되어 호출을 취소합니다.');
+      alert('호출 실패', '호출 가능한 드라이버가 없습니다.', [
+        { text: 'Ok', onPress: () => setCallToggle(callToggle + 1) },
+      ]);
     }
   };
 
@@ -112,7 +97,7 @@ function RiderWaitingForm() {
         <CarLoadingImage />
       </Overlay>
       <PickUpCancelButton content={'호출 취소'} onClick={handleClickCancel}/>
-      <Message >Searching for a driver..</Message>
+      <Message >{!!callToggle ? '범위를 넓혀 다시 탐색중...' : '주변 드라이버 탐색중...'}</Message>
     </>
   );
 }

@@ -39,6 +39,14 @@ function DriverCurrentPositionMap({ driverPos }: any) {
         onLoad={onLoad}
         onUnmount={onUnmount}
         center={driverPos}
+        options={{
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: false,
+        }}
       >
         <Circle
           center={driverPos}
