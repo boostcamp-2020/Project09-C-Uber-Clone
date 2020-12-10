@@ -168,6 +168,14 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
       center={center}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
+      options={{
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: true,
+        rotateControl: true,
+        fullscreenControl: false,
+      }}
     >
       <DistanceMatrixService
         callback={distanceMatrixCallback}
