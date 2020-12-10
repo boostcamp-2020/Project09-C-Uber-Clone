@@ -8,6 +8,7 @@ import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip
 
 import PickUpMap from '../containers/PickUpMap';
 import RiderInfoBox from '../containers/RiderInfoBox';
+import LoadingView from '../presentational/LoadingView';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { selectTripReducer } from '../../slices/tripSlice';
 
@@ -79,7 +80,7 @@ export default function DriverPickUpForm() {
     return <p>error</p>;
   }
   if (loading) {
-    return <p>라이더 위치정보를 불러오는 중입니다</p>;
+    return <LoadingView message={'라이더의 위치 정보를 기다리는 중입니다.'}/>;
   }
 
   return (
