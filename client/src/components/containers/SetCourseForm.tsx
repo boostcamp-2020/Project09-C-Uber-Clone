@@ -26,33 +26,6 @@ import {
   setTrip,
 } from '../../slices/tripSlice';
 
-
-const Header = styled.div`
-  height: 130px;
-  padding:10px;
-  background: #56A902;
-`;
-
-const PageTitle = styled.div`
-  left: 30px;
-  top: 44px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 48px;
-  line-height: 56px;
-  color: #F8F8FF;
-`;
-
-const FormTitle = styled.div`
-  padding:8px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 27px;
-  letter-spacing: -0.02em;
-  color: #000000;
-`;
-
 const HereButton = styled.button`
   background-color: transparent;
   color: #56A902;
@@ -88,6 +61,7 @@ function SetCourseForm() {
     destPlace,
     originPosition,
     destPosition,
+    mapCenter,
   }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
@@ -222,14 +196,10 @@ function SetCourseForm() {
 
   return (
     <>
-      <Header>
-        <PageTitle>라이더 <br/> 경로설정</PageTitle>
-      </Header>
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}
       />
-      <FormTitle>경로 선택</FormTitle>
       <PlaceSearchBox
         placeholder='출발지'
         onLoad={onOrignAutocompleteLoad}
