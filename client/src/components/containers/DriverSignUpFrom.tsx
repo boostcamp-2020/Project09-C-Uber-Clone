@@ -7,7 +7,6 @@ import { WhiteSpace } from 'antd-mobile';
 
 import { useMutation } from '@apollo/client';
 
-import ProfileImageInput from '../presentational/ProfileImageInput';
 import Input from '../presentational/Input';
 import DiscriptionInput from '../presentational/DescriptionInput';
 import SubmitButton from '../presentational/SubmitButton';
@@ -57,7 +56,6 @@ function DriverSignUpFrom() {
 
   return (
     <Form>
-      <ProfileImageInput selectable={true} />
       <DiscriptionInput placeholder='한마디' />
       <WhiteSpace />
       <Input

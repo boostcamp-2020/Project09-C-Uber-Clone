@@ -52,6 +52,7 @@ export default {
       const trip = await Trip.openTrip({ ...args, riderEmail });
       let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, callRadius: 0.03 });
       driverIds = driverIds.map(v => v._id.toString());
+
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
       return trip?._id;
     },

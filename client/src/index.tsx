@@ -40,7 +40,7 @@ const httpLink = createHttpLink({
 const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_WEBSOCKET_URI,
   options: {
-    reconnect: true,
+    reconnect: false,
     connectionParams: () => {
       return { Authorization: getToken() };
     },
