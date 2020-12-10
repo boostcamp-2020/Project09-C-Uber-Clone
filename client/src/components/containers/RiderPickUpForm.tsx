@@ -8,6 +8,7 @@ import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip
 import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
 import PickUpMap from '../containers/PickUpMap';
 import DriverInfoBox from '../containers/DriverInfoBox';
+import LoadingView from '../presentational/LoadingView';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { selectTripReducer } from '../../slices/tripSlice';
 import { useHistory } from 'react-router-dom';
@@ -88,7 +89,7 @@ export default function RiderPickUpForm() {
     return <p>error</p>;
   }
   if (loading) {
-    return <p>드라이버 위치정보를 불러오는 중입니다</p>;
+    return <LoadingView message={'드라이버의 위치정보를 기다리는 중입니다.'}/>;
   }
 
   return (

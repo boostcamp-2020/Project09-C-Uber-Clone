@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 import styled from 'styled-components';
 
@@ -19,26 +20,21 @@ const Modal = styled.div`
 const TripInfo = styled.div`
   height: 100%;
   display: flex;
+  justify-content: flex-start;
+`;
+
+const Trip = styled.div`
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
 `;
 
 const Time = styled.div`
-  width:47%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  > div {
-    text-align: right;
-  }
+  color: gray;
 `;
 
-const Route = styled.div`
-  width: 1px; 
-  background-color: #56A902;
-`;
-
-const Place = styled.div`
-  width:47%;
+const PlaceAndTime = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -47,7 +43,14 @@ const Place = styled.div`
   }
 `;
 
-function TripInfoBox() {
+const Route = styled.div`
+  width: 3px; 
+  background-color: #56A902;
+  margin-right: 5px;
+`;
+
+
+function TripInfoBox({ time }:{time:{startTime:number, arrivalTime?:number}}) {
   const { trip }:any = useSelector(selectTripReducer);
   const { data } = useQuery(GET_TRIP, { variables: { id: trip.id } });
 
@@ -55,15 +58,19 @@ function TripInfoBox() {
     <>
       <Modal>
         <TripInfo>
-          <Time>
-            <div>출발 시각</div>
-            <div>도착 예정 시간</div>
-          </Time>
           <Route />
-          <Place>
-            <div>{data?.trip.origin.address}</div>
-            <div>{data?.trip.destination.address}</div>
-          </Place>
+          <Trip>
+            <PlaceAndTime>
+              <h4>출발지</h4>
+              <div>{data?.trip.destination.address}</div>
+              <Time>{moment(time.startTime).format('YYYY MM DD , h:mm:ss a')}</Time>
+            </PlaceAndTime>
+            <PlaceAndTime>
+              <h4>도착지</h4>
+              <div>{data?.trip.origin.address}</div>
+              <Time>{ moment(time.arrivalTime).format('YYYY MM DD , h:mm:ss a')}</Time>
+            </PlaceAndTime>
+          </Trip>
         </TripInfo>
       </Modal>
     </>
