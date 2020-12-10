@@ -1,23 +1,9 @@
 import React, { useCallback, useState, memo } from 'react';
 
-import { GoogleMap, OverlayView, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import { OverlayView, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 
 import CarIcon from '../presentational/CarIcon';
 import PinIcon from '../presentational/PinIcon';
-
-
-enum TravelMode {
-  BICYCLING = 'BICYCLING',
-  DRIVING = 'DRIVING',
-  TRANSIT = 'TRANSIT',
-  TWO_WHEELER = 'TWO_WHEELER',
-  WALKING = 'WALKING',
-}
-
-const containerStyle = {
-  width: '100%',
-  height: '75vh',
-};
 
 function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destination: {lat:number, lng:number}}) {
   const [directionResponse, setDirectionResponse] = useState(null);
@@ -29,11 +15,7 @@ function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destin
   }, [car]);
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      zoom={16}
-      center={car}
-    >
+    <>
       <OverlayView
         position={car}
         mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
@@ -51,7 +33,7 @@ function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destin
         options={{
           destination: destination,
           origin: car,
-          travelMode: TravelMode.DRIVING,
+          travelMode: google.maps.TravelMode.DRIVING,
         }}
         callback={directionCallback}
       />
@@ -68,7 +50,7 @@ function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destin
           }}
         />
       }
-    </GoogleMap>
+    </>
   );
 }
 

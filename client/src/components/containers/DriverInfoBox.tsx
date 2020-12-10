@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
 
-import styled from 'styled-components';
 import { Modal } from 'antd-mobile';
+
+import styled from 'styled-components';
+import ProfileIcon from '../presentational/ProfileIcon';
 
 import { selectTripReducer, setTrip } from '../../slices/tripSlice';
 
@@ -15,47 +17,55 @@ const InfoBox = styled.div`
   width: 100%;
   height: 25vh;
   margin: auto;
-  padding: 20px;
+  padding: 12px;
   background-color: white;
-`;
-
-const DriverInfo = styled.div`
-  margin: 10px 0 24px 0;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 `;
 
+const Info = styled.div`
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
 const DriverName = styled.div`
+  margin-left:5px;
   text-align: left;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
 const CarInfo = styled.div`
-  padding: 8px;
-  background-color: #e0e0e0;
-  border-radius: 12px;
-  font-size: 15px;
-  text-align: center;
-  color: gray;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > div {
+    width: 50%;
+    font-size: 14px;
+    > span {
+      width: 60%;
+      display: inline-block;
+      padding: 8px;
+      background-color: #e0e0e0;
+      border-radius: 12px;
+      text-align: center;
+      color: gray;
+    }
+  }
 `;
 
 const Buttons = styled.div`
     display: flex;
-    justify-content: space-between;
-`;
-
-const ChatButton = styled.button`
-    width: 54%;
-    height: 50px;
-    background-color: #56A902;
-    color: #ffffff;
-    border:none;
-    border-radius: 15px;
+    justify-content: center;
 `;
 
 const CancelButton = styled.button`
-    width: 45%;
+    width: 54%;
     height: 50px;
     background-color: #ffffff;
     border: 0.5px solid #e0e0e0;
@@ -69,9 +79,10 @@ function DriverInfoBox() {
 
   const { trip } = useSelector(selectTripReducer);
   const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
-  const [driver, setDriver] = useState({ name: '', carType: '', plateNumber: '' });
   const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
   const [notifyRiderState] = useMutation(NOTIFY_RIDER_STATE);
+
+  const driver = useMemo(() => tripData ? { name: tripData.trip.driver.name, carType: tripData.trip.driver.carType, plateNumber: tripData.trip.driver.plateNumber } : { name: '', carType: '', plateNumber: '' }, [tripData]);
 
   const handleClickCancel = () => {
     alert('호출 취소', '드라이버 호출을 취소하시겠습니까?', [
@@ -90,30 +101,27 @@ function DriverInfoBox() {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (tripData) {
-      setDriver(tripData.trip.driver);
-    }
-  }, [tripData]);
 
   return (
-    <>
-      <InfoBox>
-        <DriverInfo>
-          <DriverName>
-            {driver.name}
-          </DriverName>
-          <CarInfo>
-            <div>{driver.plateNumber}</div>
-            <div>{driver.carType}</div>
-          </CarInfo>
-        </DriverInfo>
-        <Buttons>
-          <ChatButton>채팅하기</ChatButton>
-          <CancelButton onClick={handleClickCancel}>취소하기</CancelButton>
-        </Buttons>
-      </InfoBox>
-    </>
+    <InfoBox>
+      <Info>
+        <ProfileIcon />
+        <DriverName>
+          {driver.name}
+        </DriverName>
+      </Info>
+      <CarInfo>
+        <div>
+          차량 번호 <span>{driver.plateNumber}</span>
+        </div>
+        <div>
+          차량 종류 <span>{driver.carType}</span>
+        </div>
+      </CarInfo>
+      <Buttons>
+        <CancelButton onClick={handleClickCancel}>호출 취소</CancelButton>
+      </Buttons>
+    </InfoBox>
   );
 }
 

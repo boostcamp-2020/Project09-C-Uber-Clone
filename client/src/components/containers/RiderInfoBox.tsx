@@ -1,44 +1,58 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
+import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
+
+import styled from 'styled-components';
+import ProfileIcon from '../presentational/ProfileIcon';
 
 import { selectTripReducer } from '../../slices/tripSlice';
 
-import styled from 'styled-components';
-
 import { ADD_TRIP_STATUS, GET_TRIP } from '../../queries/trip';
 import { NOTIFY_DRIVER_STATE } from '../../queries/driver';
-import { useHistory } from 'react-router-dom';
+
 
 const Modal = styled.div`
   width: 100%;
   height: 25vh;
   margin: auto;
-  padding: 20px;
+  padding: 12px;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const Info = styled.div`
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 const RiderName = styled.div`
+  margin-left: 5px;
   text-align: left;
-  font-size: 18px;
+  font-size:20px;
   font-weight: bold;
 `;
 
 const PlaceInfo = styled.div`
-  margin: 24px 0;
-  padding: 8px 0;
+  margin-top:1px; 
+  margin-bottom: 8px;
+  padding: 8px;
   width: 100%;
   background-color: #e0e0e0;
   border-radius: 12px;
   font-size: 15px;
   text-align: center;
   color: gray;
+  word-wrap: break-word;
 `;
 
 const Buttons = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 `;
 
 const PickUpButton = styled.button`
@@ -50,16 +64,8 @@ const PickUpButton = styled.button`
     border-radius: 15px;
 `;
 
-const ChatButton = styled.button`
-    width: 45%;
-    height: 50px;
-    background-color: #ffffff;
-    border: 0.5px solid #e0e0e0;
-    border-radius: 15px;
-`;
-
 const DropButton = styled.button`
-    width: 100%;
+    width: 54%;
     height: 50px;
     background-color: #56A902;
     color: #ffffff;
@@ -97,15 +103,30 @@ function RiderInfoBox({ onBoard }:{onBoard:boolean}) {
   return (
     <>
       <Modal>
-        <RiderName>{tripData?.trip.rider.name}</RiderName>
-        <PlaceInfo>{onBoard ? tripData?.trip.destination.address : tripData?.trip.origin.address}</PlaceInfo>
+        <Info>
+          <ProfileIcon />
+          <RiderName>{tripData?.trip.rider.name}</RiderName>
+        </Info>
         {onBoard ?
-          <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
+          <>
+            <div>
+              <div>목적지</div>
+              <PlaceInfo>{ tripData?.trip.destination.address}</PlaceInfo>
+            </div>
+            <Buttons>
+              <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
+            </Buttons>
+          </>
           :
-          <Buttons>
-            <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
-            <ChatButton>채팅하기</ChatButton>
-          </Buttons>
+          <>
+            <div>
+              <div>픽업 위치</div>
+              <PlaceInfo>{tripData?.trip.origin.address}</PlaceInfo>
+            </div>
+            <Buttons>
+              <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
+            </Buttons>
+          </>
         }
 
       </Modal>
