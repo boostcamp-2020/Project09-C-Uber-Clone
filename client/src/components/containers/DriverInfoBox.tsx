@@ -1,15 +1,19 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useQuery } from '@apollo/client';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMutation, useQuery } from '@apollo/client';
+
+import { Modal } from 'antd-mobile';
 
 import styled from 'styled-components';
 import ProfileIcon from '../presentational/ProfileIcon';
 
-import { selectTripReducer } from '../../slices/tripSlice';
+import { selectTripReducer, setTrip } from '../../slices/tripSlice';
 
-import { GET_TRIP } from '../../queries/trip';
+import { GET_TRIP, CANCEL_TRIP } from '../../queries/trip';
+import { NOTIFY_RIDER_STATE } from '../../queries/rider';
+import { useHistory } from 'react-router-dom';
 
-const Modal = styled.div`
+const InfoBox = styled.div`
   width: 100%;
   height: 25vh;
   margin: auto;
@@ -69,33 +73,55 @@ const CancelButton = styled.button`
 `;
 
 function DriverInfoBox() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const alert = Modal.alert;
+
   const { trip } = useSelector(selectTripReducer);
   const { data: tripData } = useQuery(GET_TRIP, { variables: { id: trip.id } });
+  const [cancelCall, { data }] = useMutation(CANCEL_TRIP);
+  const [notifyRiderState] = useMutation(NOTIFY_RIDER_STATE);
 
   const driver = useMemo(() => tripData ? { name: tripData.trip.driver.name, carType: tripData.trip.driver.carType, plateNumber: tripData.trip.driver.plateNumber } : { name: '', carType: '', plateNumber: '' }, [tripData]);
 
+  const handleClickCancel = () => {
+    alert('호출 취소', '드라이버 호출을 취소하시겠습니까?', [
+      { text: 'Cancel' },
+      { text: 'OK', onPress: () => cancelCall({ variables: { id: trip.id } }) },
+    ]);
+  };
+
+  useEffect(() => {
+    if (data && data.cancelTrip.result === 'canceled') {
+      dispatch(setTrip({ id: '' }));
+      notifyRiderState({ variables: { tripId: trip.id, isCancel: true } });
+      alert('호출 취소', '취소 되었습니다.', [
+        { text: 'OK', onPress: () => history.push('/rider/setcourse') },
+      ]);
+    }
+  }, [data]);
+
+
   return (
-    <>
-      <Modal>
-        <Info>
-          <ProfileIcon />
-          <DriverName>
-            {driver.name}
-          </DriverName>
-        </Info>
-        <CarInfo>
-          <div>
+    <InfoBox>
+      <Info>
+        <ProfileIcon />
+        <DriverName>
+          {driver.name}
+        </DriverName>
+      </Info>
+      <CarInfo>
+        <div>
           차량 번호 <span>{driver.plateNumber}</span>
-          </div>
-          <div>
+        </div>
+        <div>
           차량 종류 <span>{driver.carType}</span>
-          </div>
-        </CarInfo>
-        <Buttons>
-          <CancelButton>호출 취소</CancelButton>
-        </Buttons>
-      </Modal>
-    </>
+        </div>
+      </CarInfo>
+      <Buttons>
+        <CancelButton onClick={handleClickCancel}>호출 취소</CancelButton>
+      </Buttons>
+    </InfoBox>
   );
 }
 

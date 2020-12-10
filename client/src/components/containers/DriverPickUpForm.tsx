@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
 
+import { Modal } from 'antd-mobile';
+
 import { setOriginPosition, setDestPosition } from '../../slices/mapSlice';
 import { LISTEN_MATCHED_RIDER_STATE, NOTIFY_DRIVER_STATE } from '../../queries/driver';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
@@ -11,6 +13,7 @@ import RiderInfoBox from '../containers/RiderInfoBox';
 import LoadingView from '../presentational/LoadingView';
 import { selectMapReducer } from '../../slices/mapSlice';
 import { selectTripReducer } from '../../slices/tripSlice';
+import { useHistory } from 'react-router-dom';
 
 const INIT_POS = {
   lat: 37.8035,
@@ -19,7 +22,10 @@ const INIT_POS = {
 
 export default function DriverPickUpForm() {
   const dispatch = useDispatch();
+  const history = useHistory();
+  const alert = Modal.alert;
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
@@ -75,6 +81,15 @@ export default function DriverPickUpForm() {
   useEffect(() => {
     notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
   }, [driverPos]);
+
+  useEffect(() => {
+    if (data && data.matchedRiderState.latitude) {
+      setRiderPos({ lat: data.matchedRiderState.latitude, lng: data.matchedRiderState.longitude });
+    }
+    if (data && data.matchedRiderState.isCancel) {
+      alert('호출취소', '라이더가 호출을 취소하였습니다.', [{ text: 'OK', onPress: () => history.push('/driver/main') }]);
+    }
+  }, [data]);
 
   if (error) {
     return <p>error</p>;
