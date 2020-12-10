@@ -38,7 +38,6 @@ function RiderPickupPositionMap() {
       const { response, driverId, tripId } = data.driverResponded;
       if (response === MATCHING_CONFIRM) {
         dispatch(setTrip({ id: tripId }));
-        localStorage.setItem('tripId', tripId);
         history.push('/rider/pickup');
       }
     }
