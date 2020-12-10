@@ -49,6 +49,9 @@ export default {
       return trip?.chattings[trip?.chattings?.length - 1];
     }
   },
+  setArrivals: async (tripId: string, realArrivalTime: Date, realDestination: {address: string, latitude:number, longitude: number}) => {
+    return await Trip.findOneAndUpdate({ _id: tripId }, { arrivalTime: realArrivalTime, destination: realDestination }, { new: true });
+  },
   getMyTrips: async (userId: string | object, isDriver: boolean, statuses?: Status[]) => {
     if (isDriver) {
       return await Trip.find({ status: { $in: statuses }, 'driver._id': userId });

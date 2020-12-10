@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery, useSubscription, useMutation } from '@apollo/client';
 
 import { GoogleMap, DistanceMatrixService } from '@react-google-maps/api';
 
 import { LISTEN_MATCHED_DRIVER_STATE } from '../../queries/rider';
-import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION, SET_ARRIVAL_DATA } from '../../queries/trip';
 
 import { selectTripReducer } from '../../slices/tripSlice';
 
@@ -116,7 +116,7 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
         />
       </GoogleMap>
       }
-      {time.arrivalTime ? isRider ? <TripInfoBox time={time} /> : <RiderInfoBox onBoard={true}/> : <></>}
+      {time.arrivalTime ? isRider ? <TripInfoBox time={time} /> : <RiderInfoBox onBoard={true} currentPos={currentPos}/> : <></>}
     </>
   );
 }

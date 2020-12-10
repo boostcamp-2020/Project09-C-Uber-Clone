@@ -7,6 +7,7 @@ type Mutation {
   cancelTrip(id: ID!): CancelResult @isAuthorized
   setTripStatus(tripId: ID!, newTripStatus: String!): Result @isAuthorized
   addChatting(tripId: ID!, chattingInput: ChattingInput!): Chatting @isAuthorized
+  setArrivals(tripId: ID!, arrivalTime: String!, destination: TripPlaceInput): Trip @isAuthorized
 }
 
 type Query {
