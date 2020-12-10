@@ -27,9 +27,11 @@ import {
 } from '../../slices/tripSlice';
 
 const HereButton = styled.button`
-  background-color: transparent;
-  color: #56A902;
+  background-color: #56A902;
+  color: #FFF;
   border: none;
+  padding: 4px 12px;
+  border-radius: 10px;
   margin-top: 5px;
   margin-left: 10px;
   cursor: pointer;
@@ -200,6 +202,9 @@ function SetCourseForm() {
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}
       />
+      <WhiteSpace />
+      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
+      <WhiteSpace />
       <PlaceSearchBox
         placeholder='출발지'
         onLoad={onOrignAutocompleteLoad}
@@ -209,7 +214,6 @@ function SetCourseForm() {
         onChange={handleOnChangeOrigin}
         error={originInputError}
       />
-      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
       <PlaceSearchBox
         placeholder='도착지'
