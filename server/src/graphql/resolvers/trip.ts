@@ -40,6 +40,12 @@ interface ChattingInterface {
 type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
 
 export default {
+  MatchedRider: {
+    id: ({ _id }) => _id,
+  },
+  MatchedDriver: {
+    id: ({ _id }) => _id,
+  },
   Query: {
     async trip(_:any, args:ID) {
       return await Trip.get(args);
