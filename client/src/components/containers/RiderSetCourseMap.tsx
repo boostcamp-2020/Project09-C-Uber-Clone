@@ -230,15 +230,17 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
       </GoogleMap>
       <SelectButton>
         <Button
-          type="primary"
+          type='primary'
+          size='small'
           inline
           style={{
             backgroundColor: '#FF1493',
             display: `${selectButtonDisplay}`,
+            fontSize: '16px',
           }}
           onClick={selectPinPosition}
         >
-          경로선택
+          {isOriginVisible ? '도착지선택' : '출발지선택'}
         </Button>
       </SelectButton>
     </>
