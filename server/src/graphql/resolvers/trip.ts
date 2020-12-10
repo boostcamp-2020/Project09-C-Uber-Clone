@@ -26,6 +26,16 @@ interface SetTripStateArgs {
   newTripStatus: string;
 }
 
+interface setArrivalsInput {
+  tripId: string;
+  arrivalTime: Date;
+  destination: {
+    address: string;
+    latitude: number;
+    longitude:number;
+  };
+}
+
 interface ChattingInput {
   tripId: string;
   chattingInput: { text: string, time: Date};
@@ -78,7 +88,7 @@ export default {
       try {
         const trip = await Trip.setStatus(args);
         if (trip && trip.status === 'close') {
-          context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: { tripId: trip._id, isDrop: true } });
+          return { result: 'close success', trip };
         }
         return { result: 'success', trip };
       } catch {
@@ -101,6 +111,11 @@ export default {
       } else {
         return null;
       }
+    },
+    async setArrivals(_:any, args: setArrivalsInput, context: any) {
+      const { tripId, arrivalTime, destination } = args;
+      const result = await Trip.setArrivals(tripId, arrivalTime, destination);
+      return result;
     },
   },
 };
