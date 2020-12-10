@@ -1,4 +1,3 @@
-import { Document } from 'mongoose';
 import { Trip } from '../../services';
 import { MATCHED_DRIVER_STATE } from '../subscriptions';
 
