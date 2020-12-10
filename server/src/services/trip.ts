@@ -121,4 +121,7 @@ export default {
   addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
     return await Trip.addChatting(tripId, chatting);
   },
+  setArrivals: async (tripId: string, arrivalTime: Date, destination: {address: string, latitude: number, longitude: number}) => {
+    return await Trip.setArrivals(tripId, arrivalTime, destination);
+  },
 };
