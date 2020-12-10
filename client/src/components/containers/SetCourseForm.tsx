@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import CourseSubmitModal from '../presentational/CourseSubmitModal';
+import LogoutButton from '../presentational/LogoutButton';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -60,6 +61,12 @@ const HereButton = styled.button`
   margin-top: 5px;
   margin-left: 10px;
   cursor: pointer;
+`;
+
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
 `;
 
 interface TripPlace {
@@ -224,6 +231,9 @@ function SetCourseForm() {
     <>
       <Header>
         <PageTitle>라이더 <br/> 경로설정</PageTitle>
+        <LogoutPosition>
+          <LogoutButton width='20px' height='20px' color='#F8F8FF' />
+        </LogoutPosition>
       </Header>
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
