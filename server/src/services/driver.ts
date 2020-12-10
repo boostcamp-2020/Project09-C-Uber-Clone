@@ -33,10 +33,16 @@ export default {
   },
   getDriverList: async (payload) => {
     try {
-      return await Driver.findAllByDistance(payload);
+      return await Driver.findAllByRadius(payload);
     } catch (e) {
       throw e.message;
     }
   },
-
+  updateDriverPosition: async(payload) => {
+    try {
+      return await Driver.updatePosition(payload);
+    } catch (e) {
+      throw e.message;
+    }
+  },
 };

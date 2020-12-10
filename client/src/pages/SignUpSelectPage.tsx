@@ -25,7 +25,6 @@ const Button = styled.button`
 `;
 
 const Title = styled.h1`
-  width: 89px;
   height: 29px;
   left: calc(50% - 89px/2 - 2.5px);
   top: calc(50% - 29px/2 - 329.5px);

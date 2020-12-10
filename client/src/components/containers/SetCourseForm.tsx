@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useApolloClient } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 
-import { WhiteSpace } from 'antd-mobile';
+import { WhiteSpace, Modal } from 'antd-mobile';
 import styled from 'styled-components';
 
-import { callRequest } from '../../apis/callRequestAPI';
 import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
-import SubmitButton from '../presentational/SubmitButton';
+import CourseSubmitModal from '../presentational/CourseSubmitModal';
+import LogoutButton from '../presentational/LogoutButton';
+
+import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
+import { reverseGoecoding } from '../../utils/geocoding';
 
 import {
   selectMapReducer,
@@ -20,79 +23,67 @@ import {
   setOriginMarker,
   setDestMarker,
 } from '../../slices/mapSlice';
-import { useHistory } from 'react-router-dom';
-
-import { reverseGoecoding } from '../../utils/geocoding';
-
-const Header = styled.div`
-  height: 130px;
-  padding:10px;
-  background: #56A902;
-`;
-
-const PageTitle = styled.div`
-  left: 30px;
-  top: 44px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 48px;
-  line-height: 56px;
-  color: #F8F8FF;
-`;
-
-const FormTitle = styled.div`
-  padding:8px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 27px;
-  letter-spacing: -0.02em;
-  color: #000000;
-`;
+import {
+  setTrip,
+} from '../../slices/tripSlice';
 
 const HereButton = styled.button`
-  background-color: transparent;
-  color: #56A902;
+  background-color: #56A902;
+  color: #FFF;
   border: none;
-  margin-top: 5px;
-  margin-left: 10px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  margin: 5px 3.5% 0 3.5%;
   cursor: pointer;
 `;
 
-interface PublishPosition {
-  lat: number
-  lng: number
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  z-index: 100;
+`;
+
+interface TripPlace {
+  address: string
+  latitude: number
+  longitude: number
 }
 
-interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: PublishPosition
-  pickUpPos: PublishPosition
-  pickUpAddress: string
-  destinationPos: PublishPosition
-  destinationAddress: string
-  tripStatus: string
+interface NotifyCallVariables {
+  origin: TripPlace
+  destination: TripPlace
+  startTime: string
+  distance?: number
+  estimatedTime: string
+  estimatedDistance: string
 }
 
 function SetCourseForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { originPlace, destPlace, originPosition, destPosition }: any = useSelector(selectMapReducer);
-  const [riderPos, setRiderPos] = useState({ lat: 0, lng: 0 });
+  const [notifyCall, { data }] = useMutation(NOTIFY_RIDER_CALL);
+
+  const {
+    originPlace,
+    destPlace,
+    originPosition,
+    destPosition,
+    mapCenter,
+  }: any = useSelector(selectMapReducer);
+  const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
   const [destAutocomplete, setDestAutocomplete] = useState(null);
   const [originInput, setOriginInput] = useState('');
   const [destInput, setDestInput] = useState('');
   const [originInputError, setOriginInputError] = useState(false);
   const [destInputError, setDestInputError] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [estimatedDistance, setEstimatedDistance] = useState('');
 
-  const handleClickCancel = (setPlace: any, setPosition: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClickCancel = (setPlace: any, setMarker: any) => (value: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPlace(''));
-    dispatch(setPosition({ lat: 0, lng: 0 }));
     dispatch(setMarker(''));
   };
 
@@ -105,18 +96,19 @@ function SetCourseForm() {
       setDestInputError(true);
       return;
     }
-    const riderPublishInfo: riderPublishInfo = {
-      riderId: '',
-      riderEmail: '',
-      riderName: '',
-      riderPos: riderPos,
-      pickUpPos: originPosition,
-      pickUpAddress: originPlace,
-      destinationPos: destPosition,
-      destinationAddress: destPlace,
-      tripStatus: 'open',
+    const variables: NotifyCallVariables = {
+      origin: { address: originPlace, latitude: originPosition.lat, longitude: originPosition.lng },
+      destination: { address: destPlace, latitude: destPosition.lat, longitude: destPosition.lng },
+      startTime: (new Date()).toString(),
+      distance: 0.03,
+      estimatedTime,
+      estimatedDistance,
     };
-    callRequest(client, history, riderPublishInfo);
+    notifyCall({ variables });
+    dispatch(setOriginPlace(''));
+    dispatch(setOriginMarker(''));
+    dispatch(setDestPlace(''));
+    dispatch(setDestMarker(''));
   };
 
   const success = (position: Position): any => {
@@ -132,17 +124,18 @@ function SetCourseForm() {
   };
 
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 0,
   };
 
   const getCurrentRiderPos = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(success, navError, options);
+      return navigator.geolocation.watchPosition(success, navError, options);
     }
   };
 
   const makeStartingPointHere = async() => {
+    dispatch(setOriginMarker(''));
     dispatch(setOriginPosition(riderPos));
     const address = await reverseGoecoding(riderPos);
     dispatch(setOriginPlace(address));
@@ -187,6 +180,21 @@ function SetCourseForm() {
     setDestInput(event.target.value);
   };
 
+  const logoutButtonHandler = () => {
+    Modal.alert(
+      '로그아웃',
+      '',
+      [
+        { text: 'Cancel' },
+        { text: 'Ok', onPress: logout },
+      ]);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
+
   useEffect(() => {
     setOriginInput(originPlace);
     setOriginInputError(false);
@@ -198,41 +206,61 @@ function SetCourseForm() {
   }, [destPlace]);
 
   useEffect(() => {
-    getCurrentRiderPos();
+    if (data) {
+      dispatch(setTrip({ id: data.driverCall }));
+      history.push('/rider/waiting');
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const locationWatch = getCurrentRiderPos();
+    return () =>
+      navigator.geolocation.clearWatch(locationWatch);
   }, []);
 
   return (
     <>
-      <Header>
-        <PageTitle>라이더 <br/> 경로설정</PageTitle>
-      </Header>
-      <RiderSetCourseMap />
-      <FormTitle>경로 선택</FormTitle>
+      <LogoutPosition>
+        <LogoutButton
+          width='20px'
+          height='20px'
+          color='rgba(0, 0, 0, 0.54)'
+          background='white'
+          onClick={logoutButtonHandler}
+        />
+      </LogoutPosition>
+      <RiderSetCourseMap
+        setEstimatedDistance={setEstimatedDistance}
+        setEstimatedTime={setEstimatedTime}
+      />
+      <WhiteSpace />
+      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
+      <WhiteSpace />
       <PlaceSearchBox
         placeholder='출발지'
         onLoad={onOrignAutocompleteLoad}
         onPlaceChanged={onOriginAutocompletePlaceChanged}
-        onCancelClicked={handleClickCancel(setOriginPlace, setOriginPosition, setOriginMarker)}
+        onCancelClicked={handleClickCancel(setOriginPlace, setOriginMarker)}
         value={originInput}
         onChange={handleOnChangeOrigin}
         error={originInputError}
       />
-      <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
       <WhiteSpace />
       <PlaceSearchBox
         placeholder='도착지'
         onLoad={destAutocompleteLoad}
         onPlaceChanged={onDestAutocompletePlaceChanged}
-        onCancelClicked={handleClickCancel(setDestPlace, setDestPosition, setDestMarker)}
+        onCancelClicked={handleClickCancel(setDestPlace, setDestMarker)}
         value={destInput}
         onChange={handleOnChangeDest}
         error={destInputError}
       />
       <WhiteSpace />
-      <SubmitButton
-        content={'결정'}
+      <CourseSubmitModal
+        time={estimatedTime}
+        distance={estimatedDistance}
         onClick={handelCourseSubmitButton}
-        disabled={false}
+        disabled={!originPlace || !destPlace}
       />
     </>
   );

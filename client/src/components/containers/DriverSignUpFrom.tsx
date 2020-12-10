@@ -5,14 +5,13 @@ import styled from 'styled-components';
 
 import { WhiteSpace } from 'antd-mobile';
 
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
-import ProfileImageInput from '../presentational/ProfileImageInput';
 import Input from '../presentational/Input';
 import DiscriptionInput from '../presentational/DescriptionInput';
 import SubmitButton from '../presentational/SubmitButton';
 
-import { requestDriverSignUp } from '../../apis/signUpAPI';
+import { SIGNUP_DRIVER } from '../../queries/signup';
 
 import { checkValidation } from '../../utils/validate';
 
@@ -21,8 +20,8 @@ const Form = styled.form`
 `;
 
 function DriverSignUpFrom() {
-  const client = useApolloClient();
   const history = useHistory();
+  const [signUpDriver] = useMutation(SIGNUP_DRIVER);
 
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -37,9 +36,15 @@ function DriverSignUpFrom() {
     setState(value);
   };
 
-  const handleSignUpButton = () => {
+  const handleSignUpButton = async () => {
     const driverInfo = { name, phoneNumber, email, password, carType, plateNumber };
-    requestDriverSignUp(client, history, driverInfo);
+    try {
+      await signUpDriver({ variables: driverInfo });
+      window.alert('회원가입 성공');
+      history.push('/login');
+    } catch (error) {
+      window.alert(`회원가입 실패\n원인${error}`);
+    }
   };
 
   const propertyToCheck = { name, phoneNumber, email, password, rePassword, carType, plateNumber };
@@ -51,7 +56,6 @@ function DriverSignUpFrom() {
 
   return (
     <Form>
-      <ProfileImageInput selectable={true} />
       <DiscriptionInput placeholder='한마디' />
       <WhiteSpace />
       <Input

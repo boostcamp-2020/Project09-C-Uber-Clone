@@ -1,48 +1,112 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { Modal } from 'antd-mobile';
+import styled from 'styled-components';
+import { useSubscription, useLazyQuery, useMutation } from '@apollo/client';
 
-import { driverListen } from '../queries/callRequest';
-import { getTripStatus } from '../apis/tripAPI';
+import { GET_TRIP_STATUS } from '../queries/trip';
+import { ADD_DRIVER_POSITION } from '../queries/driver';
+import { LISTEN_DRIVER_CALL } from '../queries/callRequest';
+
+import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
+import { OPEN } from '../constants/tripStatus';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
-import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
+import LogoutButton from '../components/presentational/LogoutButton';
+
+const LogoutPosition = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 12px;
+`;
+
+const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
   //TODO: 이 페이지 전체를 container로 이동
-  const client = useApolloClient();
   const history = useHistory();
-  const { loading, error, data } = useSubscription(driverListen);
-  const [riderCalls, setRiderCalls] = useState([]);
-  const [trip, setTrip] = useState({ id: undefined }); //TODO: type 다시 지정
-  const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
-  const [pickUpAddress, setPickUpAddress] = useState('');
-  const [destinationAddress, setDestinationAddress] = useState('');
 
-  if (error) {
-    console.log(error);
-  }
+  const [riderCalls, setRiderCalls] = useState([]);
+  const [trip, setTrip] = useState({
+    id: undefined,
+    rider: undefined,
+    origin: undefined,
+    destination: undefined,
+    startTime: undefined,
+    status: undefined,
+    estimatedTime: undefined,
+    estimatedDistance: undefined,
+  },
+  ); //TODO: type 다시 지정
+  const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
+  const [count, setCount] = useState(0);
+  const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
+
+  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
+  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'no-cache' });
+  const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
+
+  const getDriverPosition = () => {
+    const success = (position: Position): any => {
+      const pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      if (JSON.stringify(driverPos) !== JSON.stringify(pos)) {
+        setDriverPos(pos);
+      }
+    };
+
+    const navError = (): any => {
+      console.log('Error: The Geolocation service failed.');
+    };
+
+    const options = {
+      enableHighAccuracy: false,
+      maximumAge: 0,
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, navError, options);
+    }
+  };
+
+  const logoutButtonHandler = () => {
+    Modal.alert(
+      '로그아웃',
+      '',
+      [
+        { text: 'Cancel' },
+        { text: 'Ok', onPress: logout },
+      ]);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
 
   useEffect(() => {
-    if (data && driverStatus !== DRIVER_MATCHING_SUCCESS) {
-      setRiderCalls([...riderCalls, { id: data.driverListen.riderPublishInfo.tripId }]);
-      setPickUpAddress(data.driverListen.riderPublishInfo.pickUpAddress);
-      setDestinationAddress(data.driverListen.riderPublishInfo.destinationAddress);
+    if (driverListenData && driverStatus !== DRIVER_MATCHING_SUCCESS) {
+      setRiderCalls([...riderCalls, driverListenData.driverListen.trip]);
     }
-  }, [data]);
+  }, [driverListenData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
       setTrip(riderCalls[0]);
+      getTripStatus({ variables: { id: riderCalls[0].id } });
     }
   }, [riderCalls]);
 
   useEffect(() => {
-    if (trip.id) {
-      getTripStatus(client, trip, setDriverStatus);
+    if (!!tripStatusData && tripStatusData.tripStatus === OPEN) {
+      setDriverStatus(DRIVER_POPUP);
+      return;
     }
-  }, [trip]);
+    setDriverStatus(DRIVER_IGNORED);
+  }, [tripStatusData]);
 
   useEffect(() => {
     if (driverStatus === DRIVER_IGNORED) {
@@ -51,22 +115,35 @@ function DriverWaitingPage() {
     }
     if (driverStatus === DRIVER_MATCHING_SUCCESS) {
       setRiderCalls([]);
-      //TODO: trip 정보 전역으로 저장
       history.push('/driver/pickup');
     }
   }, [driverStatus]);
+
+  useEffect(() => {
+    getDriverPosition();
+    setTimeout(() => {
+      setCount(count + 1);
+      updateDriverPosition();
+    }, DRIVER_POSITION_UPDATE_TIME);
+  }, [count]);
 
   return (
     <>
       {driverStatus === DRIVER_POPUP &&
       <DriverPopup
-        riderId={data.driverListen.riderPublishInfo.riderId}
-        tripId={trip.id}
-        pickUpAddress={pickUpAddress}
-        destinationAddress={destinationAddress}
+        trip={trip}
         setDriverStatus={setDriverStatus}
       />}
-      <DriverCurrentPositionMap />
+      <DriverCurrentPositionMap driverPos={driverPos}/>
+      <LogoutPosition>
+        <LogoutButton
+          width='20px'
+          height='20px'
+          color='rgba(0, 0, 0, 0.54)'
+          background='white'
+          onClick={logoutButtonHandler}
+        />
+      </LogoutPosition>
     </>
   );
 }

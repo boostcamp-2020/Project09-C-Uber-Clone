@@ -1,27 +1,34 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { useSelector } from 'react-redux';
-import { selectMapReducer } from '../../slices/mapSlice';
-import { useApolloClient, useSubscription } from '@apollo/client';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectTripReducer } from '../../slices/tripSlice';
+import { useSubscription, useQuery } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 
-import { subscribeDriverResponse } from '../../apis/driverResponseAPI';
+import { LISTEN_DRIVER_RESPONSE } from '../../queries/driverResponded';
+import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
+import { setTrip } from '../../slices/tripSlice';
+import { MATCHING_CONFIRM } from '../../constants/matchingResult';
 
 const containerStyle = {
   width: '100%',
   height: '100vh',
 };
 
-//TODO: call Request 결과 생성된 trip id 로 대체
-const TRIP_ID = '';
-
 function RiderPickupPositionMap() {
-  const client = useApolloClient();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { data } = useSubscription(LISTEN_DRIVER_RESPONSE);
+  const { trip }: any = useSelector(selectTripReducer);
+
+  const { data: tripData } = useQuery(GET_ORIGIN_POSITION_AND_DESTINATION_POSITION,
+    { variables: { id: trip.id } });
+  const originPosition = useMemo(() => tripData ? { lat: tripData.trip.origin.latitude, lng: tripData.trip.origin.longitude } : { lat: 0, lng: 0 }, [tripData]);
 
   const [map, setMap] = useState(null);
-  const { originPosition }: any = useSelector(selectMapReducer);
+
 
   const onLoad = useCallback((map) => {
     setMap(map);
@@ -32,11 +39,14 @@ function RiderPickupPositionMap() {
   }, []);
 
   useEffect(() => {
-    const subscription = subscribeDriverResponse(client, history);
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+    if (data) {
+      const { response, driverId, tripId } = data.driverResponded;
+      if (response === MATCHING_CONFIRM) {
+        dispatch(setTrip({ id: tripId }));
+        history.push('/rider/pickup');
+      }
+    }
+  }, [data]);
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>

@@ -11,11 +11,48 @@ interface OpenArgs {
   origin: PlaceInterface;
   destination: PlaceInterface;
   startTime: Date;
-  distance?: number;
+  estimatedTime: string
+  estimatedDistance: string
 }
+
+interface SetTripStateArgs {
+  tripId: string;
+  newTripStatus: string;
+}
+
+type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
 
 export default {
   get: async({ id }) => {
+    try {
+      const trip = await Trip.findById(id);
+      const rider = trip?.rider;
+      const driver = trip?.driver;
+      const origin = trip?.origin;
+      const destination = trip?.destination;
+      const startTime = trip?.startTime;
+      const arrivalTime = trip?.arrivalTime;
+      const status = trip?.status;
+      const chattings = trip?.chattings;
+      const estimatedTime = trip?.estimatedTime;
+      const estimatedDistance = trip?.estimatedDistance;
+      return {
+        id: trip?._id,
+        rider: { id: rider?._id, ...rider },
+        driver: { id: driver?._id, ...driver },
+        origin,
+        destination,
+        startTime,
+        arrivalTime,
+        status,
+        chattings,
+        estimatedTime,
+        estimatedDistance };
+    } catch (e) {
+      throw e.message;
+    }
+  },
+  getRecallData: async({ id }) => {
     try {
       return await Trip.findById(id);
     } catch (e) {
@@ -41,9 +78,9 @@ export default {
     try {
       const data = await Trip.findOneStatus(args.tripId);
       if (data?.status === 'open') {
-        return { tripId: args.tripId, riderId: args.riderId, result: 'success' };
+        return 'success' ;
       }
-      return { tripId: args.tripId, riderId: args.riderId, result: data?.status };
+      return data?.status;
     } catch (e) {
       throw e.message;
     }
@@ -65,11 +102,31 @@ export default {
     }
   },
   openTrip: async (args: OpenArgs) => {
-    const { riderEmail, origin, destination, startTime, distance } = args;
+    const { riderEmail, origin, destination, startTime, estimatedTime, estimatedDistance } = args;
     try {
-      return await Trip.open(riderEmail, origin, destination, startTime, distance);
+      return await Trip.open(riderEmail, origin, destination, startTime, estimatedTime, estimatedDistance);
     } catch (e) {
       throw e;
     }
+  },
+  setStatus: async (args: SetTripStateArgs) => {
+    try {
+      const { tripId, newTripStatus } = args;
+      return await Trip.setStatus(tripId, newTripStatus);
+    } catch (e) {
+      throw e;
+    }
+  },
+  getChattings: async (tripId: string) => {
+    return await Trip.getChattings(tripId);
+  },
+  addChatting: async (tripId: string, chatting: {text: string, time: Date, ownerId: string}) => {
+    return await Trip.addChatting(tripId, chatting);
+  },
+  setArrivals: async (tripId: string, arrivalTime: Date, destination: {address: string, latitude: number, longitude: number}) => {
+    return await Trip.setArrivals(tripId, arrivalTime, destination);
+  },
+  getMyTrips: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    return await Trip.getMyTrips(userId, isDriver, statuses);
   },
 };

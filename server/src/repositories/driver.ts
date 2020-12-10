@@ -4,8 +4,8 @@ export default {
   create: async (payload) => {
     return await Driver.create(payload);
   },
-  updatePosition: async({ driverId, latitude, longitude }) => {
-    return await Driver.update({ _id: driverId }, { latitude, longitude });
+  updatePosition: async({ driverId, lat, lng }) => {
+    return await Driver.updateOne({ _id: driverId }, { latitude: lat, longitude: lng });
   },
   findAll: async () => {
     return await Driver.find({});
@@ -16,9 +16,9 @@ export default {
   findById: async ({ id }:{id: string}) => {
     return await Driver.findById(id);
   },
-  findAllByDistance: async({ lat, lng }:{lat:number, lng:number}) => {
-    const latitude = { $gte: lat - 0.03, $lte: lat + 0.03 };
-    const longitude = { $gte: lng - 0.03, $lte: lng + 0.03 };
+  findAllByRadius: async({ lat, lng, callRadius }:{lat:number, lng:number, callRadius: number}) => {
+    const latitude = { $gte: lat - callRadius, $lte: lat + callRadius };
+    const longitude = { $gte: lng - callRadius, $lte: lng + callRadius };
     return await Driver.find({ latitude, longitude }, '_id');
   },
 };

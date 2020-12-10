@@ -25,6 +25,11 @@ interface DriverResponse {
   response: string;
 }
 
+interface DriverPosition {
+  lat: number;
+  lng: number;
+}
+
 const MATCHED_DRIVER_STATE = 'MATCHED_DRIVER_STATE';
 
 export default {
@@ -45,16 +50,24 @@ export default {
     },
     async sendResponse(_:any, args:DriverResponse, context:any) {
       const driverId = context.req.user.data._id;
-      const checkResult = await Trip.checkStatus(args);
-      if (checkResult.result === 'success') {
+      const result = await Trip.checkStatus(args);
+      if (result === 'success') {
         context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
         await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
       }
-      return checkResult;
+      return result;
     },
     driverStateNotify(_:any, args, context:any) {
       context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
       return args;
+    },
+    async updateDriverPosition(_:any, args: any, { req }:any) {
+      try {
+        await Driver.updateDriverPosition({ driverId: req.user.data._id, ...args });
+        return { result: 'success' };
+      } catch (error) {
+        return { result: 'fail' };
+      }
     },
   },
   Subscription: {
@@ -63,18 +76,21 @@ export default {
         return context.pubsub.asyncIterator([CALL_REQUESTED]);
       },
       (payload, variables, context) => {
-        if (payload.driverListen.riderPublishInfo.driverIds) {
-          return payload.driverListen.riderPublishInfo.driverIds.includes(context.data.currentUser.data._id.toString());
+        if (payload.driverListen.driverIds) {
+          return payload.driverListen.driverIds.includes(context.data.currentUser.data._id.toString());
         }
         return false;
       },
       ),
     },
     matchedDriverState: {
-      //TODO: filter 적용
-      subscribe: (_:any, __:object, context:any) => {
+      subscribe: withFilter((_:any, __:object, context:any) => {
         return context.pubsub.asyncIterator([MATCHED_DRIVER_STATE]);
       },
+      (payload, variables) => {
+        return payload.matchedDriverState.tripId.toString() === variables.tripId.toString();
+      },
+      ),
     },
   },
 };

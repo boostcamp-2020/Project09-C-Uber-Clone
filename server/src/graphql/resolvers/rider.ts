@@ -1,7 +1,5 @@
 import { withFilter } from 'apollo-server-express';
-import { Rider, Trip } from '../../services';
-
-import DriverService from '../../services/driver';
+import { Rider, Trip, Driver } from '../../services';
 
 import { DRIVER_RESPONDED, CALL_REQUESTED, MATCHED_RIDER_STATE } from '../subscriptions';
 
@@ -22,24 +20,19 @@ interface Position {
   lng: number
 }
 
-interface riderPublishInfo {
-  riderId: string
-  riderEmail: string
-  riderName: string
-  riderPos: Position
-  driverIds: string[]
-  pickUpPos: Position
-  pickUpAddress: string
-  destinationPos: Position
-  destinationAddress: string
-  tripStatus: string
-  tripId: string
+interface TripPlace {
+  address: string
+  latitude: number
+  longitude: number
 }
 
 interface DriverCallArgs {
-  riderPublishInfo: riderPublishInfo
+  origin: TripPlace
+  destination: TripPlace
+  startTime: Date
+  estimatedTime: string
+  estimatedDistance: string
 }
-
 
 export default {
   Query: {
@@ -55,26 +48,22 @@ export default {
       return await Rider.signup(payload);
     },
     async driverCall(parent:any, args: DriverCallArgs, { req, pubsub }:any) {
-      //TODO: args 타입을 openTrip payload 타입이랑 맞추기
-      const payload = { riderEmail: req.user.data.email,
-        origin: { address: args.riderPublishInfo.pickUpAddress, latitude: args.riderPublishInfo.pickUpPos.lat, longitude: args.riderPublishInfo.pickUpPos.lng },
-        destination: { address: args.riderPublishInfo.destinationAddress, latitude: args.riderPublishInfo.destinationPos.lat, longitude: args.riderPublishInfo.destinationPos.lng },
-        startTime: new Date(),
-      };
-      const result = await Trip.openTrip(payload);
-      const driverIds = await DriverService.getDriverList(args.riderPublishInfo.pickUpPos);
-      args.riderPublishInfo = {
-        ...args.riderPublishInfo,
-        driverIds: driverIds.map(v => v._id.toString()),
-        riderId: req.user.data._id,
-        riderEmail: req.user.data.email,
-        riderName: req.user.data.name,
-        tripId: result?._id,
-      };
-      pubsub.publish(CALL_REQUESTED, { driverListen: { ...args } });
-      return args.riderPublishInfo;
+      const riderEmail = req.user.data.email;
+      const trip = await Trip.openTrip({ ...args, riderEmail });
+      let driverIds = await Driver.getDriverList({ lat: args.origin.latitude, lng: args.origin.longitude, callRadius: 0.03 });
+      driverIds = driverIds.map(v => v._id.toString());
+
+      pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
+      return trip?._id;
     },
-    async notifyRiderState(parent: any, args: any, context: any) {
+    async driverRecall(parent:any, args: {id:string}, { req, pubsub }:any) {
+      const trip = await Trip.get(args);
+      let driverIds = await Driver.getDriverList({ lat: trip?.origin?.latitude, lng: trip?.origin?.longitude, callRadius: 0.05 });
+      driverIds = driverIds.map(v => v._id.toString());
+      pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
+      return 'success';
+    },
+    notifyRiderState(parent: any, args: any, context: any) {
       context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
       return true;
     },

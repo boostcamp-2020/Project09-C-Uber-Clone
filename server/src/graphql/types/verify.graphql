@@ -1,7 +1,22 @@
-type VerifiedUser {
-  role: String!
-}
+directive @isAuthorized on FIELD_DEFINITION
 
 type Query {
+  user: User @isAuthorized
   verifyUser: VerifiedUser
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  password: String!
+  phoneNumber: String!
+  carType: String
+  plateNumber: String
+  description: String
+  profileImage: String
+}
+
+type VerifiedUser {
+  role: String!
 }

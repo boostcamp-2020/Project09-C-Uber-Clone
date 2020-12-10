@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { WhiteSpace, Checkbox } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import { requestLogin } from '../../apis/loginAPI';
+import { LOGIN_RIDER, LOGIN_DRIVER } from '../../queries/login';
+import { setLoginRole } from '../../slices/loginSlice';
 
 import { checkValidation } from '../../utils/validate';
 
@@ -21,6 +22,7 @@ const Div = styled.div`
 `;
 
 const Header = styled.div`
+  font-family: 'Ubuntu', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,18 +37,53 @@ const Header = styled.div`
   color: #243443;
 `;
 
+const CheckContent = styled.div`
+  padding-left: 10px;
+`;
+
 const SignupButton = styled.button`
   width:100%;
-  margin-top: 5px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bolder;
   color: #56A902;
   border: none;
   background-color: transparent;
 `;
 
 function LoginForm() {
-  const client = useApolloClient();
   const history = useHistory();
   const dispatch = useDispatch();
+  const [loginRider, { data: riderData, error: riderError }] = useMutation(
+    LOGIN_RIDER,
+    {
+      onCompleted: ({ loginRider }) => {
+        const { message, role, success, token } = loginRider;
+        if (success) {
+          localStorage.setItem('token', token);
+          dispatch(setLoginRole(role));
+          history.push('/rider/setcourse');
+        } else {
+          window.alert(message);
+        }
+      },
+    },
+  );
+  const [loginDriver, { data: driverData, error: driverError }] = useMutation(
+    LOGIN_DRIVER,
+    {
+      onCompleted: ({ loginDriver }) => {
+        const { message, role, success, token } = loginDriver;
+        if (success) {
+          localStorage.setItem('token', token);
+          dispatch(setLoginRole(role));
+          history.push('/driver/main');
+        } else {
+          window.alert(message);
+        }
+      },
+    },
+  );
 
   const [riderCheck, setRiderCheck] = useState(true);
   const [driverCheck, setDriverCheck] = useState(false);
@@ -58,8 +95,10 @@ function LoginForm() {
     setState(value);
   };
 
-  const handleLoginButtonClick = () => {
-    requestLogin(client, history, riderCheck, email, password, dispatch);
+  const handleLoginButtonClick = async () => {
+    riderCheck
+      ? await loginRider({ variables: { email, password } })
+      : await loginDriver({ variables: { email, password } });
   };
 
   const checkToggle = (e: any) => {
@@ -82,21 +121,24 @@ function LoginForm() {
 
   return (
     <Div>
-      <Header>UBER</Header>
-      <Checkbox
-        onChange={checkToggle}
-        checked={riderCheck}
-        style={{ margin: '0 10px 10px 0' }}
-      >
-         라이더
-      </Checkbox>
-      <Checkbox
-        onChange={checkToggle}
-        checked={driverCheck}
-        style={{ margin: '0 0 10px 10px' }}
-      >
-        드라이버
-      </Checkbox>
+      {riderError && <p>try again</p>}
+      <Header>WOOBER</Header>
+      <CheckContent>
+        <Checkbox
+          onChange={checkToggle}
+          checked={riderCheck}
+          style={{ margin: '0 5px 10px 0' }}
+        >
+          라이더
+        </Checkbox>
+        <Checkbox
+          onChange={checkToggle}
+          checked={driverCheck}
+          style={{ margin: '0 5px 10px 10px' }}
+        >
+          드라이버
+        </Checkbox>
+      </CheckContent>
       <WhiteSpace />
       <Input
         type='text'
@@ -109,14 +151,14 @@ function LoginForm() {
         placeholder='Enter your password'
         onChange={handleChangeInput(setPassword)}
       />
-      <WhiteSpace />
+      <WhiteSpace size='xl' />
       <SubmitButton
         content={'로그인'}
         onClick={handleLoginButtonClick}
         disabled={!isValidate}
       />
       <Link to='/signup/select'>
-        <SignupButton>Sign up here</SignupButton>
+        <SignupButton>회원가입하려면 클릭하세요</SignupButton>
       </Link>
     </Div>
   );

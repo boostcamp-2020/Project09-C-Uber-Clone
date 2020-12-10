@@ -1,13 +1,15 @@
 import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { GoogleMap, Marker, DirectionsRenderer, DirectionsService } from '@react-google-maps/api';
+import { GoogleMap, Marker, DirectionsRenderer, DirectionsService, DistanceMatrixService } from '@react-google-maps/api';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import picker from '../../../assets/Google_Maps_pin.png';
+import { Button } from 'antd-mobile';
 
 import styled from 'styled-components';
 
 import { reverseGoecoding } from '../../utils/geocoding';
+
+import PinIcon from '../presentational/PinIcon';
 
 import {
   selectMapReducer,
@@ -19,19 +21,18 @@ import {
   setDestMarker,
 } from '../../slices/mapSlice';
 
-const Picker = styled.img`
+const Picker = styled.div`
   position: absolute;
-  top: 40%;
-  left: 47%;
-  width: 20px;
-  z-index: 100;
-  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  z-index: 1;
 `;
 
 // Map 사이즈
 const containerStyle = {
   width: '100%',
-  height: '380px',
+  height: '520px',
 };
 
 // Marker 위치
@@ -40,10 +41,13 @@ const NEW_MARKER_POS = {
   lng: 0,
 };
 
-const INIT_POS = {
-  lat: 37.55,
-  lng: 126.97,
-};
+const SelectButton = styled.div`
+  position: absolute;
+  top: 490px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+`;
 
 enum TravelMode {
   BICYCLING = 'BICYCLING',
@@ -53,7 +57,7 @@ enum TravelMode {
   WALKING = 'WALKING',
 }
 
-function RiderSetCourseMap() {
+function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEstimatedDistance: any, setEstimatedTime: any}) {
   const {
     originPosition,
     destPosition,
@@ -67,8 +71,9 @@ function RiderSetCourseMap() {
   const [map, setMap] = useState(null);
   const [isOriginVisible, setIsOriginVisible] = useState(false);
   const [isDestVisible, setIsDestVisible] = useState(false);
-  const [center, setCenter] = useState(INIT_POS);
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [directionResponse, setDirectionResponse] = useState(null);
+  const [selectButtonDisplay, setSelectButtonDisplay] = useState('inline-block');
 
   const pickerEl = useRef(null);
 
@@ -92,32 +97,22 @@ function RiderSetCourseMap() {
     dispatch(setOriginMarker('check'));
   };
 
-  const addMarker = async ({ lat, lng }: { lat: number, lng: number}) => {
-    NEW_MARKER_POS.lat = lat;
-    NEW_MARKER_POS.lng = lng;
-    const address = await reverseGoecoding({ lat, lng });
-
-    if (originMarker !== '') {
-      return checkDestMarker(address);
-    }
-    checkOriginMarker(address);
-  };
-
-  const onDragEnd = () => {
-    pickerEl.current.style.display = 'none';
-    if (!(isDestVisible && isOriginVisible)) {
-      addMarker(JSON.parse(JSON.stringify(map.center)));
-    }
-  };
-
-  const onDragStart = () => {
-    if (!(isDestVisible && isOriginVisible)) {
-      pickerEl.current.style.display = 'block';
+  const getCurrentRiderPos = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(pos);
+      });
     }
   };
 
   const directionCallback = useCallback((response: any, status: any) => {
     if (response !== null && status === 'OK') {
+      pickerEl.current.style.display = 'none';
+      setSelectButtonDisplay('none');
       setDirectionResponse(response);
     };
   }, []);
@@ -126,6 +121,10 @@ function RiderSetCourseMap() {
     if (originMarker === '') {
       setIsOriginVisible(false);
       setDirectionResponse(null);
+      if (pickerEl.current) {
+        pickerEl.current.style.display = 'inline-block';
+      }
+      setSelectButtonDisplay('inline-block');
       return;
     }
     setCenter(originPosition);
@@ -136,46 +135,97 @@ function RiderSetCourseMap() {
     if (destMarker === '') {
       setIsDestVisible(false);
       setDirectionResponse(null);
+      if (pickerEl.current) {
+        pickerEl.current.style.display = 'inline-block';
+      }
+      setSelectButtonDisplay('inline-block');
       return;
     }
     setCenter(destPosition);
     setIsDestVisible(true);
   }, [destMarker]);
 
+  useEffect(() => {
+    getCurrentRiderPos();
+  }, []);
+
+  const distanceMatrixCallback = ({ rows }: any) => {
+    if (rows[0].elements[0].status === 'OK') {
+      setEstimatedDistance(rows[0].elements[0].distance.text);
+      setEstimatedTime(rows[0].elements[0].duration.text);
+    }
+  };
+
+  const selectPinPosition = async() => {
+    const lat = JSON.parse(JSON.stringify(map.center)).lat;
+    const lng = JSON.parse(JSON.stringify(map.center)).lng;
+
+    NEW_MARKER_POS.lat = lat;
+    NEW_MARKER_POS.lng = lng;
+
+    const address = await reverseGoecoding({ lat, lng });
+
+    if (originMarker !== '') {
+      return checkDestMarker(address);
+    }
+    checkOriginMarker(address);
+  };
+
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      zoom={14}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      center={originPosition}
-      onDragEnd={onDragEnd}
-      onDragStart={onDragStart}
-    >
-      <Picker src={picker} ref={pickerEl} />
-      <Marker
-        key={1}
-        position={originPosition}
-        label={'출발'}
-        visible={isOriginVisible}
-      />
-      <Marker
-        key={2}
-        position={destPosition}
-        label={'도착'}
-        visible={isDestVisible}
-      />
-      {originPlace !== '' && destPlace !== '' &&
+    <>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={14}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        center={center}
+        options={{
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: false,
+        }}
+      >
+        <DistanceMatrixService
+          callback={distanceMatrixCallback}
+          options={{
+            origins: [originPosition],
+            destinations: [destPosition],
+            travelMode: google.maps.TravelMode.DRIVING,
+            drivingOptions: {
+              departureTime: new Date(Date.now() + 1000),
+              trafficModel: google.maps.TrafficModel.OPTIMISTIC,
+            },
+          }}
+        />
+        <Picker ref={pickerEl}>
+          <PinIcon />
+        </Picker>
+        <Marker
+          key={1}
+          position={originPosition}
+          label={'출발'}
+          visible={isOriginVisible}
+        />
+        <Marker
+          key={2}
+          position={destPosition}
+          label={'도착'}
+          visible={isDestVisible}
+        />
+        {originPlace !== '' && destPlace !== '' &&
         <DirectionsService
+          callback={directionCallback}
           options={{
             destination: destPosition,
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
           }}
-          callback={directionCallback}
         />
-      }
-      {directionResponse &&
+        }
+        {directionResponse &&
         <DirectionsRenderer
           options={{
             directions: directionResponse,
@@ -184,8 +234,24 @@ function RiderSetCourseMap() {
             },
           }}
         />
-      }
-    </GoogleMap>
+        }
+      </GoogleMap>
+      <SelectButton>
+        <Button
+          type='primary'
+          size='small'
+          inline
+          style={{
+            backgroundColor: '#FF1493',
+            display: `${selectButtonDisplay}`,
+            fontSize: '16px',
+          }}
+          onClick={selectPinPosition}
+        >
+          {isOriginVisible ? '도착지선택' : '출발지선택'}
+        </Button>
+      </SelectButton>
+    </>
   );
 }
 

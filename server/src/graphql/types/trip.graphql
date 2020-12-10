@@ -1,3 +1,47 @@
+type Mutation {
+  openTrip(
+    origin: TripPlaceInput!,
+    destination: TripPlaceInput!,
+    startTime: String!,
+  ) : Trip @isAuthorized
+  cancelTrip(id: ID!): CancelResult @isAuthorized
+  setTripStatus(tripId: ID!, newTripStatus: String!): Result @isAuthorized
+  addChatting(tripId: ID!, chattingInput: ChattingInput!): Chatting @isAuthorized
+  setArrivals(tripId: ID!, arrivalTime: String!, destination: TripPlaceInput): Trip @isAuthorized
+}
+
+type Query {
+  trip(id: ID!):Trip @isAuthorized
+  tripStatus(id: ID!): String! @isAuthorized
+  chattings(id: ID!): [Chatting] @isAuthorized
+  myTrips(statuses: [String]): [Trip] @isAuthorized
+}
+
+input TripPlaceInput {
+  address: String!
+  latitude: Float!
+  longitude: Float!
+}
+
+type Trip {
+  id: ID!
+  rider: MatchedRider!
+  driver: MatchedDriver
+  origin: TripPlace!
+  destination: TripPlace!
+  startTime: String!
+  arrivalTime: String
+  status: String!
+  chattings: [Chatting]
+  estimatedTime: String!
+  estimatedDistance: String!
+}
+
+type Result {
+  result: String
+  trip: Trip
+}
+
 type MatchedRider {
   id: ID!
   email: String!
@@ -14,45 +58,26 @@ type MatchedDriver {
   profileImage: String
 }
 
-input TripPlaceInput {
-  address: String!
-  latitude: Float!
-  longitude: Float!
-}
-
 type TripPlace {
   address: String!
   latitude: Float!
   longitude: Float!
 }
 
-type Trip {
-  id: ID!
-  rider: MatchedRider!
-  driver: MatchedDriver
-  origin: TripPlace!
-  destination: TripPlace!
-  startTime: String!
-  arrivalTime: String
-  status: String!
-  distance: Float
-}
-
 type CancelResult{
-    id: ID!
-    result: String!
+  id: ID!
+  result: String!
 }
 
-type Mutation {
-  openTrip(
-    origin: TripPlaceInput!,
-    destination: TripPlaceInput!,
-    startTime: String!,
-    distance: Float) : Trip @isAuthorized
-  cancelTrip(id: ID!): CancelResult
+type Chatting {
+  id: ID!
+  text: String!
+  time: String!
+  ownerId: String!
+  isOwner: Boolean!
 }
 
-type Query {
-  trip(id: ID!):Trip
-  tripStatus(id: ID!): String!
+input ChattingInput {
+  text: String!
+  time: String!
 }
