@@ -1,9 +1,8 @@
 <div align="center" >
 
+![Logo](https://user-images.githubusercontent.com/26592306/101877408-4c587000-3bd1-11eb-9648-e51334a03d2d.png)
 
-<img src="https://user-images.githubusercontent.com/48055710/101781339-005aec00-3b3b-11eb-81a6-a776318bde7d.png"/>
-
-# Uber 서비스 클론
+## 지도 컴포넌트를 활용한 Uber 서비스 클론
 ### 📚 [WIKI](https://github.com/boostcamp-2020/Project09-C-Uber-Clone/wiki)
 ### 📝 [Issue List](https://docs.google.com/spreadsheets/d/1kpEvOOr6cCK0YKUocBkjjaVOwnI4LHFpKrRn-rYKC90/edit#gid=0)
 ### 📌 [Road Map](https://docs.google.com/spreadsheets/d/1kpEvOOr6cCK0YKUocBkjjaVOwnI4LHFpKrRn-rYKC90/edit#gid=782776278)
