@@ -25,35 +25,6 @@ type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
 export default {
   get: async({ id }) => {
     try {
-      const trip = await Trip.findById(id);
-      const rider = trip?.rider;
-      const driver = trip?.driver;
-      const origin = trip?.origin;
-      const destination = trip?.destination;
-      const startTime = trip?.startTime;
-      const arrivalTime = trip?.arrivalTime;
-      const status = trip?.status;
-      const chattings = trip?.chattings;
-      const estimatedTime = trip?.estimatedTime;
-      const estimatedDistance = trip?.estimatedDistance;
-      return {
-        id: trip?._id,
-        rider: { id: rider?._id, ...rider },
-        driver: { id: driver?._id, ...driver },
-        origin,
-        destination,
-        startTime,
-        arrivalTime,
-        status,
-        chattings,
-        estimatedTime,
-        estimatedDistance };
-    } catch (e) {
-      throw e.message;
-    }
-  },
-  getRecallData: async({ id }) => {
-    try {
       return await Trip.findById(id);
     } catch (e) {
       throw e.message;
