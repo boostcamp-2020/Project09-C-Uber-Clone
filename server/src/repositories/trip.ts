@@ -9,7 +9,7 @@ interface PlaceInterface {
 type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
 
 export default {
-  findById: async(id) => {
+  findById: async(id:string) => {
     return await Trip.findById(id);
   },
   create: async (payload) => {
