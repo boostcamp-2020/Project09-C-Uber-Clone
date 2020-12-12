@@ -9,9 +9,10 @@ interface NoticeModalProps {
 
 const NoticeModal: FunctionComponent<NoticeModalProps> = ({ lat, lng }) => {
   const [isVibislbe, setIsVibislbe] = useState(false);
+  const isKorea = lng >= 124 && lng <= 132 && lat >= 33 && lat <= 43;
 
   useEffect(() => {
-    if (lng >= 124 && lng <= 132 && lat >= 33 && lat <= 43) {
+    if (isKorea) {
       setIsVibislbe(true);
       return;
     }
