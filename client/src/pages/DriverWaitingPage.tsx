@@ -14,6 +14,7 @@ import { OPEN } from '../constants/tripStatus';
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
 import LogoutButton from '../components/presentational/LogoutButton';
+import NoticeModal from '../components/presentational/NoticeModal';
 
 const LogoutPosition = styled.div`
   position: absolute;
@@ -134,6 +135,7 @@ function DriverWaitingPage() {
         trip={trip}
         setDriverStatus={setDriverStatus}
       />}
+      <NoticeModal />
       <DriverCurrentPositionMap driverPos={driverPos}/>
       <LogoutPosition>
         <LogoutButton
