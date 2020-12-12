@@ -1,13 +1,22 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect, memo } from 'react';
 
 import { Modal } from 'antd-mobile';
 
 interface NoticeModalProps {
-
+  lat: number
+  lng: number
 }
 
-const NoticeModal: FunctionComponent<NoticeModalProps> = () => {
-  const [isVibislbe, setIsVibislbe] = useState(true);
+const NoticeModal: FunctionComponent<NoticeModalProps> = ({ lat, lng }) => {
+  const [isVibislbe, setIsVibislbe] = useState(false);
+
+  useEffect(() => {
+    if (lng >= 124 && lng <= 132 && lat >= 33 && lat <= 43) {
+      setIsVibislbe(true);
+      return;
+    }
+    setIsVibislbe(false);
+  }, [lat]);
 
   return (
     <Modal
@@ -30,7 +39,7 @@ const NoticeModal: FunctionComponent<NoticeModalProps> = () => {
         <br />
         <br />
         <br />
-        <strong>────── 설정방법 ──────</strong><br />
+        <strong>───── 설정방법 ─────</strong><br />
         1. 크롬 개발자도구를 연다<br />
         2. control Devtools 클릭<br />
         3. More tools - Sensors 클릭<br />
@@ -40,4 +49,4 @@ const NoticeModal: FunctionComponent<NoticeModalProps> = () => {
   );
 };
 
-export default NoticeModal;
+export default memo(NoticeModal);
