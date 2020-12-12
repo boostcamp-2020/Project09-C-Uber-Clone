@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import { GET_TRIP } from '../queries/trip';
 
 const Page = styled.div`
-  /* position: absolute; */
   width: 100vw;
   height: 100vh;
 `;
