@@ -10,6 +10,7 @@ import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import CourseSubmitModal from '../presentational/CourseSubmitModal';
 import LogoutButton from '../presentational/LogoutButton';
+import NoticeModal from '../presentational/NoticeModal';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
 import { reverseGoecoding } from '../../utils/geocoding';
@@ -220,6 +221,7 @@ function SetCourseForm() {
 
   return (
     <>
+      <NoticeModal lat={riderPos.lat} lng={riderPos.lng}/>
       <LogoutPosition>
         <LogoutButton
           width='20px'

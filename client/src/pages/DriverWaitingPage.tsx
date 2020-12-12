@@ -135,7 +135,7 @@ function DriverWaitingPage() {
         trip={trip}
         setDriverStatus={setDriverStatus}
       />}
-      <NoticeModal />
+      <NoticeModal lat={driverPos.lat} lng={driverPos.lng}/>
       <DriverCurrentPositionMap driverPos={driverPos}/>
       <LogoutPosition>
         <LogoutButton
