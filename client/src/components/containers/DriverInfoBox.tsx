@@ -93,7 +93,7 @@ function DriverInfoBox() {
 
   useEffect(() => {
     if (data && data.cancelTrip.result === 'canceled') {
-      dispatch(setTrip({ id: '' }));
+      dispatch(setTrip({ id: undefined }));
       notifyRiderState({ variables: { tripId: trip.id, isCancel: true } });
       alert('호출 취소', '취소 되었습니다.', [
         { text: 'OK', onPress: () => history.push('/rider/setcourse') },
