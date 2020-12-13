@@ -57,14 +57,10 @@ enum TravelMode {
   WALKING = 'WALKING',
 }
 
-function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEstimatedDistance: any, setEstimatedTime: any}) {
+function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime, originPlace, destPlace, originPosition, destPosition }: any) {
   const {
-    originPosition,
-    destPosition,
     originMarker,
     destMarker,
-    originPlace,
-    destPlace,
   }: any = useSelector(selectMapReducer);
   const dispatch = useDispatch();
 
@@ -74,8 +70,12 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [directionResponse, setDirectionResponse] = useState(null);
   const [selectButtonDisplay, setSelectButtonDisplay] = useState('inline-block');
-
+  const count = useRef(0);
   const pickerEl = useRef(null);
+
+  useEffect(() => {
+    count.current = 0;
+  }, [originPosition.lat, originPosition.lng, destPosition.lat, destPosition.lng]);
 
   const onLoad = useCallback((map) => {
     setMap(map);
@@ -109,13 +109,14 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
     }
   };
 
-  const directionCallback = useCallback((response: any, status: any) => {
-    if (response !== null && status === 'OK') {
+  const directionCallback = (response: any, status: any) => {
+    if (response !== null && status === 'OK' && count.current === 0) {
+      count.current += 1;
       pickerEl.current.style.display = 'none';
       setSelectButtonDisplay('none');
       setDirectionResponse(response);
-    };
-  }, []);
+    }
+  };
 
   useEffect(() => {
     if (originMarker === '') {
@@ -223,8 +224,7 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime }: { setEsti
             origin: originPosition,
             travelMode: TravelMode.DRIVING,
           }}
-        />
-        }
+        />}
         {directionResponse &&
         <DirectionsRenderer
           options={{
