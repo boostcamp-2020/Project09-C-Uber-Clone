@@ -71,7 +71,6 @@ function SetCourseForm() {
     destPlace,
     originPosition,
     destPosition,
-    mapCenter,
   }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
@@ -234,6 +233,10 @@ function SetCourseForm() {
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}
+        originPlace={originPlace}
+        destPlace={destPlace}
+        originPosition={originPosition}
+        destPosition={destPosition}
       />
       <WhiteSpace />
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>
