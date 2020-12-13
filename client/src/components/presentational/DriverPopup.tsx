@@ -105,8 +105,6 @@ function DriverPopup({ trip, setDriverStatus }:
   const handleClickSubmitButton = async() => {
     const { data } = await notifyDriverResponse();
     if (data.sendResponse === MATCHING_SUCCESS) {
-      dispatch(setTrip({ id: trip.id }));
-      dispatch(setRider({ id: trip.rider.id }));
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     }
     showAlert(data.sendResponse);
