@@ -7,7 +7,7 @@ import { Button } from 'antd-mobile';
 
 import styled from 'styled-components';
 
-import { reverseGoecoding } from '../../utils/geocoding';
+import { reverseGeocoding } from '../../utils/geocoding';
 
 import PinIcon from '../presentational/PinIcon';
 
@@ -164,7 +164,7 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime, originPlace
     NEW_MARKER_POS.lat = lat;
     NEW_MARKER_POS.lng = lng;
 
-    const address = await reverseGoecoding({ lat, lng });
+    const address = await reverseGeocoding({ lat, lng });
 
     if (originMarker !== '') {
       return checkDestMarker(address);

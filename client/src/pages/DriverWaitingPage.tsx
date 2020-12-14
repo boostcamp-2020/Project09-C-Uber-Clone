@@ -18,6 +18,7 @@ import DriverPopup from '../components/presentational/DriverPopup';
 import LogoutButton from '../components/presentational/LogoutButton';
 import { useDispatch } from 'react-redux';
 import NoticeModal from '../components/presentational/NoticeModal';
+import OnOffButton from '../components/presentational/OnOffButton';
 
 const LogoutPosition = styled.div`
   position: absolute;
@@ -47,6 +48,7 @@ function DriverWaitingPage() {
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
   const [newDriverPos, setNewDriverPos] = useState({ lat: 0, lng: 0 });
+  const [online, setOnline] = useState(true);
 
   const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
   const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'network-only' });
@@ -91,6 +93,10 @@ function DriverWaitingPage() {
   const logout = () => {
     localStorage.removeItem('token');
     history.push('/login');
+  };
+
+  const onOffButtonHandler = () => {
+    setOnline(!online);
   };
 
   useEffect(() => {
@@ -157,6 +163,7 @@ function DriverWaitingPage() {
           onClick={logoutButtonHandler}
         />
       </LogoutPosition>
+      <OnOffButton online={online} content='시작' onClick={onOffButtonHandler}/>
     </>
   );
 }
