@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useQuery } from '@apollo/client';
 
@@ -10,6 +10,7 @@ import { WhiteSpace, Icon, Steps } from 'antd-mobile';
 import styled from 'styled-components';
 
 import { GET_TRIP } from '../queries/trip';
+import { setTrip } from '../slices/tripSlice';
 
 const Page = styled.div`
   /* position: absolute; */
@@ -54,6 +55,8 @@ const Title = styled.h1`
 `;
 
 function TripClosePage() {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [tripInfo, setTripInfo] = useState(null);
   const { loginReducer, tripReducer }: any = useSelector(state => state);
   const { trip } = tripReducer;
@@ -70,6 +73,12 @@ function TripClosePage() {
       </g>
     </svg>
   );
+
+  const handleClickConfirm = () => {
+    dispatch(setTrip({ id: undefined }));
+    history.push(nextPage);
+  };
+
   useEffect(() => {
     if (tripData) {
       setTripInfo(tripData.trip);
@@ -88,9 +97,7 @@ function TripClosePage() {
             <Steps.Step title="하차지" icon={customIcon()} description={tripInfo && tripInfo.destination.address} />
           </Steps>
           <WhiteSpace />
-          <Link to={nextPage}>
-            <Button>확인</Button>
-          </Link>
+          <Button onClick={handleClickConfirm}>확인</Button>
         </Paper>
       }
     </Page>
