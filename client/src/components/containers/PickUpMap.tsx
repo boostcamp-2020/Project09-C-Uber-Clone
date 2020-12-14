@@ -52,6 +52,14 @@ export default function PickUpMap({ isRider, riderLat, riderLng, driverLat, driv
       mapContainerStyle={containerStyle}
       zoom={16}
       center={isRider ? riderPos : driverPos}
+      options={{
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: true,
+        rotateControl: true,
+        fullscreenControl: false,
+      }}
     >
       <OverlayView
         position={driverPos}

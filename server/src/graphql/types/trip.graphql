@@ -4,7 +4,7 @@ type Mutation {
     destination: TripPlaceInput!,
     startTime: String!,
   ) : Trip @isAuthorized
-  cancelTrip(id: ID!): CancelResult @isAuthorized
+  cancelTrip(id: ID!): Result @isAuthorized
   setTripStatus(tripId: ID!, newTripStatus: String!): Result @isAuthorized
   addChatting(tripId: ID!, chattingInput: ChattingInput!): Chatting @isAuthorized
   setArrivals(tripId: ID!, arrivalTime: String!, destination: TripPlaceInput): Trip @isAuthorized
@@ -12,7 +12,7 @@ type Mutation {
 
 type Query {
   trip(id: ID!):Trip @isAuthorized
-  tripStatus(id: ID!): String! @isAuthorized
+  tripStatus(id: ID!): TripStatus! @isAuthorized
   chattings(id: ID!): [Chatting] @isAuthorized
   myTrips(statuses: [String]): [Trip] @isAuthorized
 }
@@ -21,6 +21,11 @@ input TripPlaceInput {
   address: String!
   latitude: Float!
   longitude: Float!
+}
+
+type TripStatus{
+  id: ID!
+  status: String!
 }
 
 type Trip {

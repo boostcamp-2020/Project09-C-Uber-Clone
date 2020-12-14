@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { LISTEN_DRIVER_RESPONSE } from '../../queries/driverResponded';
 import { GET_ORIGIN_POSITION_AND_DESTINATION_POSITION } from '../../queries/trip';
 import { setTrip } from '../../slices/tripSlice';
-import { MATCHING_CONFIRM } from '../../constants/matchingResult';
+import { MATCHED } from '../../constants/tripStatus';
 
 const containerStyle = {
   width: '100%',
@@ -40,9 +40,9 @@ function RiderPickupPositionMap() {
 
   useEffect(() => {
     if (data) {
-      const { response, driverId, tripId } = data.driverResponded;
-      if (response === MATCHING_CONFIRM) {
-        dispatch(setTrip({ id: tripId }));
+      const { id, status } = data.driverResponded;
+      if (status === MATCHED) {
+        dispatch(setTrip({ id }));
         history.push('/rider/pickup');
       }
     }
@@ -56,6 +56,14 @@ function RiderPickupPositionMap() {
         onLoad={onLoad}
         onUnmount={onUnmount}
         center={originPosition}
+        options={{
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: false,
+        }}
       >
       </GoogleMap>
     </LoadScript>

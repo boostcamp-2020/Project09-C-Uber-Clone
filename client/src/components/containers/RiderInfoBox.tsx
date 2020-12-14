@@ -104,24 +104,24 @@ function RiderInfoBox({ onBoard, currentPos }:{onBoard:boolean, currentPos:{ lat
   };
 
   const handleOnClickDrop = () => {
-    const tripId = trip.id;
-    setTripStatus({ variables: { tripId, newTripStatus: 'close' } });
+    updateArrivalData();
   };
 
   useEffect(() => {
     if (data && data.setTripStatus.result === 'success') {
-      notifyDriverState({ variables: { tripId: trip.id, onBoard: true } });
+      notifyDriverState({ variables: { tripId: trip.id } });
       history.push('/driver/driving');
     }
     if (data && data.setTripStatus.result === 'close success') {
-      updateArrivalData();
+      notifyDriverState({ variables: { tripId: trip.id } });
+      history.push('/driver/tripend');
     }
   }, [data]);
 
   useEffect(() => {
     if (arrivalData) {
-      notifyDriverState({ variables: { tripId: trip.id, isDrop: true } });
-      history.push('/driver/tripend');
+      const tripId = trip.id;
+      setTripStatus({ variables: { tripId, newTripStatus: 'close' } });
     }
   }, [arrivalData]);
 
@@ -139,7 +139,7 @@ function RiderInfoBox({ onBoard, currentPos }:{onBoard:boolean, currentPos:{ lat
               <PlaceInfo>{ tripData?.trip.destination.address}</PlaceInfo>
             </div>
             <Buttons>
-              <DropButton onClick={handleOnClickDrop}>라이더 하차</DropButton>
+              <DropButton type={'button'} onClick={handleOnClickDrop}>라이더 하차</DropButton>
             </Buttons>
           </>
           :
@@ -149,7 +149,7 @@ function RiderInfoBox({ onBoard, currentPos }:{onBoard:boolean, currentPos:{ lat
               <PlaceInfo>{tripData?.trip.origin.address}</PlaceInfo>
             </div>
             <Buttons>
-              <PickUpButton onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
+              <PickUpButton type={'button'} onClick={handleOnClickBoardCompelete}>탑승완료</PickUpButton>
             </Buttons>
           </>
         }

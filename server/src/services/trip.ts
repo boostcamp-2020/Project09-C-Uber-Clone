@@ -25,35 +25,6 @@ type Status = 'open' | 'matched' | 'onBoard' | 'close' | 'cancel';
 export default {
   get: async({ id }) => {
     try {
-      const trip = await Trip.findById(id);
-      const rider = trip?.rider;
-      const driver = trip?.driver;
-      const origin = trip?.origin;
-      const destination = trip?.destination;
-      const startTime = trip?.startTime;
-      const arrivalTime = trip?.arrivalTime;
-      const status = trip?.status;
-      const chattings = trip?.chattings;
-      const estimatedTime = trip?.estimatedTime;
-      const estimatedDistance = trip?.estimatedDistance;
-      return {
-        id: trip?._id,
-        rider: { id: rider?._id, ...rider },
-        driver: { id: driver?._id, ...driver },
-        origin,
-        destination,
-        startTime,
-        arrivalTime,
-        status,
-        chattings,
-        estimatedTime,
-        estimatedDistance };
-    } catch (e) {
-      throw e.message;
-    }
-  },
-  getRecallData: async({ id }) => {
-    try {
       return await Trip.findById(id);
     } catch (e) {
       throw e.message;
@@ -62,7 +33,7 @@ export default {
   getStatus: async({ id }) => {
     try {
       const result = await Trip.findOneStatus(id);
-      return result?.status;
+      return result;
     } catch (e) {
       throw e.message;
     }
@@ -87,8 +58,8 @@ export default {
   },
   cancel: async ({ id }) => {
     try {
-      await Trip.update(id, { status: 'cancel' });
-      return { id, result: 'canceled' };
+      const trip = await Trip.update(id, { status: 'cancel' });
+      return { result: 'canceled', trip };
     } catch (e) {
       throw e.message;
     }
@@ -126,7 +97,7 @@ export default {
   setArrivals: async (tripId: string, arrivalTime: Date, destination: {address: string, latitude: number, longitude: number}) => {
     return await Trip.setArrivals(tripId, arrivalTime, destination);
   },
-  getMyTrips: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
-    return await Trip.getMyTrips(userId, isDriver, statuses);
+  getMyTrip: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    return await Trip.getMyTrip(userId, isDriver, statuses);
   },
 };

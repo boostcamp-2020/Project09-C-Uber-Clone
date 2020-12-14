@@ -7,9 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
 import { VERIFY_USER_ROLE } from '../queries/verify';
-import { GET_MY_TRIPS } from '../queries/trip';
-import { setLoginRole } from '../slices/loginSlice';
-import { setTrip } from '../slices/tripSlice';
+import { selectLoginReducer, setLoginRole } from '../slices/loginSlice';
 import SetCoursePage from '../pages/SetCoursePage';
 import DriverWaitingPage from '../pages/DriverWaitingPage';
 import DriverPickUpPage from '../pages/DriverPickUpPage';
@@ -19,58 +17,51 @@ import RiderWaitingPage from '../pages/RiderWaitingPage';
 import DriverDrivingPage from '../pages/DriverDrivingPage';
 import RiderDrivingPage from '../pages/RiderDrivingPage';
 import TripClosePage from '../pages/TripClosePage';
-
+import ValidateTripStatus from './ValidateTripStatus';
+import { setTrip } from '../slices/tripSlice';
 interface Paths {
   path: string;
 }
 
 const RouteIf: FunctionComponent<Paths> = ({ path }) => {
   const dispatch = useDispatch();
-  const { loginReducer }: any = useSelector((state: any) => state);
 
-  useQuery(VERIFY_USER_ROLE, { onCompleted: (userData) => {
-    if (loginReducer.loginRole === '') {
-      !!userData ? dispatch(setLoginRole(userData.verifyUser.role)) : dispatch(setLoginRole('unknown'));
-    }
-  } });
+  const { loginRole } = useSelector(selectLoginReducer);
 
-  useQuery(GET_MY_TRIPS, {
-    variables: { statuses: ['open', 'matched', 'onBoard'] },
-    onCompleted: (data) => {
-      if (data.myTrips.length === 1) {
-        dispatch(setTrip({ id: data.myTrips[0].id }));
-      }
-    },
-  });
+  const { loading } = useQuery(VERIFY_USER_ROLE, { onCompleted: (data) => {
+    dispatch(setLoginRole(data.verifyUser.role));
+    dispatch(setTrip({ id: data.verifyUser.tripId }));
+  }, skip: loginRole !== '' });
 
   return (
+    <>{!loading &&
     <Route
       path={path}
       render={() => {
-        if (loginReducer.loginRole === 'driver') {
+        if (loginRole === 'driver') {
           return (
             <Switch>
-              <Route path='/driver/main' component={DriverWaitingPage} />
-              <Route path='/driver/pickup' component={DriverPickUpPage} />
-              <Route path='/driver/driving' component={DriverDrivingPage} />
-              <Route path='/driver/tripend' component={TripClosePage} />
+              <Route path='/driver/main' component={ValidateTripStatus(DriverWaitingPage, 'main')} />
+              <Route path='/driver/pickup' component={ValidateTripStatus(DriverPickUpPage, 'matched')} />
+              <Route path='/driver/driving' component={ValidateTripStatus(DriverDrivingPage, 'onBoard')} />
+              <Route path='/driver/tripend' component={ValidateTripStatus(TripClosePage, 'close')} />
               <Redirect path="*" to="/driver/main" />
             </Switch>
           );
         }
-        if (loginReducer.loginRole === 'rider') {
+        if (loginRole === 'rider') {
           return (
             <Switch>
-              <Route path='/rider/setcourse' component={SetCoursePage} />
-              <Route path='/rider/waiting' component={RiderWaitingPage}/>
-              <Route path='/rider/pickup' component={RiderPickUpPage} />
-              <Route path='/rider/driving' component={RiderDrivingPage} />
-              <Route path='/rider/tripend' component={TripClosePage} />
+              <Route path='/rider/setcourse' component={ValidateTripStatus(SetCoursePage, 'main')} />
+              <Route path='/rider/waiting' component={ValidateTripStatus(RiderWaitingPage, 'open')}/>
+              <Route path='/rider/pickup' component={ValidateTripStatus(RiderPickUpPage, 'matched')} />
+              <Route path='/rider/driving' component={ValidateTripStatus(RiderDrivingPage, 'onBoard')} />
+              <Route path='/rider/tripend' component={ValidateTripStatus(TripClosePage, 'close')} />
               <Redirect path="*" to="/rider/setcourse" />
             </Switch>
           );
         }
-        if (loginReducer.loginRole === 'unknown') {
+        if (loginRole === 'unknown') {
           localStorage.removeItem('token');
           return (
             <Switch>
@@ -80,7 +71,7 @@ const RouteIf: FunctionComponent<Paths> = ({ path }) => {
           );
         }
       }}
-    />
+    />}</>
   );
 };
 
