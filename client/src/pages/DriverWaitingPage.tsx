@@ -117,7 +117,7 @@ function DriverWaitingPage() {
       setDriverStatus(DRIVER_POPUP);
       return;
     }
-    if (driverStatus !== DRIVER_POPUP) {
+    if (!!tripStatusData && driverStatus !== DRIVER_POPUP) {
       setDriverStatus(DRIVER_IGNORED);
     }
   }, [tripStatusData]);
