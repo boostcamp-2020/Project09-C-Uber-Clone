@@ -53,9 +53,8 @@ type Driver {
 type LoginResult {
   success: Boolean!
   message: String
-  name: String
-  role: String!
   token: String
+  user: VerifiedUser
 }
 
 input DriverPositionInput {
