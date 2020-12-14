@@ -2,20 +2,26 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 const Button = styled.button<{online: boolean}>`
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  margin: auto;
   padding: 4px;
   border: none;
   border-radius: 50%;
   background-color: ${props => props.online ? '#EC534B' : '#56A902'};
   color: white;
   font-weight: bold;
+  font-size: 18px;
   text-align: center;
   box-shadow: 0px 4px 4px #CCCCCC;
   cursor: pointer;
 `;
 
 const Circle = styled.div`
-  padding: 12px 6px;
-  border: 1.5px solid #F8F8FF;
+  padding: 16px 8px;
+  border: 2px solid #F8F8FF;
   border-radius: 50%;
 `;
 

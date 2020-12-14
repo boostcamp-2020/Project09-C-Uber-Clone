@@ -23,12 +23,6 @@ const LogoutPosition = styled.div`
   top: 12px;
 `;
 
-const OnOffbuttonPosition = styled.div`
-  position: absolute;
-  bottom: 16px;
-  width: 100vw;
-`;
-
 const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
@@ -162,9 +156,7 @@ function DriverWaitingPage() {
           onClick={logoutButtonHandler}
         />
       </LogoutPosition>
-      <OnOffbuttonPosition>
-        <OnOffButton online={online} content='시작' onClick={onOffButtonHandler}/>
-      </OnOffbuttonPosition>
+      <OnOffButton online={online} content='시작' onClick={onOffButtonHandler}/>
     </>
   );
 }
