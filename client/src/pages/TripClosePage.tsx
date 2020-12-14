@@ -13,7 +13,6 @@ import { GET_TRIP } from '../queries/trip';
 import { setTrip } from '../slices/tripSlice';
 
 const Page = styled.div`
-  /* position: absolute; */
   width: 100vw;
   height: 100vh;
 `;

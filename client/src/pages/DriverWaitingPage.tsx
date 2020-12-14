@@ -17,6 +17,7 @@ import DriverCurrentPositionMap from '../components/containers/DriverCurrentPosi
 import DriverPopup from '../components/presentational/DriverPopup';
 import LogoutButton from '../components/presentational/LogoutButton';
 import { useDispatch } from 'react-redux';
+import NoticeModal from '../components/presentational/NoticeModal';
 
 const LogoutPosition = styled.div`
   position: absolute;
@@ -27,7 +28,6 @@ const LogoutPosition = styled.div`
 const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
-  //TODO: 이 페이지 전체를 container로 이동
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -46,6 +46,7 @@ function DriverWaitingPage() {
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
+  const [newDriverPos, setNewDriverPos] = useState({ lat: 0, lng: 0 });
 
   const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
   const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'network-only' });
@@ -57,9 +58,10 @@ function DriverWaitingPage() {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      if (JSON.stringify(driverPos) !== JSON.stringify(pos)) {
+      if (driverPos.lat === 0 && driverPos.lng === 0) {
         setDriverPos(pos);
       }
+      setNewDriverPos(pos);
     };
 
     const navError = (): any => {
@@ -130,7 +132,10 @@ function DriverWaitingPage() {
     getDriverPosition();
     setTimeout(() => {
       setCount(count + 1);
-      updateDriverPosition();
+      if (JSON.stringify(newDriverPos) !== JSON.stringify(driverPos)) {
+        updateDriverPosition();
+        setDriverPos(newDriverPos);
+      }
     }, DRIVER_POSITION_UPDATE_TIME);
   }, [count]);
 
@@ -141,6 +146,7 @@ function DriverWaitingPage() {
         trip={currentTrip}
         setDriverStatus={setDriverStatus}
       />}
+      <NoticeModal lat={driverPos.lat} lng={driverPos.lng}/>
       <DriverCurrentPositionMap driverPos={driverPos}/>
       <LogoutPosition>
         <LogoutButton
