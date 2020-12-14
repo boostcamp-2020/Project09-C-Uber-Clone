@@ -50,7 +50,7 @@ function DriverWaitingPage() {
   const [newDriverPos, setNewDriverPos] = useState({ lat: 0, lng: 0 });
   const [online, setOnline] = useState(true);
 
-  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
+  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL, { skip: !online });
   const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'network-only' });
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
