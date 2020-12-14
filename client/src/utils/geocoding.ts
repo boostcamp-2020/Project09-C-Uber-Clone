@@ -1,4 +1,4 @@
-export const reverseGoecoding = (position: {lat: number, lng: number}): Promise<string> => {
+export const reverseGeocoding = (position: {lat: number, lng: number}): Promise<string> => {
   const geocoder = new google.maps.Geocoder;
   return new Promise((resolve, reject) => {
     geocoder.geocode(

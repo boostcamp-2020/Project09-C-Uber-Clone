@@ -13,7 +13,7 @@ import LogoutButton from '../presentational/LogoutButton';
 import NoticeModal from '../presentational/NoticeModal';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
-import { reverseGoecoding } from '../../utils/geocoding';
+import { reverseGeocoding } from '../../utils/geocoding';
 
 import {
   selectMapReducer,
@@ -137,7 +137,7 @@ function SetCourseForm() {
   const makeStartingPointHere = async() => {
     dispatch(setOriginMarker(''));
     dispatch(setOriginPosition(riderPos));
-    const address = await reverseGoecoding(riderPos);
+    const address = await reverseGeocoding(riderPos);
     dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('현재위치'));
   };

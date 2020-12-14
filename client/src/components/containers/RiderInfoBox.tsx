@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 
-import { reverseGoecoding } from '../../utils/geocoding';
+import { reverseGeocoding } from '../../utils/geocoding';
 import { selectTripReducer } from '../../slices/tripSlice';
 
 import styled from 'styled-components';
@@ -84,7 +84,7 @@ function RiderInfoBox({ onBoard, currentPos }:{onBoard:boolean, currentPos:{ lat
 
   const updateArrivalData = async () => {
     const now = new Date();
-    const address = await reverseGoecoding(currentPos);
+    const address = await reverseGeocoding(currentPos);
     setArrival({ variables: {
       tripId: trip.id,
       arrivalTime: now,
