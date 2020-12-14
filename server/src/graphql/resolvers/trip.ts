@@ -86,9 +86,9 @@ export default {
       const user = context.req.user;
       const { statuses } = args;
       if (!statuses) {
-        return await Trip.getMyTrips(user.data._id, user.isDriver, ['open', 'matched', 'onBoard', 'close', 'cancel']);
+        return await Trip.getMyTrip(user.data._id, user.isDriver, ['open', 'matched', 'onBoard', 'close', 'cancel']);
       }
-      return await Trip.getMyTrips(user.data._id, user.isDriver, statuses);
+      return await Trip.getMyTrip(user.data._id, user.isDriver, statuses);
     },
   },
   Mutation: {

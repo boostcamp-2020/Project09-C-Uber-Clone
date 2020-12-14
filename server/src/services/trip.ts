@@ -33,7 +33,7 @@ export default {
   getStatus: async({ id }) => {
     try {
       const result = await Trip.findOneStatus(id);
-      return result?.status;
+      return result;
     } catch (e) {
       throw e.message;
     }
@@ -58,8 +58,8 @@ export default {
   },
   cancel: async ({ id }) => {
     try {
-      await Trip.update(id, { status: 'cancel' });
-      return { id, result: 'canceled' };
+      const trip = await Trip.update(id, { status: 'cancel' });
+      return { result: 'canceled', trip };
     } catch (e) {
       throw e.message;
     }
@@ -97,7 +97,7 @@ export default {
   setArrivals: async (tripId: string, arrivalTime: Date, destination: {address: string, latitude: number, longitude: number}) => {
     return await Trip.setArrivals(tripId, arrivalTime, destination);
   },
-  getMyTrips: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
-    return await Trip.getMyTrips(userId, isDriver, statuses);
+  getMyTrip: async(userId: string | object, isDriver: boolean, statuses?: Status[]) => {
+    return await Trip.getMyTrip(userId, isDriver, statuses);
   },
 };
