@@ -96,6 +96,9 @@ function DriverPopup({ trip, setDriverStatus }:
 
   const showAlert = (result:string) => {
     setStatus(result);
+    setTimeout(() => {
+      setDriverStatus(DRIVER_IGNORED);
+    }, 2000);
   };
 
   const handleClickIgnoreButton = () => {
@@ -104,10 +107,10 @@ function DriverPopup({ trip, setDriverStatus }:
 
   const handleClickSubmitButton = async() => {
     const { data } = await notifyDriverResponse();
-    if (data.sendResponse === MATCHING_SUCCESS) {
+    if (data.sendResponse.result === MATCHING_SUCCESS) {
       return setDriverStatus(DRIVER_MATCHING_SUCCESS);
     }
-    showAlert(data.sendResponse);
+    showAlert(data.sendResponse.trip.status);
   };
 
   useEffect(() => {
