@@ -56,6 +56,14 @@ function RiderPickupPositionMap() {
         onLoad={onLoad}
         onUnmount={onUnmount}
         center={originPosition}
+        options={{
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: false,
+        }}
       >
       </GoogleMap>
     </LoadScript>
