@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const { actions, reducer } = createSlice({
   name: 'trip',
   initialState: {
-    trip: { id: '' },
+    trip: { id: undefined },
     rider: { id: '', name: '', email: '' },
     driver: { id: '', name: '', carType: '', plateNumber: '', description: '', profileImage: '' },
   },

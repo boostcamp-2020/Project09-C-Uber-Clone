@@ -8,12 +8,15 @@ import { GET_TRIP_STATUS } from '../queries/trip';
 import { ADD_DRIVER_POSITION } from '../queries/driver';
 import { LISTEN_DRIVER_CALL } from '../queries/callRequest';
 
+import { setTrip } from '../slices/tripSlice';
+
 import { DRIVER_MATCHING_SUCCESS, DRIVER_POPUP, DRIVER_IGNORED, DRIVER_WAITING } from '../constants/driverStatus';
 import { OPEN } from '../constants/tripStatus';
 
 import DriverCurrentPositionMap from '../components/containers/DriverCurrentPositionMap';
 import DriverPopup from '../components/presentational/DriverPopup';
 import LogoutButton from '../components/presentational/LogoutButton';
+import { useDispatch } from 'react-redux';
 import NoticeModal from '../components/presentational/NoticeModal';
 
 const LogoutPosition = styled.div`
@@ -26,9 +29,10 @@ const DRIVER_POSITION_UPDATE_TIME = 1000;
 
 function DriverWaitingPage() {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [riderCalls, setRiderCalls] = useState([]);
-  const [trip, setTrip] = useState({
+  const [currentTrip, setCurrentTrip] = useState({
     id: undefined,
     rider: undefined,
     origin: undefined,
@@ -38,14 +42,14 @@ function DriverWaitingPage() {
     estimatedTime: undefined,
     estimatedDistance: undefined,
   },
-  ); //TODO: type 다시 지정
+  );
   const [driverStatus, setDriverStatus] = useState(DRIVER_WAITING);
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
   const [newDriverPos, setNewDriverPos] = useState({ lat: 0, lng: 0 });
 
   const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
-  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'no-cache' });
+  const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'network-only' });
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
   const getDriverPosition = () => {
@@ -97,17 +101,19 @@ function DriverWaitingPage() {
 
   useEffect(() => {
     if (driverStatus === DRIVER_WAITING && riderCalls[0]) {
-      setTrip(riderCalls[0]);
+      setCurrentTrip(riderCalls[0]);
       getTripStatus({ variables: { id: riderCalls[0].id } });
     }
   }, [riderCalls]);
 
   useEffect(() => {
-    if (!!tripStatusData && tripStatusData.tripStatus === OPEN) {
+    if (!!tripStatusData && tripStatusData.trip.status === OPEN) {
       setDriverStatus(DRIVER_POPUP);
       return;
     }
-    setDriverStatus(DRIVER_IGNORED);
+    if (driverStatus !== DRIVER_POPUP) {
+      setDriverStatus(DRIVER_IGNORED);
+    }
   }, [tripStatusData]);
 
   useEffect(() => {
@@ -116,6 +122,7 @@ function DriverWaitingPage() {
       setRiderCalls(riderCalls.slice(1));
     }
     if (driverStatus === DRIVER_MATCHING_SUCCESS) {
+      dispatch(setTrip({ id: currentTrip.id }));
       setRiderCalls([]);
       history.push('/driver/pickup');
     }
@@ -136,7 +143,7 @@ function DriverWaitingPage() {
     <>
       {driverStatus === DRIVER_POPUP &&
       <DriverPopup
-        trip={trip}
+        trip={currentTrip}
         setDriverStatus={setDriverStatus}
       />}
       <NoticeModal lat={driverPos.lat} lng={driverPos.lng}/>

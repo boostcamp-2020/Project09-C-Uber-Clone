@@ -18,17 +18,17 @@ type Mutation {
     startTime: String!,
     estimatedTime: String!,
     estimatedDistance: String!
-  ): String @isAuthorized
+  ): CallResult @isAuthorized
   
   driverRecall(
     id:ID!
-  ): String @isAuthorized
+  ): CallResult @isAuthorized
 
-  notifyRiderState(tripId: ID!, latitude: Float, longitude: Float, isCancel: Boolean): Boolean @isAuthorized
+  notifyRiderState(tripId: ID!, latitude: Float, longitude: Float): Boolean @isAuthorized
 }
 
 type Subscription {
-  driverResponded: DriverResponse
+  driverResponded: Trip
 
   matchedRiderState(tripId: ID!): RiderState
 }
@@ -50,13 +50,18 @@ type RiderState {
   tripId: ID!
   latitude: Float
   longitude: Float
-  isCancel: Boolean
+  trip: Trip
 }
 
 type DriverResponse{
   driverId: ID!
   tripId: ID!
   response: String!
+}
+
+type CallResult{
+  result: String!
+  trip: Trip
 }
 
 

@@ -79,14 +79,14 @@ export default function DriverPickUpForm() {
   }, [count]);
 
   useEffect(() => {
-    notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos, isDrop: false } });
+    notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos } });
   }, [driverPos]);
 
   useEffect(() => {
     if (data && data.matchedRiderState.latitude) {
       setRiderPos({ lat: data.matchedRiderState.latitude, lng: data.matchedRiderState.longitude });
     }
-    if (data && data.matchedRiderState.isCancel) {
+    if (data && data.matchedRiderState.trip.status === 'cancel') {
       alert('호출취소', '라이더가 호출을 취소하였습니다.', [{ text: 'OK', onPress: () => history.push('/driver/main') }]);
     }
   }, [data]);
@@ -109,7 +109,7 @@ export default function DriverPickUpForm() {
         pickUpLat={originPosition.lat}
         pickUpLng={originPosition.lng}
       />
-      <RiderInfoBox onBoard={false}/>
+      <RiderInfoBox onBoard={false} currentPos={driverPos}/>
     </>
   );
 }
