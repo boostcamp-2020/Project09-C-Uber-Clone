@@ -109,7 +109,7 @@ export default function DriverPickUpForm() {
         pickUpLat={originPosition.lat}
         pickUpLng={originPosition.lng}
       />
-      <RiderInfoBox onBoard={false}/>
+      <RiderInfoBox onBoard={false} currentPos={driverPos}/>
     </>
   );
 }
