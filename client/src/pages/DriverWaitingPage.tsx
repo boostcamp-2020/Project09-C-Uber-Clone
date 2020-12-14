@@ -15,11 +15,18 @@ import DriverCurrentPositionMap from '../components/containers/DriverCurrentPosi
 import DriverPopup from '../components/presentational/DriverPopup';
 import LogoutButton from '../components/presentational/LogoutButton';
 import NoticeModal from '../components/presentational/NoticeModal';
+import OnOffButton from '../components/presentational/OnOffButton';
 
 const LogoutPosition = styled.div`
   position: absolute;
   right: 8px;
   top: 12px;
+`;
+
+const OnOffbuttonPosition = styled.div`
+  position: absolute;
+  bottom: 16px;
+  width: 100vw;
 `;
 
 const DRIVER_POSITION_UPDATE_TIME = 1000;
@@ -43,8 +50,9 @@ function DriverWaitingPage() {
   const [count, setCount] = useState(0);
   const [driverPos, setDriverPos] = useState({ lat: 0, lng: 0 });
   const [newDriverPos, setNewDriverPos] = useState({ lat: 0, lng: 0 });
+  const [online, setOnline] = useState(true);
 
-  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL);
+  const { data: driverListenData } = useSubscription(LISTEN_DRIVER_CALL, { skip: !online });
   const [getTripStatus, { data: tripStatusData }] = useLazyQuery(GET_TRIP_STATUS, { fetchPolicy: 'no-cache' });
   const [updateDriverPosition] = useMutation(ADD_DRIVER_POSITION, { variables: driverPos });
 
@@ -87,6 +95,10 @@ function DriverWaitingPage() {
   const logout = () => {
     localStorage.removeItem('token');
     history.push('/login');
+  };
+
+  const onOffButtonHandler = () => {
+    setOnline(!online);
   };
 
   useEffect(() => {
@@ -150,6 +162,9 @@ function DriverWaitingPage() {
           onClick={logoutButtonHandler}
         />
       </LogoutPosition>
+      <OnOffbuttonPosition>
+        <OnOffButton online={online} content='시작' onClick={onOffButtonHandler}/>
+      </OnOffbuttonPosition>
     </>
   );
 }
