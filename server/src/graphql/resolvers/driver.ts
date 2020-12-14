@@ -52,13 +52,16 @@ export default {
       const driverId = context.req.user.data._id;
       const result = await Trip.checkStatus(args);
       if (result === 'success') {
-        context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: { driverId, ...args } });
-        await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
+        const trip = await Trip.setMatchedDriver({ driverId, tripId: args.tripId });
+        context.pubsub.publish(DRIVER_RESPONDED, { driverResponded: trip });
+        return { result, trip };
       }
-      return result;
+      const trip = await Trip.get({ id: args.tripId });
+      return { result, trip };
     },
-    driverStateNotify(_:any, args, context:any) {
-      context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: args });
+    async driverStateNotify(_:any, args, context:any) {
+      const trip = await Trip.get({ id: args.tripId });
+      context.pubsub.publish(MATCHED_DRIVER_STATE, { matchedDriverState: { ...args, trip } });
       return args;
     },
     async updateDriverPosition(_:any, args: any, { req }:any) {
