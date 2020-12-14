@@ -206,8 +206,8 @@ function SetCourseForm() {
   }, [destPlace]);
 
   useEffect(() => {
-    if (data) {
-      dispatch(setTrip({ id: data.driverCall }));
+    if (data && data.driverCall.result) {
+      dispatch(setTrip({ id: data.driverCall.trip.id }));
       history.push('/rider/waiting');
     }
   }, [data]);

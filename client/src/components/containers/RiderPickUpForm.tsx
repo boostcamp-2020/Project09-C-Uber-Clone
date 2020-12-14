@@ -80,7 +80,7 @@ export default function RiderPickUpForm() {
     if (data && data.matchedDriverState.driverPosition) {
       setDriverPos(data.matchedDriverState.driverPosition);
     }
-    if (data && data.matchedDriverState.onBoard) {
+    if (data && data.matchedDriverState.trip.status === 'onBoard') {
       history.push('/rider/driving');
     }
   }, [data]);
