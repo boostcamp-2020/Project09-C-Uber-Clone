@@ -10,12 +10,14 @@ import styled from 'styled-components';
 
 import { LOGIN_RIDER, LOGIN_DRIVER } from '../../queries/login';
 import { setLoginRole } from '../../slices/loginSlice';
+import { setTrip } from '../../slices/tripSlice';
 
 import { checkValidation } from '../../utils/validate';
 
 import Input from '../presentational/Input';
 import SubmitButton from '../presentational/SubmitButton';
-import { setTrip } from '../../slices/tripSlice';
+import LoadingView from '../presentational/LoadingView';
+
 
 const Div = styled.div`
   width: 90%;
@@ -55,7 +57,7 @@ const SignupButton = styled.button`
 function LoginForm() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [loginRider, { data: riderData, error: riderError }] = useMutation(
+  const [loginRider, { data: riderData, loading: riderLoading, error: riderError }] = useMutation(
     LOGIN_RIDER,
     {
       onCompleted: ({ loginRider }) => {
@@ -67,11 +69,12 @@ function LoginForm() {
           history.push('/rider/setcourse');
         } else {
           window.alert(message);
+          history.push('/login');
         }
       },
     },
   );
-  const [loginDriver, { data: driverData, error: driverError }] = useMutation(
+  const [loginDriver, { data: driverData, loading: driverLoading, error: driverError }] = useMutation(
     LOGIN_DRIVER,
     {
       onCompleted: ({ loginDriver }) => {
@@ -83,6 +86,7 @@ function LoginForm() {
           history.push('/driver/main');
         } else {
           window.alert(message);
+          history.push('/login');
         }
       },
     },
@@ -121,6 +125,10 @@ function LoginForm() {
   useEffect(() => {
     checkValidation(propertyToCheck, setIsValidate);
   }, propertyToWatch);
+
+  if (riderLoading || driverLoading) {
+    return <LoadingView />;
+  }
 
   return (
     <Div>
