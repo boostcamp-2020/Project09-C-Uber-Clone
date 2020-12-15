@@ -30,10 +30,22 @@ subscription {
 
 export const NOTIFY_RIDER_CALL = gql`
 mutation driverCall($origin: TripPlaceInput!, $destination: TripPlaceInput!, $startTime: String!, $estimatedTime: String!, $estimatedDistance: String!) {
-  driverCall(origin: $origin, destination: $destination, startTime: $startTime, estimatedTime: $estimatedTime, estimatedDistance: $estimatedDistance)
+  driverCall(origin: $origin, destination: $destination, startTime: $startTime, estimatedTime: $estimatedTime, estimatedDistance: $estimatedDistance){
+    result
+    trip{
+      id
+      status
+    }
+  }
 }`;
 
 export const RE_NOTIFY_RIDER_CALL = gql`
 mutation driveRecall($id: ID!) {
-  driverRecall(id: $id)
+  driverRecall(id: $id){
+    result
+    trip{
+      id
+      status
+    }
+  }
 }`;

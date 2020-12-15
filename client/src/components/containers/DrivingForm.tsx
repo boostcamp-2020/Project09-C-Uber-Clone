@@ -83,7 +83,7 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
   }, [tripData]);
 
   useEffect(() => {
-    if (data && data.matchedDriverState.isDrop) {
+    if (data && data.matchedDriverState.trip.status === 'close') {
       history.push('/rider/tripend');
     }
   }, [data]);
@@ -96,6 +96,14 @@ export default function DrivingForm({ isRider }:{isRider:boolean}) {
         mapContainerStyle={containerStyle}
         zoom={16}
         center={currentPos}
+        options={{
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: false,
+        }}
       >
         <DistanceMatrixService
           callback={distanceMatrixCallback}

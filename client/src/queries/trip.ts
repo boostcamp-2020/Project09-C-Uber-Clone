@@ -2,13 +2,19 @@ import { gql } from '@apollo/client';
 
 export const CANCEL_TRIP = gql`mutation cancelCall($id:ID!){
   cancelTrip(id:$id){
-    id
     result
+    trip{
+      id
+      status
+    }
   }
 }`;
 
 export const GET_TRIP_STATUS = gql`query getStatus($id:ID!){
-  tripStatus(id:$id)
+  trip(id:$id){
+    id
+    status
+  }
 }`;
 
 export const GET_PICK_UP_POSITION = gql`query pickUpPos($id:ID!){
@@ -68,6 +74,14 @@ export const GET_TRIP = gql`query getTrip($id:ID!){
   }
 }`;
 
+export const TRIP_STATUS = gql`query ($id:ID!){
+  tripStatus(id:$id){
+    id
+    status
+  }
+}
+`;
+
 export const GET_TRIP_BEFORE_MATCHING = gql`query getTrip($id:ID!){
   trip(id:$id){
     id
@@ -98,6 +112,10 @@ export const ADD_TRIP_STATUS = gql`
   mutation setTripStatus($tripId: ID!, $newTripStatus: String!) {
     setTripStatus(tripId:$tripId, newTripStatus:$newTripStatus) {
       result
+      trip{
+        id
+        status
+      }
     }
   }
 `;

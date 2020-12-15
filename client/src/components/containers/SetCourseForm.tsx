@@ -10,9 +10,10 @@ import PlaceSearchBox from '../presentational/PlaceSearchBox';
 import RiderSetCourseMap from './RiderSetCourseMap';
 import CourseSubmitModal from '../presentational/CourseSubmitModal';
 import LogoutButton from '../presentational/LogoutButton';
+import NoticeModal from '../presentational/NoticeModal';
 
 import { NOTIFY_RIDER_CALL } from '../../queries/callRequest';
-import { reverseGoecoding } from '../../utils/geocoding';
+import { reverseGeocoding } from '../../utils/geocoding';
 
 import {
   selectMapReducer,
@@ -70,7 +71,6 @@ function SetCourseForm() {
     destPlace,
     originPosition,
     destPosition,
-    mapCenter,
   }: any = useSelector(selectMapReducer);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
   const [originAutocomplete, setOriginAutocomplete] = useState(null);
@@ -137,7 +137,7 @@ function SetCourseForm() {
   const makeStartingPointHere = async() => {
     dispatch(setOriginMarker(''));
     dispatch(setOriginPosition(riderPos));
-    const address = await reverseGoecoding(riderPos);
+    const address = await reverseGeocoding(riderPos);
     dispatch(setOriginPlace(address));
     dispatch(setOriginMarker('현재위치'));
   };
@@ -206,8 +206,8 @@ function SetCourseForm() {
   }, [destPlace]);
 
   useEffect(() => {
-    if (data) {
-      dispatch(setTrip({ id: data.driverCall }));
+    if (data && data.driverCall.result) {
+      dispatch(setTrip({ id: data.driverCall.trip.id }));
       history.push('/rider/waiting');
     }
   }, [data]);
@@ -220,6 +220,7 @@ function SetCourseForm() {
 
   return (
     <>
+      <NoticeModal lat={riderPos.lat} lng={riderPos.lng}/>
       <LogoutPosition>
         <LogoutButton
           width='20px'
@@ -232,6 +233,10 @@ function SetCourseForm() {
       <RiderSetCourseMap
         setEstimatedDistance={setEstimatedDistance}
         setEstimatedTime={setEstimatedTime}
+        originPlace={originPlace}
+        destPlace={destPlace}
+        originPosition={originPosition}
+        destPosition={destPosition}
       />
       <WhiteSpace />
       <HereButton onClick={makeStartingPointHere}>현재 위치로</HereButton>

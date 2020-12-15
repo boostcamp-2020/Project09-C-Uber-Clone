@@ -20,18 +20,16 @@ type Mutation {
     response: String!, 
     riderId: ID!,
     tripId: ID!
-  ): String @isAuthorized
+  ): Result @isAuthorized
 
   driverStateNotify(
     tripId: String
     driverPosition: DriverPositionInput
-    onBoard: Boolean
-    isDrop: Boolean
   ): driverStateNotify @isAuthorized
 
   updateDriverPosition(
     lat:Float, lng:Float
-  ): Result @isAuthorized
+  ): updateResult @isAuthorized
 }
 
 type Subscription {
@@ -55,9 +53,8 @@ type Driver {
 type LoginResult {
   success: Boolean!
   message: String
-  name: String
-  role: String!
   token: String
+  user: VerifiedUser
 }
 
 input DriverPositionInput {
@@ -68,8 +65,7 @@ input DriverPositionInput {
 type driverStateNotify {
   tripId: ID!
   driverPosition: Position
-  onBoard: Boolean
-  isDrop: Boolean
+  trip: Trip
 }
 
 type Position {
@@ -82,6 +78,6 @@ type driverListenResult{
   driverIds: [String]
 }
 
-type Result {
+type updateResult {
   result: String
 }

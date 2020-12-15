@@ -12,6 +12,10 @@ const { actions, reducer } = createSlice({
   },
 });
 
+export const selectLoginReducer = (state: any) => {
+  return state.loginReducer;
+};
+
 export const {
   setLoginRole,
 } = actions;

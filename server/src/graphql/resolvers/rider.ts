@@ -54,17 +54,18 @@ export default {
       driverIds = driverIds.map(v => v._id.toString());
 
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
-      return trip?._id;
+      return { result: 'success', trip };
     },
     async driverRecall(parent:any, args: {id:string}, { req, pubsub }:any) {
       const trip = await Trip.get(args);
       let driverIds = await Driver.getDriverList({ lat: trip?.origin?.latitude, lng: trip?.origin?.longitude, callRadius: 0.05 });
       driverIds = driverIds.map(v => v._id.toString());
       pubsub.publish(CALL_REQUESTED, { driverListen: { trip, driverIds } });
-      return 'success';
+      return { result: 'success', trip };
     },
-    notifyRiderState(parent: any, args: any, context: any) {
-      context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: args });
+    async notifyRiderState(parent: any, args: any, context: any) {
+      const trip = await Trip.get({ id: args.tripId });
+      context.pubsub.publish(MATCHED_RIDER_STATE, { matchedRiderState: { ...args, trip } });
       return true;
     },
   },
@@ -84,7 +85,7 @@ export default {
         return context.pubsub.asyncIterator([DRIVER_RESPONDED]);
       },
       (payload, variables, context) => {
-        return payload.driverResponded.riderId === context.data.currentUser.data._id.toString();
+        return payload.driverResponded.rider._id.toString() === context.data.currentUser.data._id.toString();
       },
       ),
     },

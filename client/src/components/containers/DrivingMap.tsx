@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo } from 'react';
+import React, { useCallback, useState, useRef, useEffect, memo } from 'react';
 
 import { OverlayView, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 
@@ -7,12 +7,19 @@ import PinIcon from '../presentational/PinIcon';
 
 function DrivingMap({ car, destination }: {car: {lat:number, lng:number}, destination: {lat:number, lng:number}}) {
   const [directionResponse, setDirectionResponse] = useState(null);
+  const count = useRef(0);
 
   const directionCallback = useCallback((response: any, status: any) => {
-    if (response !== null && status === 'OK') {
+    if (response !== null && status === 'OK' && count.current <= 1) {
+      count.current += 1;
       setDirectionResponse(response);
     };
-  }, [car]);
+  }, [car.lat, car.lng]);
+
+  useEffect(() => {
+    count.current = 0;
+  }, [car.lat, car.lng, destination.lat, destination.lng]);
+
 
   return (
     <>

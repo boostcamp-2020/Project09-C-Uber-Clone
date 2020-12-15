@@ -86,7 +86,7 @@ function RiderWaitingForm() {
 
   useEffect(() => {
     if (data && data.cancelTrip.result === 'canceled') {
-      dispatch(setTrip({ id: '' }));
+      dispatch(setTrip({ id: undefined }));
       history.push('/rider/setcourse');
     }
   }, [data]);
