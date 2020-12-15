@@ -10,12 +10,14 @@ import styled from 'styled-components';
 
 import { LOGIN_RIDER, LOGIN_DRIVER } from '../../queries/login';
 import { setLoginRole } from '../../slices/loginSlice';
+import { setTrip } from '../../slices/tripSlice';
 
 import { checkValidation } from '../../utils/validate';
 
 import Input from '../presentational/Input';
 import SubmitButton from '../presentational/SubmitButton';
 import LoadingView from '../presentational/LoadingView';
+
 
 const Div = styled.div`
   width: 90%;
@@ -59,10 +61,11 @@ function LoginForm() {
     LOGIN_RIDER,
     {
       onCompleted: ({ loginRider }) => {
-        const { message, role, success, token } = loginRider;
+        const { message, success, token, user } = loginRider;
         if (success) {
           localStorage.setItem('token', token);
-          dispatch(setLoginRole(role));
+          dispatch(setLoginRole(user.role));
+          dispatch(setTrip({ id: user.tripId }));
           history.push('/rider/setcourse');
         } else {
           window.alert(message);
@@ -75,10 +78,11 @@ function LoginForm() {
     LOGIN_DRIVER,
     {
       onCompleted: ({ loginDriver }) => {
-        const { message, role, success, token } = loginDriver;
+        const { message, success, token, user } = loginDriver;
         if (success) {
           localStorage.setItem('token', token);
-          dispatch(setLoginRole(role));
+          dispatch(setLoginRole(user.role));
+          dispatch(setTrip({ id: user.tripId }));
           history.push('/driver/main');
         } else {
           window.alert(message);
