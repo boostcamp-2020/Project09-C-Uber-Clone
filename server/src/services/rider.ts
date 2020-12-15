@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 
+import { Trip } from '../services';
 import signToken from '../utils/signToken';
 import { Rider } from '../repositories';
 
@@ -10,9 +11,10 @@ export default {
     try {
       const { user } = await context.authenticate('rider-local', payload);
       const token = signToken({ email: user.email, isDriver: false });
-      return { success: true, name: user.name, role: 'rider', token: token };
+      const trip = user ? await Trip.getMyTrip(user._id, false, ['open', 'matched', 'onBoard']) : undefined ;
+      return { success: true, token, user: { role: 'rider', tripId: trip?._id } };
     } catch (e) {
-      return { success: false, message: e.message, role: 'rider' };
+      return { success: false, message: e.message };
     }
   },
   signup: async (payload) => {

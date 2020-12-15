@@ -62,12 +62,12 @@ function TripInfoBox({ time }:{time:{startTime:number, arrivalTime?:number}}) {
           <Trip>
             <PlaceAndTime>
               <h4>출발지</h4>
-              <div>{data?.trip.destination.address}</div>
+              <div>{data?.trip.origin.address}</div>
               <Time>{moment(time.startTime).format('YYYY MM DD , h:mm:ss a')}</Time>
             </PlaceAndTime>
             <PlaceAndTime>
               <h4>도착지</h4>
-              <div>{data?.trip.origin.address}</div>
+              <div>{data?.trip.destination.address}</div>
               <Time>{ moment(time.arrivalTime).format('YYYY MM DD , h:mm:ss a')}</Time>
             </PlaceAndTime>
           </Trip>
