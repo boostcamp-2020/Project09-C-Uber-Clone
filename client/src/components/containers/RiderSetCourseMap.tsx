@@ -110,7 +110,7 @@ function RiderSetCourseMap({ setEstimatedDistance, setEstimatedTime, originPlace
   };
 
   const directionCallback = (response: any, status: any) => {
-    if (response !== null && status === 'OK' && count.current === 0) {
+    if (response !== null && status === 'OK' && count.current <= 1) {
       count.current += 1;
       pickerEl.current.style.display = 'none';
       setSelectButtonDisplay('none');
