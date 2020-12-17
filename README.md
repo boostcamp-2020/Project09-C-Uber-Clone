@@ -13,6 +13,7 @@
 ![redux](https://img.shields.io/badge/redux-^4.0.5-blueviolet?logo=redux)
 ![apollo-client](https://img.shields.io/badge/apollo%20client-3.2.6-e10098?logo=apollo-graphql)
 ![antd-mobile](https://img.shields.io/badge/antd%20mobile-2.3.4-lightgrey?logo=ant-design)
+
 ![NodeJS](https://img.shields.io/badge/node.js-v14.15.1-green?logo=Node.js)
 ![Express](https://img.shields.io/badge/Express-v4.17.1-000)
 ![GraphQL](https://img.shields.io/badge/grapqhql-v15.4.0-e10098?logo=graphql)
