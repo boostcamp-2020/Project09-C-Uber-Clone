@@ -71,8 +71,8 @@ export default function DriverPickUpForm() {
   };
 
   useEffect(() => {
+    getDriverPosition();
     let timerId = setTimeout(function tick() {
-      getDriverPosition();
       if (JSON.stringify(driverPos) !== JSON.stringify(newDriverPos)) {
         setDriverPos(newDriverPos);
       }

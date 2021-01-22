@@ -68,8 +68,8 @@ export default function RiderPickUpForm() {
   };
 
   useEffect(() => {
+    getRiderPosition();
     let timerId = setTimeout(function tick() {
-      getRiderPosition();
       if (JSON.stringify(riderPos) !== JSON.stringify(newRiderPos)) {
         setRiderPos(newRiderPos);
       }
