@@ -20,13 +20,15 @@ const INIT_POS = {
   lng: -122.46,
 };
 
+const UPDATE_POS_INTERVAL = 1000;
+
 export default function DriverPickUpForm() {
   const dispatch = useDispatch();
   const history = useHistory();
   const alert = Modal.alert;
   const [driverPos, setDriverPos] = useState(INIT_POS);
+  const [newDriverPos, setNewDriverPos] = useState(INIT_POS);
   const [riderPos, setRiderPos] = useState({ lat: undefined, lng: undefined });
-  const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
@@ -50,7 +52,7 @@ export default function DriverPickUpForm() {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     };
-    setDriverPos(pos);
+    setNewDriverPos(pos);
   };
 
   const navError = (): any => {
@@ -70,13 +72,16 @@ export default function DriverPickUpForm() {
 
   useEffect(() => {
     getDriverPosition();
-    const timer = setTimeout(() => {
-      setCount(count + 1);
-    }, 1000);
+    let timerId = setTimeout(function tick() {
+      if (JSON.stringify(driverPos) !== JSON.stringify(newDriverPos)) {
+        setDriverPos(newDriverPos);
+      }
+      timerId = setTimeout(tick, UPDATE_POS_INTERVAL);
+    }, UPDATE_POS_INTERVAL);
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timerId);
     };
-  }, [count]);
+  });
 
   useEffect(() => {
     notifyDriverState({ variables: { tripId: trip.id, driverPosition: driverPos } });

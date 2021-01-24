@@ -18,12 +18,14 @@ const INIT_POS = {
   lng: -122.4782,
 };
 
+const UPDATE_POS_INTERVAL = 1000;
+
 export default function RiderPickUpForm() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [riderPos, setRiderPos] = useState(INIT_POS);
+  const [newRiderPos, setNewRiderPos] = useState(INIT_POS);
   const [driverPos, setDriverPos] = useState(INIT_POS);
-  const [count, setCount] = useState(0);
   const { originPosition }: any = useSelector(selectMapReducer);
   const { trip }: any = useSelector(selectTripReducer);
 
@@ -47,7 +49,7 @@ export default function RiderPickUpForm() {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     };
-    setRiderPos(pos);
+    setNewRiderPos(pos);
   };
 
   const navError = (): any => {
@@ -67,10 +69,16 @@ export default function RiderPickUpForm() {
 
   useEffect(() => {
     getRiderPosition();
-    setTimeout(() => {
-      setCount(count + 1);
-    }, 1000);
-  }, [count]);
+    let timerId = setTimeout(function tick() {
+      if (JSON.stringify(riderPos) !== JSON.stringify(newRiderPos)) {
+        setRiderPos(newRiderPos);
+      }
+      timerId = setTimeout(tick, UPDATE_POS_INTERVAL);
+    }, UPDATE_POS_INTERVAL);
+    return () => {
+      clearTimeout(timerId);
+    };
+  });
 
   useEffect(() => {
     notifyRiderState({ variables: { tripId: trip.id, latitude: riderPos.lat, longitude: riderPos.lng } });
