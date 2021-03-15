@@ -11,7 +11,9 @@
     "start": "node 'dist/app.js'",
     "build": "tsc -p . && ncp src/graphql/types dist/graphql/types",
     "dev": "nodemon 'src/app.ts' --exec 'ts-node' src/app.ts -e ts,graphql",
-    "lint": "eslint ./src/**/*.ts"
+    "lint": "eslint ./src/**/*.ts",
+    "tsc": "tsc"
+
   },
   "keywords": [],
   "author": "",
