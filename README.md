@@ -34,7 +34,9 @@
 
 <br />
 
-~~## [🚨 배포 링크](https://woober.tk)~~ 이전 중
+## [🚨 배포 링크](https://woober.netlify.app)
+
+- google maps api key 만료되어 정상 동작하지 않을 수 있습니다.
 
 <br />
 
