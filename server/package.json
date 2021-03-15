@@ -12,8 +12,8 @@
     "build": "tsc -p . && ncp src/graphql/types dist/graphql/types",
     "dev": "nodemon 'src/app.ts' --exec 'ts-node' src/app.ts -e ts,graphql",
     "lint": "eslint ./src/**/*.ts",
-    "tsc": "tsc"
-
+    "tsc": "tsc",
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "",
