@@ -45,7 +45,9 @@ module.exports = {
       template: './src/index.html',
       favicon: './src/favicon.ico',
     }),
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],

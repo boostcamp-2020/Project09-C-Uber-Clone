@@ -1,13 +1,19 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.15.4",
+    "npm":  "6.14.10"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node 'dist/app.js'",
     "build": "tsc -p . && ncp src/graphql/types dist/graphql/types",
     "dev": "nodemon 'src/app.ts' --exec 'ts-node' src/app.ts -e ts,graphql",
-    "lint": "eslint ./src/**/*.ts"
+    "lint": "eslint ./src/**/*.ts",
+    "tsc": "tsc",
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "",
